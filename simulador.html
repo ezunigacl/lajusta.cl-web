@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulador | La Justa</title>
     
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@1&family=Inter:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-    
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://unpkg.com/lucide@latest"></script> <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;600;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 
     <script>
         tailwind.config = {
@@ -23,184 +23,79 @@
                         oceanDark: '#011826',
                         acid: '#CCFF00',
                         acidHover: '#b3e600',
-                        lightText: '#E6F4F1'
+                        lightText: '#E6F4F1',
+                        paper: '#F3F4F6' // Agregado del V3
                     },
                     fontFamily: {
                         serif: ['Instrument Serif', 'serif'],
                         sans: ['Inter', 'sans-serif'],
                         mono: ['Space Mono', 'monospace'],
                     },
-                    backgroundImage: {
-                        'grid-pattern': "linear-gradient(rgba(204, 255, 0, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(204, 255, 0, 0.03) 1px, transparent 1px)",
+                    animation: {
+                        'fade-in-up': 'fadeInUp 0.5s ease-out forwards',
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
                     }
                 }
             }
         }
     </script>
-
+    
     <style>
-        body { background-color: #022C43; color: #E6F4F1; }
-        .font-serif { font-family: 'Instrument Serif', serif; font-style: italic; }
-        .font-mono { font-family: 'Space Mono', monospace; }
+        body { background-color: #022C43; color: #E6F4F1; font-family: 'Inter', sans-serif; overflow-x: hidden; }
         
+        /* Estilos del Sitio Web Principal */
         .glass-panel { 
-            background: rgba(5, 59, 88, 0.3); 
+            background: rgba(5, 59, 88, 0.4); 
             backdrop-filter: blur(16px); 
+            -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.08); 
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
         }
-        
-        .grid-bg { background-image: var(--tw-gradient-stops); background-size: 40px 40px; }
-        
         .btn-3d { transition: all 0.1s ease; box-shadow: 4px 4px 0px rgba(0,0,0,0.5); }
         .btn-3d:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px rgba(0,0,0,0.5); }
+        
+        /* Estilos Específicos del Simulador V3 */
+        .grid-bg {
+            background-image: 
+                linear-gradient(rgba(204, 255, 0, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(204, 255, 0, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+            position: fixed; inset: 0; z-index: -1; pointer-events: none;
+        }
+        .cta-button {
+            background-color: #CCFF00; color: #022C43;
+            font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;
+            border-radius: 0.25rem; transition: all 0.2s ease;
+            box-shadow: 0 4px 0px 0px #8eb300; font-family: 'Inter', sans-serif;
+        }
+        .cta-button:active:not(:disabled) { transform: translateY(4px); box-shadow: 0 0px 0px 0px #8eb300; }
+        .cta-button:hover:not(:disabled) { filter: brightness(1.1); }
+        .cta-button:disabled { opacity: 0.6; cursor: not-allowed; box-shadow: none; background-color: #4b5563; color: #d1d5db; }
+        
+        .input-premium {
+            background-color: rgba(5, 59, 88, 0.2) !important; 
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            color: #F3F4F6 !important; transition: all 0.2s;
+            width: 100%; padding: 0.5rem; border-radius: 0.375rem;
+        }
+        .input-premium:focus { border-color: #CCFF00 !important; box-shadow: 0 0 0 1px #CCFF00 !important; outline: none; }
+        .input-error { border-color: #ef4444 !important; background-color: rgba(239, 68, 68, 0.1) !important; }
+        
+        /* Ajuste para el Widget UF en el Navbar */
+        #ufWidgetContainer input { 
+            color: #CCFF00 !important; font-family: 'Space Mono', monospace; 
+            border-color: rgba(204, 255, 0, 0.3) !important; 
+        }
     </style>
 </head>
-<body class="relative antialiased selection:bg-acid selection:text-ocean bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+PHBhdGggZD0iTTEgMWgydjJIMUMxeiIgZmlsbD0iIzQ0NCIgZmlsbC1vcGFjaXR5PSIwLjAzIi8+PC9zdmc+')]">
+<body class="antialiased selection:bg-acid selection:text-ocean">
+
+    <div class="grid-bg"></div>
 
     <nav class="fixed w-full z-50 glass-panel border-b-0 border-white/5">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-20">
-                <div class="flex-shrink-0 cursor-pointer">
-                    <a href="index.html" class="font-serif text-3xl text-acid tracking-wide">La Justa<span class="text-white">.</span></a>
-                </div>
-                <div class="hidden md:block">
-                    <div class="ml-10 flex items-baseline space-x-8 font-mono text-sm">
-                        <a href="index.html" class="text-white hover:text-acid transition-colors">INICIO</a>
-                        <a href="index.html#que-hacemos" class="text-white hover:text-acid transition-colors">SERVICIOS</a>
-                        <a href="simulador.html" class="text-acid glow-sm">[ HERRAMIENTAS ]</a> 
-                        <a href="#login" class="border border-acid text-acid px-4 py-2 hover:bg-acid hover:text-ocean transition-all btn-3d">ACCESO</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <main class="pt-32 pb-20 min-h-screen relative overflow-hidden">
-        <div class="absolute top-20 right-0 w-96 h-96 bg-acid opacity-5 blur-[120px] rounded-full pointer-events-none"></div>
-
-        <div class="max-w-4xl mx-auto px-4 relative z-10">
-            <div class="text-center mb-12">
-                <span class="font-mono text-acid text-xs tracking-[0.3em] uppercase mb-4 block">Herramienta 01</span>
-                <h1 class="font-serif text-5xl md:text-6xl text-white mb-4">Simulador de Pensión</h1>
-                <p class="text-gray-400 max-w-lg mx-auto">Proyección matemática basada en interés compuesto y tablas de mortalidad ajustadas.</p>
-            </div>
-
-            <div class="glass-panel p-8 md:p-12 border border-acid/20 shadow-2xl relative">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-                    
-                    <form id="calcFormPage" class="space-y-6 font-mono text-sm">
-                        <div>
-                            <label class="block text-acid mb-2 uppercase text-xs">Monto Acumulado Actual ($)</label>
-                            <input type="number" id="montoP" placeholder="Ej: 45000000" class="w-full bg-oceanDark border border-white/20 p-4 text-white focus:border-acid outline-none transition-colors text-lg">
-                        </div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-acid mb-2 uppercase text-xs">Edad Actual</label>
-                                <input type="number" id="edadP" placeholder="35" class="w-full bg-oceanDark border border-white/20 p-4 text-white focus:border-acid outline-none transition-colors text-lg">
-                            </div>
-                            <div>
-                                <label class="block text-acid mb-2 uppercase text-xs">Jubilación</label>
-                                <input type="number" value="65" disabled class="w-full bg-oceanDark/50 border border-white/10 p-4 text-gray-500 cursor-not-allowed text-lg">
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-acid mb-2 uppercase text-xs">Sueldo Líquido ($)</label>
-                            <input type="number" id="sueldoP" placeholder="Ej: 1200000" class="w-full bg-oceanDark border border-white/20 p-4 text-white focus:border-acid outline-none transition-colors text-lg">
-                        </div>
-
-                        <button type="submit" class="w-full btn-3d bg-acid text-ocean py-4 font-bold mt-4 hover:bg-white transition-colors text-lg flex justify-center gap-2 items-center">
-                            EJECUTAR PROYECCIÓN <i data-lucide="cpu" class="w-5 h-5"></i>
-                        </button>
-                    </form>
-
-                    <div class="flex flex-col justify-center border-t md:border-t-0 md:border-l border-white/10 md:pl-12 pt-8 md:pt-0">
-                        <div id="introResult" class="text-center text-gray-500">
-                            <i data-lucide="bar-chart-2" class="w-16 h-16 mx-auto mb-4 opacity-20"></i>
-                            <p>Ingresa tus datos para generar la matriz de cálculo.</p>
-                        </div>
-
-                        <div id="finalResult" class="hidden text-center fade-in-up">
-                            <p class="font-mono text-xs text-acid mb-2">PENSION ESTIMADA MENSUAL</p>
-                            <div class="text-5xl md:text-6xl font-serif text-white mb-4 tracking-tighter" id="displayPension">$0</div>
-                            
-                            <div class="flex justify-between border-t border-white/10 pt-4 mt-4 text-xs font-mono">
-                                <span class="text-gray-400">Tasa Reemplazo:</span>
-                                <span class="text-acid" id="displayTasa">0%</span>
-                            </div>
-                            <div class="flex justify-between mt-2 text-xs font-mono">
-                                <span class="text-gray-400">Rentabilidad Base:</span>
-                                <span class="text-white">UF + 4%</span>
-                            </div>
-                            
-                            <div class="mt-8 p-4 bg-acid/10 border border-acid/20 text-left">
-                                <p class="text-acid text-xs mb-1 font-bold">ANÁLISIS DE LA JUSTA:</p>
-                                <p class="text-gray-300 text-xs leading-relaxed" id="analysisText">
-                                    Tu proyección indica una brecha importante. Recomendamos optimizar APV régimen A.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <footer class="bg-oceanDark pt-16 pb-8 border-t border-white/10 text-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col md:flex-row justify-between items-center text-xs text-gray-600 font-mono">
-                <p>&copy; 2025 La Justa Fintech SpA.</p>
-                <p class="mt-2 md:mt-0">Volver a <a href="index.html" class="text-acid hover:underline">Inicio</a></p>
-            </div>
-        </div>
-    </footer>
-
-    <script>
-        lucide.createIcons();
-
-        document.getElementById('calcFormPage').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Datos
-            const monto = parseFloat(document.getElementById('montoP').value) || 0;
-            const edad = parseFloat(document.getElementById('edadP').value) || 30;
-            const sueldo = parseFloat(document.getElementById('sueldoP').value) || 0;
-            
-            // Constantes
-            const edadJubilacion = 65;
-            const rentabilidadAnual = 0.04; 
-            const expectativaVidaMeses = 20 * 12; 
-            const añosRestantes = Math.max(1, edadJubilacion - edad);
-            const aporteMensual = sueldo * 0.10; 
-
-            // Cálculo
-            const vfAcumulado = monto * Math.pow(1 + rentabilidadAnual, añosRestantes);
-            const vfAportes = (aporteMensual * 12) * ((Math.pow(1 + rentabilidadAnual, añosRestantes) - 1) / rentabilidadAnual);
-            const totalFondo = vfAcumulado + vfAportes;
-            const pensionMensual = totalFondo / expectativaVidaMeses;
-            
-            let tasa = 0;
-            if(sueldo > 0) tasa = (pensionMensual / sueldo) * 100;
-
-            // Mostrar
-            document.getElementById('introResult').classList.add('hidden');
-            document.getElementById('finalResult').classList.remove('hidden');
-            
-            document.getElementById('displayPension').innerText = pensionMensual.toLocaleString('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 });
-            document.getElementById('displayTasa').innerText = tasa.toFixed(1) + '%';
-            
-            // Mensaje dinámico simple
-            const analysis = document.getElementById('analysisText');
-            if(tasa < 30) {
-                analysis.innerText = "ALERTA CRÍTICA: Tu tasa de reemplazo es peligrosamente baja. Necesitas estrategia de APV agresiva inmediato.";
-                analysis.parentElement.classList.add('bg-red-900/20', 'border-red-500/30');
-            } else if (tasa < 60) {
-                analysis.innerText = "RIESGO MEDIO: Estás en el promedio, pero no es suficiente para mantener tu estilo de vida. Evalúa Depósito Convenido.";
-                 analysis.parentElement.classList.remove('bg-red-900/20', 'border-red-500/30');
-            } else {
-                analysis.innerText = "SALUDABLE: Tu proyección es sólida. Enfócate en eficiencia tributaria (57 Bis) para no perder en impuestos.";
-                analysis.parentElement.classList.remove('bg-red-900/20', 'border-red-500/30');
-            }
-        });
-    </script>
-</body>
-</html>
+        <div class="max-w-7xl mx-auto px-
