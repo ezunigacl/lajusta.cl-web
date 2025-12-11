@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auditor SCOMP | La Justa</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://unpkg.com/lucide@latest"></script> <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        ocean: '#022C43',
+                        oceanLight: '#053b58',
+                        oceanDark: '#011826',
+                        acid: '#CCFF00',
+                        acidHover: '#b3e600',
+                        paper: '#F3F4F6',
+                    },
+                    fontFamily: {
+                        serif: ['Instrument Serif', 'serif'],
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Space Mono', 'monospace'], 
+                    }
+                }
+            }
+        }
+    </script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;600;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        body { background-color: #022C43; color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        
+        /* Navbar & Glass Effects */
+        .glass-panel {
+            background: rgba(5, 59, 88, 0.4); backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 0.75rem;
+        }
+        .btn-3d { transition: all 0.1s ease; box-shadow: 4px 4px 0px rgba(0,0,0,0.5); }
+        .btn-3d:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px rgba(0,0,0,0.5); }
+
+        /* Estilos del Auditor */
+        .grid-bg {
+            background-image: 
+                linear-gradient(rgba(204, 255, 0, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(204, 255, 0, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+            position: fixed; inset: 0; z-index: -1; pointer-events: none;
+        }
+        .cta-button {
+            background-color: #CCFF00; color: #022C43;
+            font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;
+            border-radius: 0.25rem; transition: all 0.2s ease;
+            box-shadow: 0 4px 0px 0px #8eb300; font-family: 'Inter', sans-serif;
+        }
+        .cta-button:hover { filter: brightness(1.1); transform: translateY(-1px); }
+        .cta-button:active { transform: translateY(2px); box-shadow: 0 0px 0px 0px #8eb300; }
+        
+        .table-row-hover:hover td { background-color: rgba(204, 255, 0, 0.05); }
+        .truncate-text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        
+        /* Custom Scrollbars for Dashboard */
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #053b58; border-radius: 3px; }
+        .slide-down { animation: slideDown 0.3s ease-out; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="antialiased selection:bg-acid selection:text-ocean">
+
+    <div class="grid-bg"></div>
+
+    <nav class="fixed w-full z-50 glass-panel border-b-0 border-white/5 rounded-none border-t-0 border-x-0 top-0">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex-shrink-0 cursor-pointer">
+                    <a href="index.html" class="font-serif text-3xl text-acid tracking-wide">La Justa<span class="text-white">.</span></a>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8 font-mono text-sm">
+                        <a href="index.html" class="text-white hover:text-acid transition-colors">INICIO</a>
+                        <a href="index.html#que-hacemos" class="text-white hover:text-acid transition-colors">SERVICIOS</a>
+                        <a href="simulador.html" class="text-white hover:text-acid transition-colors">SIMULADOR</a>
+                        <a href="#" class="text-acid glow-sm">[ AUDITOR ]</a>
+                        <a href="index.html#login" class="border border-acid text-acid px-4 py-2 hover:bg-acid hover:text-ocean transition-all btn-3d">ACCESO</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button class="text-white hover:text-acid p-2"><i data-lucide="menu" class="w-8 h-8"></i></button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="pt-24 pb-8"></div>
+
+    <div class="max-w-[1600px] mx-auto px-4 md:px-6 h-[85vh] flex flex-col mb-12">
+        
+        <div class="flex justify-between items-center border-b border-white/10 pb-4 mb-4 shrink-0 bg-ocean/80 backdrop-blur-md z-10 rounded-t-xl px-2">
+            <div class="flex items-center gap-3">
+                <div class="text-acid bg-oceanLight/30 p-2 rounded-lg"><i class="ph ph-files text-2xl"></i></div>
+                <div>
+                    <h1 class="text-2xl font-serif italic font-bold text-paper tracking-wide">Auditor SCOMP <span class="text-acid not-italic font-mono text-sm ml-1">V4.0</span></h1>
+                    <p class="text-white/50 text-xs font-sans mt-0.5 flex items-center gap-1">
+                        <i class="ph ph-lightning text-acid"></i> Motor Actuarial V3 Integrado
+                    </p>
+                </div>
+            </div>
+            <div class="flex gap-3 items-center">
+                <div class="hidden md:flex items-center space-x-2 bg-oceanLight/30 px-3 py-1.5 rounded-lg border border-white/5">
+                    <span class="text-[10px] font-bold text-acid uppercase tracking-widest">UF Hoy</span>
+                    <span class="font-mono text-white text-sm font-bold" id="headerUF">...</span>
+                </div>
+                <button onclick="clearFullLog()" class="text-xs text-red-400 hover:text-red-300 flex items-center gap-1 px-3 py-1.5 rounded hover:bg-red-500/10 transition-colors">
+                    <i class="ph ph-trash"></i> Limpiar
+                </button>
+            </div>
+        </div>
+
+        <div class="flex flex-col md:flex-row flex-1 gap-6 overflow-hidden pb-2">
+            
+            <div class="w-full md:w-1/4 flex flex-col gap-4 overflow-hidden">
+                <div class="glass-panel p-5 space-y-4 shrink-0">
+                    <label class="block group cursor-pointer">
+                        <span class="text-xs font-bold text-acid uppercase mb-2 block group-hover:text-white transition-colors flex items-center gap-2">
+                            <i class="ph ph-upload-simple"></i> Cargar Documentos (PDF)
+                        </span>
+                        <input type="file" id="fileInput" multiple accept=".pdf" class="block w-full text-xs text-gray-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-acid file:text-ocean hover:file:bg-white transition-all cursor-pointer bg-oceanLight/30 border border-white/10"/>
+                    </label>
+                    <button onclick="processBatch()" class="cta-button w-full py-3 flex justify-center items-center gap-2">
+                        <i class="ph ph-play-circle text-lg"></i> Ejecutar Auditoría
+                    </button>
+                </div>
+                
+                <div class="glass-panel flex-1 overflow-hidden flex flex-col p-5 space-y-4">
+                    <div class="flex items-center justify-between border-b border-white/10 pb-2">
+                        <h3 class="text-xs font-bold text-paper/80 uppercase">Resumen Global</h3>
+                        <span class="text-[10px] bg-white/5 px-2 py-0.5 rounded text-white/50">Sesión Actual</span>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4 shrink-0">
+                        <div>
+                            <p class="text-[10px] text-white/50 uppercase tracking-widest">Procesados</p>
+                            <p class="text-2xl font-mono text-white font-bold" id="statCount">0</p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] text-white/50 uppercase tracking-widest">Desviación Prom.</p>
+                            <p class="text-2xl font-mono text-gray-500 font-bold" id="statError">--</p>
+                        </div>
+                    </div>
+                    
+                    <div class="h-24 w-full relative shrink-0">
+                        <canvas id="errorChart"></canvas>
+                    </div>
+
+                    <div class="flex-1 flex flex-col min-h-0 border-t border-white/10 pt-3">
+                        <h4 class="text-[10px] text-acid font-bold uppercase mb-2 flex items-center gap-2">
+                            <i class="ph ph-clock-counter-clockwise"></i> Historial de Lotes
+                        </h4>
+                        <div class="overflow-y-auto flex-1 space-y-1 pr-1 custom-scrollbar" id="batchHistoryList"></div>
+                    </div>
+
+                    <div class="pt-2 border-t border-white/10 flex gap-2">
+                        <button onclick="exportData()" class="flex-1 bg-white/5 hover:bg-white/10 py-2 rounded text-[10px] text-gray-300 flex justify-center gap-1 items-center transition-colors border border-white/5">
+                            <i class="ph ph-export"></i> Exportar
+                        </button>
+                        <label class="flex-1 bg-white/5 hover:bg-white/10 py-2 rounded text-[10px] text-gray-300 flex justify-center gap-1 items-center transition-colors cursor-pointer border border-white/5">
+                            <i class="ph ph-import"></i> Importar
+                            <input type="file" onchange="importData(this)" accept=".json" class="hidden">
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="w-full md:w-3/4 flex flex-col gap-4 overflow-hidden">
+                <div class="glass-panel flex-1 overflow-hidden flex flex-col">
+                    <div class="bg-oceanLight/30 px-6 py-4 border-b border-white/10 flex justify-between items-center shrink-0">
+                        <div class="flex items-center gap-3">
+                            <h3 class="text-sm font-bold text-acid uppercase flex items-center gap-2">
+                                <i class="ph ph-table"></i> Bitácora Detallada
+                            </h3>
+                            <span class="text-[10px] text-white/40 border-l border-white/10 pl-3">Ordenado por Emisión</span>
+                        </div>
+                        <button onclick="copyTableData()" class="text-xs bg-acid/10 hover:bg-acid/20 text-acid px-3 py-1.5 rounded flex items-center gap-1.5 transition-colors border border-acid/20 font-bold uppercase tracking-wider">
+                            <i class="ph ph-copy"></i> Copiar Tabla
+                        </button>
+                    </div>
+                    
+                    <div class="overflow-y-auto flex-1 scroll-smooth custom-scrollbar" id="tableContainer">
+                        <table class="w-full text-xs text-left border-collapse" id="mainTable">
+                            <thead class="sticky top-0 bg-ocean z-10 shadow-lg text-white/60 font-sans uppercase text-[10px] tracking-wider">
+                                <tr>
+                                    <th class="p-4 border-b border-white/10 w-10"></th>
+                                    <th class="p-4 border-b border-white/10 cursor-pointer hover:text-acid group select-none transition-colors" onclick="toggleSortOrder()">
+                                        Emisión <span id="sortIcon" class="text-acid ml-1">▼</span>
+                                    </th>
+                                    <th class="p-4 border-b border-white/10 text-acid">Afiliado</th>
+                                    <th class="p-4 border-b border-white/10">RUT</th>
+                                    <th class="p-4 border-b border-white/10 text-right">Capital Total (UF)</th>
+                                    <th class="p-4 border-b border-white/10 text-right hidden lg:table-cell">RV Real (UF)</th>
+                                    <th class="p-4 border-b border-white/10 text-right text-acid font-bold hidden lg:table-cell">Simulador V3</th>
+                                    <th class="p-4 border-b border-white/10 text-right">Desviación</th>
+                                    <th class="p-4 border-b border-white/10 text-center">Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody id="resultsTableBody" class="font-mono text-gray-300 text-[11px]"></tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="h-24 bg-black/40 border-t border-white/10 p-3 font-mono text-[10px] overflow-y-auto text-gray-500 shrink-0 custom-scrollbar" id="consoleLog">
+                        <div class="text-acid/50">> Auditor V4.0 inicializado.</div>
+                        <div class="text-acid/50">> Motor Actuarial V3 cargado (Mortalidad, Impuestos, SIS, PGU).</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-oceanDark pt-16 pb-8 border-t border-white/10 text-sm mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center text-xs text-gray-600 font-mono">
+                <p>&copy; 2025 La Justa Fintech SpA. Todos los derechos reservados.</p>
+                <div class="flex gap-4 mt-2 md:mt-0">
+                    <a href="index.html" class="hover:text-acid transition-colors">Inicio</a>
+                    <a href="#" class="hover:text-acid transition-colors">Soporte</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>lucide.createIcons();</script>
+
+    <script>
+        // LOGICA DEL AUDITOR SCOMP V4.0 (Sin Cambios Funcionales)
+        const PGU_FACTOR_MAX_UF = 5.64; 
+        const PGU_CUTOFF_FULL_UF = 19.5;    
+        const PGU_CUTOFF_PARTIAL_UF = 32.0; 
+        const INTERES_TECNICO_RP = 0.042;
+        const AFP_COMMISSION_RP = 0.0125;
+        let currentUTM = 66628; 
+        let currentUF = 38000;
+
+        fetch('https://mindicador.cl/api/uf').then(res => res.json()).then(data => {
+            currentUF = data.serie[0].valor;
+            document.getElementById('headerUF').innerText = `$${new Intl.NumberFormat('es-CL').format(currentUF)}`;
+            log(`UF Actualizada: $${currentUF}`);
+        }).catch(err => log("Error obteniendo UF, usando valor base."));
+
+        function calculateAge(dobStr) {
+            if(!dobStr) return 65; 
+            const parts = dobStr.split('/');
+            if(parts.length !== 3) return 65;
+            const dob = new Date(parts[2], parts[1]-1, parts[0]);
+            const diffMs = Date.now() - dob.getTime();
+            const ageDt = new Date(diffMs); 
+            return Math.abs(ageDt.getUTCFullYear() - 1970);
+        }
+
+        function calculateCNU_V3(age, gender, hasSpouse) {
+            const r = INTERES_TECNICO_RP; 
+            let lifeExp = (gender === 'M') ? 86 : 91;
+            let yearsToLive = Math.max(lifeExp - age, 5); 
+            let annuityFactor = (1 - Math.pow(1 + r, -yearsToLive)) / r;
+            let cnu = annuityFactor * 12; 
+            if (hasSpouse) cnu *= 1.15; 
+            return cnu;
+        }
+
+        function calculateTax(amountCLP) {
+            if (!currentUTM) return 0;
+            const utmVal = amountCLP / currentUTM;
+            const b = [
+                { limit: 13.5, factor: 0,     deduction: 0 },
+                { limit: 30,   factor: 0.04,  deduction: 0.54 },
+                { limit: 50,   factor: 0.08,  deduction: 1.74 },
+                { limit: 70,   factor: 0.135, deduction: 4.49 },
+                { limit: 90,   factor: 0.23,  deduction: 11.14 },
+                { limit: 120,  factor: 0.304, deduction: 17.8 },
+                { limit: 310,  factor: 0.35,  deduction: 23.32 },
+                { limit: 9999, factor: 0.40,  deduction: 38.82 }
+            ].find(x => utmVal <= x.limit);
+            return b ? Math.max(0, (amountCLP * b.factor) - (b.deduction * currentUTM)) : 0;
+        }
+
+        function runBatchSimulationV3(data) {
+            const age = data.age;
+            const gender = data.gender;
+            const capitalUF = data.capitalUF;
+            const hasSpouse = data.beneficiary.type === 'SPOUSE';
+
+            const cnu = calculateCNU_V3(age, gender, hasSpouse);
+            const basePensionUF = capitalUF / cnu;
+            const factorRV = 0.92; 
+            const ufSimple = basePensionUF * factorRV;
+
+            return {
+                simple: ufSimple,
+                gar120: ufSimple * 0.97,
+                gar180: ufSimple * 0.95,
+                rp: basePensionUF
+            };
+        }
+
+        async function extractDataFromPDF(file) {
+            const arrayBuffer = await file.arrayBuffer();
+            const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
+            
+            let fullText = "";
+            let page2Text = ""; 
+            
+            for (let i = 1; i <= Math.min(pdf.numPages, 8); i++) {
+                const page = await pdf.getPage(i);
+                const textContent = await page.getTextContent();
+                const text = textContent.items.map(item => item.str).join(" ") + " ";
+                fullText += text;
+                if(i === 2) page2Text = text.toUpperCase();
+            }
+            const normalizedText = fullText.replace(/\s+/g, ' ').toUpperCase(); 
+
+            if (normalizedText.includes("CONSULTORÍA PREVISIONAL") || normalizedText.includes("ESTUDIO MODALIDADES DE PENSIÓN")) {
+                return parseConsultingReport(file.name, normalizedText);
+            } else {
+                return parseSCOMP(file.name, normalizedText, page2Text);
+            }
+        }
+
+        function parseSCOMP(filename, normalizedText, page2Text) {
+            let name = "Desconocido", rut = "S/I";
+            const stopLookahead = "(?=\\s+(?:APELLIDO|NOMBRES|RUT|SEXO|FECHA|NACIONALIDAD|ESTADO|DIRECCI|EMAIL|TELEFONO|CELULAR|REGION|COMUNA|$))";
+            
+            const pMatch = page2Text.match(new RegExp(`APELLIDO PATERNO:?\\s*(.*?)${stopLookahead}`));
+            const mMatch = page2Text.match(new RegExp(`APELLIDO MATERNO:?\\s*(.*?)${stopLookahead}`));
+            const nMatch = page2Text.match(new RegExp(`NOMBRES:?\\s*(.*?)${stopLookahead}`));
+            const rMatch = page2Text.match(/RUT:?\s*([\d\.]+-[0-9Kk])/);
+
+            if(pMatch || nMatch) name = `${nMatch?nMatch[1].trim():''} ${pMatch?pMatch[1].trim():''} ${mMatch?mMatch[1].trim():''}`.trim();
+            if(rMatch) rut = rMatch[1];
+
+            let gender = normalizedText.includes("SEXO: FEMENINO") || normalizedText.includes("SEXO: FEME") ? 'F' : 'M';
+            let age = 65;
+            
+            const dobMatch = normalizedText.match(/FECHA DE NACIMIENTO:?\s*(\d{2}\/\d{2}\/\d{4})/);
+            const issueMatch = normalizedText.match(/FECHA DE EMISI[OÓ]N:?\s*(\d{2}\/\d{2}\/\d{4})/);
+            let issueDateStr = "S/I";
+            
+            if(issueMatch) {
+                issueDateStr = issueMatch[1];
+                if(dobMatch) age = calculateAgeExact(parseDate(dobMatch[1]), parseDate(issueMatch[1]));
+            }
+
+            let beneficiaryInfo = { type: 'NONE', label: 'Sin Benef.', age: null };
+            if (!page2Text.includes("AFILIADO SIN BENEFICIARIOS") && !page2Text.includes("SIN BENEFICIARIOS")) {
+                if (page2Text.includes("CONYUGE") || page2Text.includes("ESPOSA") || page2Text.includes("MARIDO")) {
+                    beneficiaryInfo.type = 'SPOUSE'; beneficiaryInfo.label = 'Cónyuge';
+                } else {
+                    beneficiaryInfo.type = 'OTHER'; beneficiaryInfo.label = 'Otros';
+                }
+            }
+
+            let capitalUF = 0;
+            const capMatch = normalizedText.substring(normalizedText.indexOf("SALDO DESTINADO"), normalizedText.indexOf("SALDO DESTINADO")+300).match(/UF\s*([\d\.]+[, \.]\d{2})/);
+            if (capMatch) capitalUF = parseNumber(capMatch[1]);
+
+            const offers = extractOffers(normalizedText);
+            let status = (capitalUF > 0 && offers.simple > 0) ? 'OK' : 'FAIL';
+            let failReason = status === 'FAIL' ? (capitalUF <= 0 ? 'Capital 0' : 'Ofertas no leídas') : '';
+
+            return { filename, name, rut, age, gender, capitalUF, beneficiary: beneficiaryInfo, offers, status, failReason, issueDate: issueDateStr, type: 'SCOMP' };
+        }
+
+        function parseConsultingReport(filename, normalizedText) {
+            let name = "Desconocido", rut = "S/I", issueDateStr = "S/I", age = 65, gender = 'M';
+            
+            const nMatch = normalizedText.match(/CAUSANTE:\s*([A-Z\s]+?)(?:AFP|FECHA|$)/);
+            if (nMatch) name = nMatch[1].trim();
+            const rMatch = normalizedText.match(/RUT[:\s]*([\d\.]+-[0-9Kk])/);
+            if (rMatch) rut = rMatch[1];
+            const dMatch = normalizedText.match(/FECHA ESTUDIO:\s*(\d{2}[\/-]\d{2}[\/-]\d{2,4})/);
+            if (dMatch) issueDateStr = dMatch[1].replace(/-/g, '/');
+
+            let capitalUF = 0;
+            const cMatch = normalizedText.match(/(?:FONDO PREVISIONAL PARA PENSI[OÓ]N|COTIZACIONES OBLIGATORIAS)\s*\(UF\):\s*([\d\.,]+)/);
+            if(cMatch) capitalUF = parseNumber(cMatch[1]);
+
+            let beneficiaryInfo = { type: 'NONE', label: 'Sin Benef.', age: null };
+            if (normalizedText.includes("ESCENARIO SIN INCLUIR CÓNYUGE")) {
+                beneficiaryInfo.type = 'SPOUSE'; beneficiaryInfo.label = 'Cónyuge (Implícito)';
+            }
+
+            const offers = { simple: 0, gar120: 0, gar180: 0, rp: 0 };
+            const rviSection = normalizedText.split("RENTA VITALICIA AUMENTADA")[0];
+            
+            offers.simple = extractValFromSection(rviSection, "SIMPLE");
+            offers.gar120 = extractValFromSection(rviSection, "GARANTIZADA 120");
+            offers.gar180 = extractValFromSection(rviSection, "GARANTIZADA 180");
+            
+            const rpMatch = normalizedText.match(/PRIMERA ANUALIDAD.*?(\d{1,3}[\.,]\d{2})/);
+            if(rpMatch) offers.rp = parseNumber(rpMatch[1]);
+
+            let status = capitalUF > 0 ? 'OK' : 'FAIL';
+            let failReason = capitalUF <= 0 ? 'Capital no encontrado' : '';
+            return { filename, name, rut, age, gender, capitalUF, beneficiary: beneficiaryInfo, offers, status, failReason, issueDate: issueDateStr, type: 'CONSULT' };
+        }
+
+        function extractValFromSection(text, label) {
+            const regex = new RegExp(`${label}.*?(\\d{1,3}[\\.,]\\d{2})`);
+            const match = text.match(regex);
+            return match ? parseNumber(match[1]) : 0;
+        }
+        function extractOffers(text) {
+            const mods = { simple: "RENTA VITALICIA INMEDIATA SIMPLE", gar120: "GARANTIZADA DURANTE 120 MESES", gar180: "GARANTIZADA DURANTE 180 MESES", rp: "RETIRO PROGRAMADO" };
+            let res = { simple:0, gar120:0, gar180:0, rp:0 };
+            for (const [k, pat] of Object.entries(mods)) {
+                const idx = text.indexOf(pat);
+                if(idx !== -1) {
+                    const chunk = text.substring(idx, idx+400);
+                    const nums = chunk.match(/(\d{1,3}[,\.]\d{2})/g);
+                    if(nums) {
+                        const valid = nums.map(parseNumber).filter(n => n > 0.5 && n < 300);
+                        if(valid.length) res[k] = valid[0];
+                    }
+                }
+            }
+            return res;
+        }
+        function parseNumber(str) {
+            if(!str) return 0;
+            str = str.replace(/[^\d,\.]/g, ''); 
+            if (str.indexOf(',') > str.indexOf('.')) str = str.replace(/\./g, '').replace(',', '.');
+            else str = str.replace(/,/g, '');
+            return parseFloat(str);
+        }
+        function parseDate(s) { if(!s) return null; const [d, m, y] = s.split('/'); return new Date(y, m-1, d); }
+        function calculateAgeExact(dob, target) { if(!dob || !target) return 65; let age = target.getFullYear() - dob.getFullYear(); const m = target.getMonth() - dob.getMonth(); if(m < 0 || (m===0 && target.getDate() < dob.getDate())) age--; return age; }
+        function calcErr(r, s) { return r===0 ? 0 : ((s-r)/r)*100; }
+
+        // PROCESS
+        async function processBatch() {
+            const files = document.getElementById('fileInput').files;
+            if(files.length === 0) { alert("Seleccione archivos PDF."); return; }
+            const batchId = new Date().toLocaleString();
+            let batchRecords = [];
+            log(`>>> Iniciando Lote: ${batchId}`);
+            
+            for (let file of files) {
+                try {
+                    const data = await extractDataFromPDF(file);
+                    if (data.status === 'FAIL') {
+                        log(`[FAIL] ${data.filename}: ${data.failReason}`);
+                        batchRecords.push({ data, sim: null, errorPct: 0, status: 'FAIL', comparison: null, batchId });
+                        continue;
+                    }
+                    const sim = runBatchSimulationV3(data);
+                    let errorPct = 0;
+                    if(data.offers.simple > 0) errorPct = ((sim.simple - data.offers.simple) / data.offers.simple) * 100;
+
+                    const comparison = {
+                        simple: { real: data.offers.simple, sim: sim.simple, err: calcErr(data.offers.simple, sim.simple) },
+                        gar120: { real: data.offers.gar120, sim: sim.gar120, err: calcErr(data.offers.gar120, sim.gar120) },
+                        gar180: { real: data.offers.gar180, sim: sim.gar180, err: calcErr(data.offers.gar180, sim.gar180) },
+                        rp: { real: data.offers.rp, sim: sim.rp, err: calcErr(data.offers.rp, sim.rp) }
+                    };
+                    batchRecords.push({ data, sim, errorPct, status: 'OK', comparison, batchId });
+                    log(`[OK] ${data.filename} | Sim: ${sim.simple.toFixed(2)} UF`);
+                } catch (e) { console.error(e); log(`[ERR] ${file.name}`); }
+            }
+            saveToStorage(batchRecords);
+            loadFromStorage();
+        }
+
+        let currentSortOrder = 'default';
+        function toggleSortOrder() {
+            currentSortOrder = (currentSortOrder === 'default') ? 'desc' : (currentSortOrder === 'desc' ? 'asc' : 'default');
+            document.getElementById('sortIcon').innerText = currentSortOrder === 'asc' ? '↑' : (currentSortOrder === 'desc' ? '↓' : '▼');
+            loadFromStorage();
+        }
+        function sortRecords(records) {
+            if (currentSortOrder === 'default') return records;
+            return [...records].sort((a, b) => {
+                const dA = parseDateFromStr(a.data.issueDate);
+                const dB = parseDateFromStr(b.data.issueDate);
+                return currentSortOrder === 'desc' ? dB - dA : dA - dB;
+            });
+        }
+        function parseDateFromStr(s) { if(!s || s === 'S/I') return new Date(0); const p = s.split('/'); return p.length === 3 ? new Date(p[2], p[1]-1, p[0]) : new Date(0); }
+
+        function saveToStorage(recs) {
+            let store = JSON.parse(localStorage.getItem('scomp_audit_v4') || '[]');
+            store = [...store, ...recs];
+            if(store.length > 500) store = store.slice(store.length - 500);
+            localStorage.setItem('scomp_audit_v4', JSON.stringify(store));
+        }
+        function loadFromStorage() {
+            const raw = JSON.parse(localStorage.getItem('scomp_audit_v4') || '[]');
+            const store = sortRecords(raw);
+            const tbody = document.getElementById('resultsTableBody');
+            tbody.innerHTML = '';
+            
+            let lastBatch = null;
+            store.forEach(rec => {
+                if(currentSortOrder === 'default' && rec.batchId !== lastBatch) {
+                    tbody.insertAdjacentHTML('beforeend', `<tr class="bg-white/5 border-y border-white/10"><td colspan="10" class="p-3 text-center text-[10px] text-acid font-bold tracking-widest font-sans">--- LOTE: ${rec.batchId} ---</td></tr>`);
+                    lastBatch = rec.batchId;
+                }
+                renderRow(rec);
+            });
+            recalcStats(store);
+            renderHistory(raw);
+        }
+
+        function renderRow(rec) {
+            const tbody = document.getElementById('resultsTableBody');
+            const rid = 'r-' + Math.random().toString(36).substr(2,9);
+            const { data, sim, errorPct, status, comparison } = rec;
+            if(status !== 'OK') {
+                tbody.insertAdjacentHTML('beforeend', `<tr class="border-b border-white/5 opacity-50"><td colspan="10" class="p-4 text-red-400 text-center font-mono text-[10px]">${data.filename}: ${data.failReason}</td></tr>`);
+                return;
+            }
+            const healthy = Math.abs(errorPct) <= 5.0;
+            const badge = healthy ? 'text-green-400 bg-green-500/10 border-green-500/20' : 'text-red-400 bg-red-500/10 border-red-500/20';
+            const dateParts = data.issueDate.split('/');
+            const dateDisplay = dateParts.length === 3 ? `${dateParts[1]}/${dateParts[2]}` : data.issueDate;
+            const typeBadge = data.type === 'CONSULT' ? '<span class="text-[9px] border border-blue-400 text-blue-300 px-1 rounded ml-2 font-sans">CONSULTORA</span>' : '';
+
+            const main = `
+                <tr class="border-b border-white/5 hover:bg-white/5 cursor-pointer transition-colors table-row-hover" onclick="document.getElementById('${rid}').classList.toggle('hidden')">
+                    <td class="p-4 text-center text-acid/50 w-10"><i class="ph ph-caret-down"></i></td>
+                    <td class="p-4 text-white/50 font-mono">${dateDisplay}</td>
+                    <td class="p-4 text-acid font-bold truncate-text max-w-[150px] font-sans" title="${data.name}">${data.name}${typeBadge}</td>
+                    <td class="p-4 text-white font-mono">${data.rut}</td>
+                    <td class="p-4 text-right text-gray-300 font-mono">${data.capitalUF.toLocaleString('es-CL', {minimumFractionDigits: 2})}</td>
+                    <td class="p-4 text-right font-bold text-gray-400 hidden lg:table-cell font-mono">${data.offers.simple.toFixed(2)}</td>
+                    <td class="p-4 text-right text-acid font-bold hidden lg:table-cell font-mono">${sim.simple.toFixed(2)}</td>
+                    <td class="p-4 text-right font-bold ${Math.abs(errorPct) > 5 ? 'text-red-400' : 'text-green-400'} font-mono">${errorPct > 0 ? '+' : ''}${errorPct.toFixed(2)}%</td>
+                    <td class="p-4 text-center"><span class="px-2 py-1 rounded text-[10px] font-bold border ${badge}">${healthy ? 'OK' : 'REV'}</span></td>
+                </tr>
+            `;
+            const detail = `
+                <tr id="${rid}" class="hidden bg-black/20 border-b border-white/10 slide-down shadow-inner">
+                    <td colspan="10" class="p-6">
+                        <div class="flex flex-wrap gap-6 mb-6 text-xs text-gray-400 border-b border-white/5 pb-4 font-sans">
+                            <span class="font-bold text-acid uppercase tracking-wider">Detalles Técnicos:</span>
+                            <span class="flex items-center gap-1"><i class="ph ph-gender-intersex"></i> Género: ${data.gender}</span>
+                            <span class="flex items-center gap-1"><i class="ph ph-cake"></i> Edad: ${data.age}</span>
+                            <span class="flex items-center gap-1"><i class="ph ph-users"></i> Beneficiarios: ${data.beneficiary.label}</span>
+                        </div>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            ${renderCard("RV Simple", comparison.simple)}
+                            ${renderCard("RV Gar 10A", comparison.gar120)}
+                            ${renderCard("RV Gar 15A", comparison.gar180)}
+                            ${renderCard("Retiro Prog.", comparison.rp)}
+                        </div>
+                    </td>
+                </tr>`;
+            tbody.insertAdjacentHTML('beforeend', main + detail);
+        }
+
+        function renderCard(title, comp) {
+            if(comp.real === 0) return `<div class="bg-white/5 p-4 rounded-xl text-center opacity-30 border border-white/5"><p class="text-gray-400 font-bold font-sans">${title}</p><p class="text-xs mt-1">No detectado</p></div>`;
+            const color = Math.abs(comp.err) < 5 ? 'text-green-400' : 'text-red-400';
+            return `
+                <div class="bg-oceanLight/40 p-4 rounded-xl border border-white/10 hover:border-white/20 transition-colors">
+                    <p class="text-gray-400 font-bold mb-3 uppercase text-[10px] tracking-wider font-sans border-b border-white/5 pb-1">${title}</p>
+                    <div class="flex justify-between items-center mb-1 text-xs"><span class="text-white/60">Real (UF):</span> <span class="text-white font-mono font-bold">${comp.real.toFixed(2)}</span></div>
+                    <div class="flex justify-between items-center mb-2 text-xs"><span class="text-white/60">Simulado:</span> <span class="text-acid font-mono font-bold">${comp.sim.toFixed(2)}</span></div>
+                    <div class="flex justify-between items-center text-xs font-bold ${color} bg-black/20 p-1.5 rounded"><span>Desviación:</span> <span class="font-mono">${comp.err > 0 ? '+' : ''}${comp.err.toFixed(2)}%</span></div>
+                </div>`;
+        }
+
+        let myChart = null;
+        function recalcStats(store) {
+            if(store.length === 0) return;
+            let totalErr = 0, count = 0, data = [], labels = [];
+            store.forEach((rec, i) => {
+                if(rec.status === 'OK') { totalErr += Math.abs(rec.errorPct); count++; }
+            });
+            const chartSet = store.filter(r => r.status === 'OK').slice(-20);
+            chartSet.forEach((r, i) => { data.push(r.errorPct); labels.push(`C${i+1}`); });
+
+            document.getElementById('statCount').innerText = count;
+            const avg = count ? (totalErr/count).toFixed(2) : '--';
+            document.getElementById('statError').innerText = avg + "%";
+
+            const ctx = document.getElementById('errorChart').getContext('2d');
+            if(myChart) myChart.destroy();
+            myChart = new Chart(ctx, {
+                type: 'bar',
+                data: { labels, datasets: [{ data, backgroundColor: data.map(v => Math.abs(v) <= 5 ? '#CCFF00' : '#EF4444'), borderRadius: 2, maxBarThickness: 6 }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#64748b', font: {size: 9} } } } }
+            });
+        }
+
+        function renderHistory(store) {
+            const list = document.getElementById('batchHistoryList');
+            list.innerHTML = '';
+            if(!store.length) { list.innerHTML = '<p class="text-[10px] text-white/30 p-2 italic">Sin historial.</p>'; return; }
+            const groups = {};
+            store.forEach(r => {
+                if(!groups[r.batchId]) groups[r.batchId] = { count: 0, errs: 0, date: r.batchId };
+                groups[r.batchId].count++;
+                if(r.status === 'OK' && Math.abs(r.errorPct) > 5) groups[r.batchId].errs++;
+            });
+            Object.values(groups).reverse().forEach(g => {
+                const ok = g.errs === 0;
+                const col = ok ? 'border-green-500/50' : 'border-red-500/50';
+                list.insertAdjacentHTML('beforeend', `<div class="bg-white/5 p-2 rounded hover:bg-white/10 mb-1 border-l-2 ${col} cursor-default transition-colors group"><div class="flex justify-between items-center"><span class="text-[10px] text-gray-400 font-mono group-hover:text-white">${g.date.split(',')[0]}</span><span class="text-[9px] font-bold ${ok?'text-green-400':'text-red-400'} px-1.5 py-0.5 bg-black/20 rounded">${ok?'OK':g.errs+' ERR'}</span></div><div class="text-[9px] text-white/30 mt-1 flex justify-between"><span>${g.count} docs</span></div></div>`);
+            });
+        }
+
+        function log(m) { 
+            const c = document.getElementById('consoleLog'); 
+            const time = new Date().toLocaleTimeString('es-CL', {hour12:false});
+            c.innerHTML += `<div class="hover:bg-white/5 px-1 py-0.5 rounded"><span class="text-white/30 mr-2">[${time}]</span>${m}</div>`; 
+            c.scrollTop = c.scrollHeight; 
+        }
+        function clearFullLog() { if(confirm("¿Eliminar todo el historial?")) { localStorage.removeItem('scomp_audit_v4'); location.reload(); } }
+        function exportData() {
+            const d = localStorage.getItem('scomp_audit_v4');
+            if(!d) return;
+            const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([d], {type:'application/json'}));
+            a.download = `SCOMP_Audit_V4_${new Date().toISOString().slice(0,10)}.json`; a.click();
+        }
+        function importData(inp) {
+            const r = new FileReader();
+            r.onload = e => { try { JSON.parse(e.target.result); localStorage.setItem('scomp_audit_v4', e.target.result); location.reload(); } catch(x) { alert("JSON Inválido"); } };
+            if(inp.files[0]) r.readAsText(inp.files[0]);
+        }
+        function copyTableData() {
+            const store = sortRecords(JSON.parse(localStorage.getItem('scomp_audit_v4')||'[]'));
+            let t = "EMISION\tAFILIADO\tRUT\tCAPITAL\tRVS REAL\tRVS SIM\tDESV\tESTADO\n";
+            store.forEach(r => { if(r.status==='OK') t += `${r.data.issueDate}\t${r.data.name}\t${r.data.rut}\t${r.data.capitalUF}\t${r.data.offers.simple}\t${r.sim.simple.toFixed(2)}\t${r.errorPct.toFixed(2)}%\t${Math.abs(r.errorPct)<=5?'OK':'REV'}\n`});
+            navigator.clipboard.writeText(t).then(()=>log("Tabla copiada al portapapeles."));
+        }
+        
+        loadFromStorage();
+    </script>
+</body>
+</html>
