@@ -1,560 +1,237 @@
-{\rtf1\ansi\ansicpg1252\cocoartf2820
-\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fnil\fcharset0 Menlo-Regular;}
-{\colortbl;\red255\green255\blue255;\red0\green0\blue0;}
-{\*\expandedcolortbl;;\cssrgb\c0\c1\c1;}
-\margl1440\margr1440\vieww11520\viewh8400\viewkind0
-\deftab720
-\pard\pardeftab720\partightenfactor0
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Justa | La verdad financiera</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@1&family=Inter:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
 
-\f0\fs24 \cf2 \expnd0\expndtw0\kerning0
-<!DOCTYPE html>\
-<html lang="es" class="scroll-smooth">\
-<head>\
-    <meta charset="UTF-8">\
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">\
-    <title>La Justa | La verdad financiera</title>\
-    \
-    <!-- Google Fonts -->\
-    <link rel="preconnect" href="https://fonts.googleapis.com">\
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\
-    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@1&family=Inter:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">\
-    \
-    <!-- Tailwind CSS (CDN) -->\
-    <script src="https://cdn.tailwindcss.com"></script>\
-    \
-    <!-- Icons (Lucide) -->\
-    <script src="https://unpkg.com/lucide@latest"></script>\
-\
-    <!-- Tailwind Config -->\
-    <script>\
-        tailwind.config = \{\
-            theme: \{\
-                extend: \{\
-                    colors: \{\
-                        ocean: '#022C43',\
-                        oceanLight: '#053B58',\
-                        oceanDark: '#011826',\
-                        acid: '#CCFF00',\
-                        acidHover: '#b3e600',\
-                        lightText: '#E6F4F1'\
-                    \},\
-                    fontFamily: \{\
-                        serif: ['Instrument Serif', 'serif'],\
-                        sans: ['Inter', 'sans-serif'],\
-                        mono: ['Space Mono', 'monospace'],\
-                    \},\
-                    backgroundImage: \{\
-                        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',\
-                    \}\
-                \}\
-            \}\
-        \}\
-    </script>\
-\
-    <!-- Custom CSS -->\
-    <style>\
-        /* Base styles */\
-        body \{\
-            background-color: #022C43;\
-            color: #E6F4F1;\
-            overflow-x: hidden;\
-        \}\
-\
-        /* Typography Enforcers */\
-        .font-serif \{ font-family: 'Instrument Serif', serif; font-style: italic; \}\
-        .font-mono \{ font-family: 'Space Mono', monospace; \}\
-        \
-        /* Effects */\
-        .text-glow \{ \
-            text-shadow: 0 0 20px rgba(204, 255, 0, 0.4); \
-        \}\
-        \
-        .glass-panel \{ \
-            background: rgba(5, 59, 88, 0.3); \
-            backdrop-filter: blur(16px); \
-            -webkit-backdrop-filter: blur(16px);\
-            border: 1px solid rgba(255, 255, 255, 0.08); \
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);\
-        \}\
-\
-        .grid-bg \{ \
-            background-image: \
-                linear-gradient(rgba(204, 255, 0, 0.03) 1px, transparent 1px), \
-                linear-gradient(90deg, rgba(204, 255, 0, 0.03) 1px, transparent 1px); \
-            background-size: 40px 40px; \
-            background-position: center top;\
-        \}\
-\
-        /* Micro-interactions */\
-        .btn-3d \{\
-            transition: all 0.1s ease;\
-            box-shadow: 4px 4px 0px rgba(0,0,0,0.5);\
-        \}\
-        .btn-3d:active \{\
-            transform: translate(2px, 2px);\
-            box-shadow: 2px 2px 0px rgba(0,0,0,0.5);\
-        \}\
-\
-        .card-hover \{\
-            transition: all 0.4s ease;\
-        \}\
-        .card-hover:hover \{\
-            transform: translateY(-5px);\
-            border-color: rgba(204, 255, 0, 0.5);\
-            box-shadow: 0 10px 40px -10px rgba(204, 255, 0, 0.15);\
-        \}\
-\
-        /* Custom Scrollbar */\
-        ::-webkit-scrollbar \{\
-            width: 8px;\
-        \}\
-        ::-webkit-scrollbar-track \{\
-            background: #022C43; \
-        \}\
-        ::-webkit-scrollbar-thumb \{\
-            background: #053B58; \
-            border-radius: 4px;\
-        \}\
-        ::-webkit-scrollbar-thumb:hover \{\
-            background: #CCFF00; \
-        \}\
-        \
-        /* Fade In Animation */\
-        .fade-in-up \{\
-            animation: fadeInUp 0.8s ease-out forwards;\
-            opacity: 0;\
-            transform: translateY(20px);\
-        \}\
-        @keyframes fadeInUp \{\
-            to \{ opacity: 1; transform: translateY(0); \}\
-        \}\
-    </style>\
-</head>\
-<body class="grid-bg relative antialiased selection:bg-acid selection:text-ocean">\
-\
-    <!-- Navbar -->\
-    <nav class="fixed w-full z-50 glass-panel border-b-0 border-white/5">\
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">\
-            <div class="flex items-center justify-between h-20">\
-                <!-- Logo -->\
-                <div class="flex-shrink-0 cursor-pointer">\
-                    <span class="font-serif text-3xl text-acid tracking-wide">La Justa<span class="text-white">.</span></span>\
-                </div>\
-                \
-                <!-- Desktop Menu -->\
-                <div class="hidden md:block">\
-                    <div class="ml-10 flex items-baseline space-x-8 font-mono text-sm">\
-                        <a href="#inicio" class="text-white hover:text-acid transition-colors duration-300">INICIO</a>\
-                        <a href="#que-hacemos" class="text-white hover:text-acid transition-colors duration-300">SERVICIOS</a>\
-                        <a href="#tools" class="text-acid hover:text-white transition-colors duration-300 glow-sm">[ HERRAMIENTAS ]</a>\
-                        <a href="#login" class="border border-acid text-acid px-4 py-2 hover:bg-acid hover:text-ocean transition-all duration-300 btn-3d">ACCESO</a>\
-                    </div>\
-                </div>\
-\
-                <!-- Mobile menu button -->\
-                <div class="md:hidden">\
-                    <button class="text-white hover:text-acid p-2">\
-                        <i data-lucide="menu" class="w-8 h-8"></i>\
-                    </button>\
-                </div>\
-            </div>\
-        </div>\
-    </nav>\
-\
-    <!-- 1. Hero / Inicio -->\
-    <section id="inicio" class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">\
-        <div class="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-acid opacity-10 blur-[100px] rounded-full pointer-events-none"></div>\
-        \
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center lg:text-left">\
-            <div class="lg:w-2/3 fade-in-up" style="animation-delay: 0.1s;">\
-                <div class="inline-flex items-center gap-2 px-3 py-1 border border-acid/30 rounded-full bg-oceanLight/30 backdrop-blur-sm mb-6">\
-                    <span class="w-2 h-2 rounded-full bg-acid animate-pulse"></span>\
-                    <span class="text-xs font-mono text-acid tracking-widest uppercase">Beta P\'fablica v1.0</span>\
-                </div>\
-                <h1 class="font-serif text-6xl md:text-8xl leading-[0.9] mb-6 text-white">\
-                    La verdad <br/>\
-                    financiera <br/>\
-                    <span class="text-acid text-glow">sin letra chica.</span>\
-                </h1>\
-                <p class="mt-4 max-w-lg text-lg text-gray-300 font-light leading-relaxed font-sans mb-10 mx-auto lg:mx-0">\
-                    Desafiamos el status quo de las finanzas personales. Tecnolog\'eda transparente para decisiones que definen tu futuro.\
-                </p>\
-                \
-                <!-- Action Buttons Update -->\
-                <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start font-mono text-sm">\
-                    <button onclick="toggleModal('simuladorModal')" class="btn-3d bg-acid text-ocean px-8 py-4 font-bold flex items-center justify-center gap-2 hover:bg-white transition-colors cursor-pointer">\
-                        CALCULADORA R\'c1PIDA <i data-lucide="calculator" class="w-4 h-4"></i>\
-                    </button>\
-                    <a href="#manifiesto" class="btn-3d border border-white/20 text-white px-8 py-4 hover:border-acid hover:text-acid bg-ocean/50 backdrop-blur-sm transition-colors text-center">\
-                        LEER MANIFIESTO\
-                    </a>\
-                </div>\
-\
-            </div>\
-        </div>\
-        \
-        <!-- Decoration Data Viz -->\
-        <div class="hidden lg:block absolute right-0 bottom-0 w-1/3 h-full opacity-20 pointer-events-none">\
-            <div class="h-full w-full border-l border-acid/20 flex flex-col justify-end p-8 font-mono text-xs text-acid">\
-                <div class="mb-2">MARKET_DATA_STREAM</div>\
-                <div class="h-64 w-full border border-acid/20 relative">\
-                    <div class="absolute bottom-0 left-0 w-full h-full bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxwb2x5bGluZSBwb2ludHM9IjAsMTAwIDUwLDgwIDEwMCwxMjAgMTUwLDYwIDIwMCw5MCAyNTAsNDAgMzAwLDgwIiBmaWxsPSJub25lIiBzdHJva2U9IiNDQ0ZGMDAiIHN0cm9rZS13aWR0aD0iMiIvPjwvc3ZnPg==')] bg-no-repeat bg-cover opacity-50"></div>\
-                </div>\
-                <div class="mt-2 flex justify-between">\
-                    <span>SCOMP: 2.4%</span>\
-                    <span>VAR: +0.8</span>\
-                </div>\
-            </div>\
-        </div>\
-    </section>\
-\
-    <!-- 2. Qu\'e9 Hacemos -->\
-    <section id="que-hacemos" class="py-20 border-t border-white/5 relative bg-oceanDark/50">\
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">\
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-12">\
-                <!-- Item 1 -->\
-                <div class="group">\
-                    <div class="w-12 h-12 border border-acid/30 rounded-full flex items-center justify-center mb-6 text-acid group-hover:bg-acid group-hover:text-ocean transition-all duration-300">\
-                        <i data-lucide="cpu" class="w-6 h-6"></i>\
-                    </div>\
-                    <h3 class="font-mono text-xl text-white mb-3">Algoritmos, no Vendedores</h3>\
-                    <p class="text-gray-400 font-sans text-sm leading-relaxed">\
-                        Eliminamos el sesgo humano. Nuestras recomendaciones se basan en matem\'e1ticas puras y eficiencia fiscal, no en comisiones ocultas.\
-                    </p>\
-                </div>\
-                <!-- Item 2 -->\
-                <div class="group">\
-                    <div class="w-12 h-12 border border-acid/30 rounded-full flex items-center justify-center mb-6 text-acid group-hover:bg-acid group-hover:text-ocean transition-all duration-300">\
-                        <i data-lucide="shield-check" class="w-6 h-6"></i>\
-                    </div>\
-                    <h3 class="font-mono text-xl text-white mb-3">Auditor\'eda Radical</h3>\
-                    <p class="text-gray-400 font-sans text-sm leading-relaxed">\
-                        Desglosamos cada oferta del mercado. Te mostramos lo que los bancos y aseguradoras prefieren mantener en letra chica.\
-                    </p>\
-                </div>\
-                <!-- Item 3 -->\
-                <div class="group">\
-                    <div class="w-12 h-12 border border-acid/30 rounded-full flex items-center justify-center mb-6 text-acid group-hover:bg-acid group-hover:text-ocean transition-all duration-300">\
-                        <i data-lucide="users" class="w-6 h-6"></i>\
-                    </div>\
-                    <h3 class="font-mono text-xl text-white mb-3">Asesor\'eda H\'edbrida</h3>\
-                    <p class="text-gray-400 font-sans text-sm leading-relaxed">\
-                        La potencia de la IA validada por expertos tributarios humanos. Tecnolog\'eda para calcular, humanos para estrategizar.\
-                    </p>\
-                </div>\
-            </div>\
-        </div>\
-    </section>\
-\
-    <!-- 3. Prop\'f3sito (Manifiesto) -->\
-    <section id="manifiesto" class="py-32 bg-ocean relative overflow-hidden flex items-center justify-center">\
-        <div class="absolute inset-0 grid-bg opacity-30"></div>\
-        <div class="max-w-4xl mx-auto px-4 text-center relative z-10">\
-            <span class="font-mono text-acid text-xs tracking-[0.3em] uppercase mb-4 block">Manifiesto 01</span>\
-            <h2 class="font-serif text-5xl md:text-7xl leading-tight text-white mb-8">\
-                "La asimetr\'eda de informaci\'f3n es el impuesto m\'e1s caro que pagas. <br/>\
-                <span class="text-acid/80">Democratizar los datos</span> no es caridad,<br/>\
-                es justicia."\
-            </h2>\
-            <div class="h-1 w-24 bg-acid mx-auto"></div>\
-        </div>\
-    </section>\
-\
-    <!-- 4. HUB DE HERRAMIENTAS (CRITICAL) -->\
-    <section id="tools" class="py-24 relative">\
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-acid opacity-5 blur-[120px] rounded-full pointer-events-none"></div>\
-        \
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">\
-            <div class="flex flex-col md:flex-row justify-between items-end mb-16">\
-                <div>\
-                    <h2 class="font-serif text-5xl text-white mb-2">Hub de Herramientas</h2>\
-                    <p class="text-gray-400 font-mono text-sm">/ Acceso_Directo_Sistema_Central</p>\
-                </div>\
-                <div class="hidden md:block">\
-                    <span class="text-acid font-mono text-xs animate-pulse">\uc0\u9679  SISTEMA OPERATIVO</span>\
-                </div>\
-            </div>\
-\
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">\
-                \
-                <!-- Card A: Simulador Pensi\'f3n (Featured) -->\
-                <div class="glass-panel p-8 rounded-none card-hover group relative flex flex-col justify-between h-[450px] border-acid/30 shadow-[0_0_30px_rgba(204,255,0,0.05)]">\
-                    <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-acid text-ocean px-3 py-1 font-mono text-[10px] font-bold tracking-widest uppercase">\
-                        M\'e1s Utilizado\
-                    </div>\
-                    <div class="absolute top-0 right-0 p-4 opacity-20 group-hover:opacity-100 transition-opacity">\
-                        <i data-lucide="arrow-up-right" class="text-acid w-6 h-6"></i>\
-                    </div>\
-                    <div>\
-                        <div class="w-16 h-16 bg-acid/10 rounded-full flex items-center justify-center mb-6 border border-acid/20 group-hover:border-acid transition-colors">\
-                            <i data-lucide="bar-chart-2" class="text-acid w-8 h-8"></i>\
-                        </div>\
-                        <h3 class="font-serif text-3xl text-white mb-2">Simulador de Pensi\'f3n</h3>\
-                        <p class="font-mono text-xs text-acid mb-4">MODE: PREDICTIVE</p>\
-                        <p class="text-gray-400 text-sm leading-relaxed">\
-                            Proyecta tu jubilaci\'f3n real cruzando datos de rentabilidad hist\'f3rica, lagunas previsionales y esperanza de vida ajustada.\
-                        </p>\
-                    </div>\
-                    <!-- HREF Fixed to prevent external jump -->\
-                    <a href="#" class="mt-8 w-full block text-center btn-3d bg-acid text-ocean py-3 font-mono text-sm font-bold uppercase hover:bg-white transition-all">\
-                        Calcular Ahora\
-                    </a>\
-                </div>\
-\
-                <!-- Card B: Simulador ELD -->\
-                <div class="glass-panel p-8 rounded-none card-hover group relative flex flex-col justify-between h-[450px]">\
-                    <div>\
-                        <div class="w-16 h-16 bg-oceanLight rounded-full flex items-center justify-center mb-6 border border-white/10 group-hover:border-acid/50 transition-colors">\
-                            <i data-lucide="zap" class="text-white w-8 h-8 group-hover:text-acid transition-colors"></i>\
-                        </div>\
-                        <h3 class="font-serif text-3xl text-white mb-2">Eficiencia ELD</h3>\
-                        <p class="font-mono text-xs text-acid mb-4">MODE: OPTIMIZATION</p>\
-                        <p class="text-gray-400 text-sm leading-relaxed">\
-                            Analizador de Eficiencia Legal Tributaria. Descubre cu\'e1nto impuesto puedes recuperar legalmente mediante APV y 57 Bis.\
-                        </p>\
-                    </div>\
-                    <button class="mt-8 w-full btn-3d bg-transparent border border-acid text-acid py-3 font-mono text-sm hover:bg-acid hover:text-ocean font-bold uppercase transition-all">\
-                        Iniciar An\'e1lisis\
-                    </button>\
-                </div>\
-\
-                <!-- Card C: Comparador SCOMP -->\
-                <div class="glass-panel p-8 rounded-none card-hover group relative flex flex-col justify-between h-[450px]">\
-                    <div class="absolute top-0 right-0 p-4 opacity-20 group-hover:opacity-100 transition-opacity">\
-                        <i data-lucide="arrow-up-right" class="text-acid w-6 h-6"></i>\
-                    </div>\
-                    <div>\
-                        <div class="w-16 h-16 bg-oceanLight rounded-full flex items-center justify-center mb-6 border border-white/10 group-hover:border-acid/50 transition-colors">\
-                            <i data-lucide="scale" class="text-white w-8 h-8 group-hover:text-acid transition-colors"></i>\
-                        </div>\
-                        <h3 class="font-serif text-3xl text-white mb-2">Auditor SCOMP</h3>\
-                        <p class="font-mono text-xs text-acid mb-4">MODE: COMPARATIVE</p>\
-                        <p class="text-gray-400 text-sm leading-relaxed">\
-                            Decodificamos las ofertas del Sistema de Consultas de Ofertas de Montos de Pensi\'f3n. Compara tasas reales vs. mercado.\
-                        </p>\
-                    </div>\
-                    <!-- HREF Fixed to prevent external jump -->\
-                    <a href="#" class="mt-8 w-full block text-center btn-3d bg-transparent border border-acid text-acid py-3 font-mono text-sm hover:bg-acid hover:text-ocean font-bold uppercase transition-all">\
-                        Auditar Ofertas\
-                    </a>\
-                </div>\
-\
-            </div>\
-        </div>\
-    </section>\
-\
-    <!-- 5. Blog (La Verdad) -->\
-    <section id="blog" class="py-20 border-t border-white/5">\
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">\
-            <h2 class="font-serif text-4xl text-white mb-12">La Verdad <span class="font-sans text-lg text-gray-500 not-italic ml-4">// Art\'edculos Recientes</span></h2>\
-            \
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">\
-                <!-- Article 1 -->\
-                <article class="group cursor-pointer">\
-                    <div class="h-48 w-full bg-oceanLight mb-4 relative overflow-hidden border border-white/5">\
-                        <div class="absolute inset-0 bg-acid/10 group-hover:bg-acid/20 transition-colors"></div>\
-                        <div class="absolute bottom-4 left-4 font-mono text-xs bg-ocean px-2 py-1 text-acid">09 DIC 2025</div>\
-                    </div>\
-                    <h3 class="font-serif text-2xl text-white mb-2 group-hover:text-acid transition-colors">\'bfTu APV realmente rinde?</h3>\
-                    <p class="text-gray-500 text-sm font-sans line-clamp-3">\
-                        Desglosamos las comisiones fantasmas de las principales administradoras. El resultado te va a molestar.\
-                    </p>\
-                </article>\
-\
-                <!-- Article 2 -->\
-                <article class="group cursor-pointer">\
-                    <div class="h-48 w-full bg-oceanLight mb-4 relative overflow-hidden border border-white/5">\
-                        <div class="absolute inset-0 bg-acid/10 group-hover:bg-acid/20 transition-colors"></div>\
-                        <div class="absolute bottom-4 left-4 font-mono text-xs bg-ocean px-2 py-1 text-acid">05 DIC 2025</div>\
-                    </div>\
-                    <h3 class="font-serif text-2xl text-white mb-2 group-hover:text-acid transition-colors">El mito de la Rentabilidad Garantizada</h3>\
-                    <p class="text-gray-500 text-sm font-sans line-clamp-3">\
-                        Por qu\'e9 "seguridad" suele ser sin\'f3nimo de perder poder adquisitivo frente a la inflaci\'f3n real.\
-                    </p>\
-                </article>\
-\
-                <!-- Article 3 -->\
-                <article class="group cursor-pointer">\
-                    <div class="h-48 w-full bg-oceanLight mb-4 relative overflow-hidden border border-white/5">\
-                        <div class="absolute inset-0 bg-acid/10 group-hover:bg-acid/20 transition-colors"></div>\
-                        <div class="absolute bottom-4 left-4 font-mono text-xs bg-ocean px-2 py-1 text-acid">01 DIC 2025</div>\
-                    </div>\
-                    <h3 class="font-serif text-2xl text-white mb-2 group-hover:text-acid transition-colors">SCOMP Hacks: Gu\'eda Avanzada</h3>\
-                    <p class="text-gray-500 text-sm font-sans line-clamp-3">\
-                        C\'f3mo leer el certificado de ofertas para encontrar las brechas que los agentes no te explican.\
-                    </p>\
-                </article>\
-            </div>\
-        </div>\
-    </section>\
-\
-    <!-- 6. Acceso Usuarios -->\
-    <section id="login" class="py-24 bg-oceanDark relative">\
-        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">\
-            <div class="glass-panel p-1 border-acid/20">\
-                <div class="grid grid-cols-1 md:grid-cols-2">\
-                    \
-                    <!-- Client Access -->\
-                    <div class="p-10 md:border-r border-white/10 flex flex-col items-center text-center hover:bg-white/5 transition-colors">\
-                        <div class="w-16 h-16 rounded-full bg-ocean border border-acid text-acid flex items-center justify-center mb-6">\
-                            <i data-lucide="user" class="w-8 h-8"></i>\
-                        </div>\
-                        <h3 class="font-serif text-3xl text-white mb-2">Soy Cliente</h3>\
-                        <p class="text-gray-400 text-sm mb-8 max-w-xs">Accede a tu dashboard personal, evoluci\'f3n de fondos y documentos tributarios.</p>\
-                        <button class="btn-3d w-48 bg-acid text-ocean py-3 font-mono text-sm font-bold uppercase hover:bg-white transition-all">\
-                            Entrar\
-                        </button>\
-                    </div>\
-\
-                    <!-- Advisor Access -->\
-                    <div class="p-10 flex flex-col items-center text-center hover:bg-white/5 transition-colors relative overflow-hidden">\
-                         <!-- subtle tech grid bg specific for advisor -->\
-                        <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjEiIGZpbGw9IiNDQ0ZGMDAiIGZpbGwtb3BhY2l0eT0iMC4xIi8+PC9zdmc+')] opacity-20"></div>\
-                        \
-                        <div class="w-16 h-16 rounded-full bg-ocean border border-gray-600 text-gray-400 flex items-center justify-center mb-6">\
-                            <i data-lucide="briefcase" class="w-8 h-8"></i>\
-                        </div>\
-                        <h3 class="font-serif text-3xl text-white mb-2">Soy Asesor</h3>\
-                        <p class="text-gray-400 text-sm mb-8 max-w-xs">Plataforma de gesti\'f3n CRM, herramientas de c\'e1lculo avanzado y leads.</p>\
-                        <button class="btn-3d w-48 bg-transparent border border-gray-500 text-white py-3 font-mono text-sm font-bold uppercase hover:border-acid hover:text-acid transition-all">\
-                            Acceso Pro\
-                        </button>\
-                    </div>\
-\
-                </div>\
-            </div>\
-        </div>\
-    </section>\
-\
-    <!-- 7. Footer -->\
-    <footer class="bg-oceanDark pt-16 pb-8 border-t border-white/10 text-sm">\
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">\
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">\
-                <div class="col-span-1 md:col-span-2">\
-                    <span class="font-serif text-3xl text-white italic tracking-wide block mb-4">La Justa.</span>\
-                    <p class="text-gray-500 max-w-sm font-sans">\
-                        Reingenier\'eda financiera para una nueva generaci\'f3n. Sin sucursales, sin corbatas, sin mentiras.\
-                    </p>\
-                </div>\
-                <div>\
-                    <h4 class="font-mono text-acid text-xs uppercase mb-4 tracking-widest">Navegaci\'f3n</h4>\
-                    <ul class="space-y-2 font-mono text-gray-400">\
-                        <li><a href="#" class="hover:text-white transition-colors">Simuladores</a></li>\
-                        <li><a href="#" class="hover:text-white transition-colors">Metodolog\'eda</a></li>\
-                        <li><a href="#" class="hover:text-white transition-colors">Prensa</a></li>\
-                    </ul>\
-                </div>\
-                <div>\
-                    <h4 class="font-mono text-acid text-xs uppercase mb-4 tracking-widest">Legal</h4>\
-                    <ul class="space-y-2 font-mono text-gray-400">\
-                        <li><a href="#" class="hover:text-white transition-colors">T\'e9rminos y Condiciones</a></li>\
-                        <li><a href="#" class="hover:text-white transition-colors">Privacidad de Datos</a></li>\
-                        <li><a href="#" class="hover:text-white transition-colors">Normativa CMF</a></li>\
-                    </ul>\
-                </div>\
-            </div>\
-            \
-            <div class="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-gray-600 font-mono">\
-                <p>&copy; 2025 La Justa Fintech SpA. Todos los derechos reservados.</p>\
-                <p class="mt-2 md:mt-0 text-center md:text-right max-w-lg">\
-                    DISCLAIMER: Las proyecciones SCOMP son referenciales y no garantizan rentabilidad futura. La Justa est\'e1 regulada por la Comisi\'f3n para el Mercado Financiero.\
-                </p>\
-            </div>\
-        </div>\
-    </footer>\
-\
-    <!-- MODAL & SCRIPTS -->\
-    <div id="simuladorModal" class="fixed inset-0 z-[100] hidden">\
-        <div class="absolute inset-0 bg-oceanDark/90 backdrop-blur-sm transition-opacity" onclick="toggleModal('simuladorModal')"></div>\
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md px-4">\
-            <div class="glass-panel p-8 border border-acid/30 relative shadow-2xl">\
-                <button onclick="toggleModal('simuladorModal')" class="absolute top-4 right-4 text-gray-400 hover:text-acid">\
-                    <i data-lucide="x" class="w-6 h-6"></i>\
-                </button>\
-                <h3 class="font-serif text-3xl text-white mb-6">Simulaci\'f3n Express</h3>\
-                <form id="calcForm" class="space-y-4 font-mono text-sm">\
-                    <div>\
-                        <label class="block text-acid mb-2">Monto Acumulado (CLP)</label>\
-                        <input type="number" id="monto" placeholder="Ej: 45000000" class="w-full bg-oceanDark border border-white/20 p-3 text-white focus:border-acid outline-none transition-colors">\
-                    </div>\
-                    <div>\
-                        <label class="block text-acid mb-2">Edad Actual</label>\
-                        <input type="number" id="edad" placeholder="Ej: 35" class="w-full bg-oceanDark border border-white/20 p-3 text-white focus:border-acid outline-none transition-colors">\
-                    </div>\
-                    <div>\
-                        <label class="block text-acid mb-2">Sueldo L\'edquido</label>\
-                        <input type="number" id="sueldo" placeholder="Ej: 1200000" class="w-full bg-oceanDark border border-white/20 p-3 text-white focus:border-acid outline-none transition-colors">\
-                    </div>\
-                    <button type="submit" class="w-full btn-3d bg-acid text-ocean py-3 font-bold mt-6 hover:bg-white transition-colors">\
-                        CALCULAR AHORA\
-                    </button>\
-                </form>\
-                <div id="resultado" class="hidden mt-6 pt-6 border-t border-white/10 text-center fade-in-up">\
-                    <p class="text-gray-400 text-xs mb-1">PROYECCI\'d3N ESTIMADA (JUBILACI\'d3N 65 A\'d1OS)</p>\
-                    <div class="text-4xl font-serif text-white mb-2" id="montoPension">$0</div>\
-                    <p class="text-acid text-xs">Tasa de reemplazo: <span id="tasaReemplazo">0%</span></p>\
-                    <p class="text-[10px] text-gray-500 mt-2">*C\'e1lculo referencial base rentabilidad 4% real.</p>\
-                </div>\
-            </div>\
-        </div>\
-    </div>\
-\
-    <script>\
-        function toggleModal(modalID)\{\
-            document.getElementById(modalID).classList.toggle('hidden');\
-        \}\
-\
-        document.getElementById('calcForm').addEventListener('submit', function(e) \{\
-            e.preventDefault();\
-            const monto = parseFloat(document.getElementById('monto').value) || 0;\
-            const edad = parseFloat(document.getElementById('edad').value) || 30;\
-            const sueldo = parseFloat(document.getElementById('sueldo').value) || 0;\
-            \
-            const edadJubilacion = 65;\
-            const rentabilidadAnual = 0.04;\
-            const expectativaVidaMeses = 20 * 12; // 20 a\'f1os sobrevida\
-            \
-            const a\'f1osRestantes = Math.max(1, edadJubilacion - edad);\
-            const aporteMensual = sueldo * 0.10; // 10% obligatorio\
-            \
-            // FV of current amount\
-            const vfAcumulado = monto * Math.pow(1 + rentabilidadAnual, a\'f1osRestantes);\
-            \
-            // FV of monthly contributions (Annuity)\
-            const vfAportes = (aporteMensual * 12) * ((Math.pow(1 + rentabilidadAnual, a\'f1osRestantes) - 1) / rentabilidadAnual);\
-            \
-            const totalFondo = vfAcumulado + vfAportes;\
-            const pensionMensual = totalFondo / expectativaVidaMeses;\
-            \
-            let tasa = 0;\
-            if(sueldo > 0) \{\
-                tasa = (pensionMensual / sueldo) * 100;\
-            \}\
-\
-            document.getElementById('montoPension').innerText = pensionMensual.toLocaleString('es-CL', \{ style: 'currency', currency: 'CLP', maximumFractionDigits: 0 \});\
-            document.getElementById('tasaReemplazo').innerText = tasa.toFixed(1) + '%';\
-            \
-            document.getElementById('resultado').classList.remove('hidden');\
-        \});\
-\
-        // Initialize Icons and Smooth Scroll\
-        lucide.createIcons();\
-        \
-        document.addEventListener('DOMContentLoaded', () => \{\
-            // Smooth Scroll fix\
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => \{\
-                anchor.addEventListener('click', function (e) \{\
-                    // Only apply if it's a valid ID\
-                    const targetId = this.getAttribute('href');\
-                    if (targetId === '#' || !document.querySelector(targetId)) return;\
-                    \
-                    e.preventDefault();\
-                    document.querySelector(targetId).scrollIntoView(\{\
-                        behavior: 'smooth'\
-                    \});\
-                \});\
-            \});\
-        \});\
-    </script>\
-</body>\
-</html>}
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        ocean: '#022C43',
+                        oceanLight: '#053B58',
+                        oceanDark: '#011826',
+                        acid: '#CCFF00',
+                        acidHover: '#b3e600',
+                        lightText: '#E6F4F1'
+                    },
+                    fontFamily: {
+                        serif: ['Instrument Serif', 'serif'],
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Space Mono', 'monospace'],
+                    },
+                    backgroundImage: {
+                        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Base styles */
+        body {
+            background-color: #022C43;
+            color: #E6F4F1;
+            overflow-x: hidden;
+        }
+
+        /* Typography Enforcers */
+        .font-serif { font-family: 'Instrument Serif', serif; font-style: italic; }
+        .font-mono { font-family: 'Space Mono', monospace; }
+        
+        /* Effects */
+        .text-glow { 
+            text-shadow: 0 0 20px rgba(204, 255, 0, 0.4); 
+        }
+        
+        .glass-panel { 
+            background: rgba(5, 59, 88, 0.3); 
+            backdrop-filter: blur(16px); 
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .grid-bg { 
+            background-image: 
+                linear-gradient(rgba(204, 255, 0, 0.03) 1px, transparent 1px), 
+                linear-gradient(90deg, rgba(204, 255, 0, 0.03) 1px, transparent 1px); 
+            background-size: 40px 40px; 
+            background-position: center top;
+        }
+
+        /* Micro-interactions */
+        .btn-3d {
+            transition: all 0.1s ease;
+            box-shadow: 4px 4px 0px rgba(0,0,0,0.5);
+        }
+        .btn-3d:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px rgba(0,0,0,0.5);
+        }
+
+        .card-hover {
+            transition: all 0.4s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            border-color: rgba(204, 255, 0, 0.5);
+            box-shadow: 0 10px 40px -10px rgba(204, 255, 0, 0.15);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #022C43; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #053B58; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #CCFF00; 
+        }
+        
+        /* Fade In Animation */
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease-out forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="grid-bg relative antialiased selection:bg-acid selection:text-ocean">
+
+    <nav class="fixed w-full z-50 glass-panel border-b-0 border-white/5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex-shrink-0 cursor-pointer">
+                    <span class="font-serif text-3xl text-acid tracking-wide">La Justa<span class="text-white">.</span></span>
+                </div>
+                
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8 font-mono text-sm">
+                        <a href="#inicio" class="text-white hover:text-acid transition-colors duration-300">INICIO</a>
+                        <a href="#que-hacemos" class="text-white hover:text-acid transition-colors duration-300">SERVICIOS</a>
+                        <a href="#tools" class="text-acid hover:text-white transition-colors duration-300 glow-sm">[ HERRAMIENTAS ]</a>
+                        <a href="#login" class="border border-acid text-acid px-4 py-2 hover:bg-acid hover:text-ocean transition-all duration-300 btn-3d">ACCESO</a>
+                    </div>
+                </div>
+
+                <div class="md:hidden">
+                    <button class="text-white hover:text-acid p-2">
+                        <i data-lucide="menu" class="w-8 h-8"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section id="inicio" class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
+        <div class="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-acid opacity-10 blur-[100px] rounded-full pointer-events-none"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center lg:text-left">
+            <div class="lg:w-2/3 fade-in-up" style="animation-delay: 0.1s;">
+                <div class="inline-flex items-center gap-2 px-3 py-1 border border-acid/30 rounded-full bg-oceanLight/30 backdrop-blur-sm mb-6">
+                    <span class="w-2 h-2 rounded-full bg-acid animate-pulse"></span>
+                    <span class="text-xs font-mono text-acid tracking-widest uppercase">Beta Pública v1.0</span>
+                </div>
+                <h1 class="font-serif text-6xl md:text-8xl leading-[0.9] mb-6 text-white">
+                    La verdad <br/>
+                    financiera <br/>
+                    <span class="text-acid text-glow">sin letra chica.</span>
+                </h1>
+                <p class="mt-4 max-w-lg text-lg text-gray-300 font-light leading-relaxed font-sans mb-10 mx-auto lg:mx-0">
+                    Desafiamos el status quo de las finanzas personales. Tecnología transparente para decisiones que definen tu futuro.
+                </p>
+                
+                <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start font-mono text-sm">
+                    <button onclick="toggleModal('simuladorModal')" class="btn-3d bg-acid text-ocean px-8 py-4 font-bold flex items-center justify-center gap-2 hover:bg-white transition-colors cursor-pointer">
+                        CALCULADORA RÁPIDA <i data-lucide="calculator" class="w-4 h-4"></i>
+                    </button>
+                    <a href="#manifiesto" class="btn-3d border border-white/20 text-white px-8 py-4 hover:border-acid hover:text-acid bg-ocean/50 backdrop-blur-sm transition-colors text-center">
+                        LEER MANIFIESTO
+                    </a>
+                </div>
+
+            </div>
+        </div>
+        
+        <div class="hidden lg:block absolute right-0 bottom-0 w-1/3 h-full opacity-20 pointer-events-none">
+            <div class="h-full w-full border-l border-acid/20 flex flex-col justify-end p-8 font-mono text-xs text-acid">
+                <div class="mb-2">MARKET_DATA_STREAM</div>
+                <div class="h-64 w-full border border-acid/20 relative">
+                    <div class="absolute bottom-0 left-0 w-full h-full bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxwb2x5bGluZSBwb2ludHM9IjAsMTAwIDUwLDgwIDEwMCwxMjAgMTUwLDYwIDIwMCw5MCAyNTAsNDAgMzAwLDgwIiBmaWxsPSJub25lIiBzdHJva2U9IiNDQ0ZGMDAiIHN0cm9rZS13aWR0aD0iMiIvPjwvc3ZnPg==')] bg-no-repeat bg-cover opacity-50"></div>
+                </div>
+                <div class="mt-2 flex justify-between">
+                    <span>SCOMP: 2.4%</span>
+                    <span>VAR: +0.8</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="que-hacemos" class="py-20 border-t border-white/5 relative bg-oceanDark/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                <div class="group">
+                    <div class="w-12 h-12 border border-acid/30 rounded-full flex items-center justify-center mb-6 text-acid group-hover:bg-acid group-hover:text-ocean transition-all duration-300">
+                        <i data-lucide="cpu" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="font-mono text-xl text-white mb-3">Algoritmos, no Vendedores</h3>
+                    <p class="text-gray-400 font-sans text-sm leading-relaxed">
+                        Eliminamos el sesgo humano. Nuestras recomendaciones se basan en matemáticas puras y eficiencia fiscal, no en comisiones ocultas.
+                    </p>
+                </div>
+                <div class="group">
+                    <div class="w-12 h-12 border border-acid/30 rounded-full flex items-center justify-center mb-6 text-acid group-hover:bg-acid group-hover:text-ocean transition-all duration-300">
+                        <i data-lucide="shield-check" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="font-mono text-xl text-white mb-3">Auditoría Radical</h3>
+                    <p class="text-gray-400 font-sans text-sm leading-relaxed">
+                        Desglosamos cada oferta del mercado. Te mostramos lo que los bancos y aseguradoras prefieren mantener en letra chica.
+                    </p>
+                </div>
+                <div class="group">
+                    <div class="w-12 h-12 border border-acid/30 rounded-full flex items-center justify-center mb-6 text-acid group-hover:bg-acid group-hover:text-ocean transition-all duration-300">
+                        <i data-lucide="users" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="font-mono text-xl text-white mb-3">Asesoría Híbrida</h3>
+                    <p class="text-gray-400 font-sans text-sm leading-relaxed">
+                        La potencia de la IA validada por expertos tributarios humanos. Tecnología para calcular, humanos para estrategizar.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="manifiesto" class="py-32 bg-ocean relative overflow-hidden flex items-center justify-center">
+        <div class="absolute inset-0 grid-bg opacity-30"></div>
+        <div class="max-w-4xl mx-auto px-4 text-center relative z-10">
+            <span class="font-mono text-acid text-xs tracking-[0.3em] uppercase mb-4 block">Manifiesto 01</span>
+            <h2 class="font-serif text-5xl md:text-7xl leading-tight text-white mb-8">
+                "La asimetría de información es el impuesto más caro que pagas. <br/>
+                <span class="text-acid/80">Democratizar los datos</span> no es caridad,<br/>
+                es justicia."
+            </h2>
+            <div class="h-1 w-24 bg-acid mx-auto"></div>
+        </div>
+    </section>
+
+    <section id="tools" class="py-24 relative">
