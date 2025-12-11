@@ -121,8 +121,8 @@
     <nav class="fixed w-full z-50 glass-panel border-b-0 border-white/5">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-20">
-                <div class="flex-shrink-0 cursor-pointer">
-                    <span class="font-serif text-3xl text-acid tracking-wide">La Justa<span class="text-white">.</span></span>
+                <div class="flex-shrink-0 cursor-pointer flex items-center gap-4">
+                    <a href="index.html" class="font-serif text-3xl text-acid tracking-wide">La Justa<span class="text-white">.</span></a>
                 </div>
                 
                 <div class="hidden md:block">
@@ -135,10 +135,20 @@
                 </div>
 
                 <div class="md:hidden">
-                    <button class="text-white hover:text-acid p-2">
+                    <button onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" class="text-white hover:text-acid p-2 focus:outline-none">
                         <i data-lucide="menu" class="w-8 h-8"></i>
                     </button>
                 </div>
+            </div>
+        </div>
+
+        <div id="mobile-menu" class="hidden md:hidden bg-oceanDark/95 backdrop-blur-xl border-t border-white/10 absolute w-full left-0">
+            <div class="px-4 pt-2 pb-6 space-y-2 font-mono text-sm">
+                <a href="#inicio" class="block px-3 py-4 text-white hover:text-acid border-b border-white/5">INICIO</a>
+                <a href="simulador.html" class="block px-3 py-4 text-white hover:text-acid border-b border-white/5">SIMULADOR</a>
+                <a href="auditorscomp.html" class="block px-3 py-4 text-white hover:text-acid border-b border-white/5">AUDITOR SCOMP</a>
+                <a href="rentaprivada.html" class="block px-3 py-4 text-white hover:text-acid border-b border-white/5">RENTA PRIVADA</a>
+                <a href="#login" class="block px-3 py-4 text-acid font-bold">ACCESO CLIENTES</a>
             </div>
         </div>
     </nav>
@@ -162,9 +172,9 @@
                 </p>
                 
                 <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start font-mono text-sm">
-                    <button onclick="toggleModal('simuladorModal')" class="btn-3d bg-acid text-ocean px-8 py-4 font-bold flex items-center justify-center gap-2 hover:bg-white transition-colors cursor-pointer">
+                    <a href="simulador.html" class="btn-3d bg-acid text-ocean px-8 py-4 font-bold flex items-center justify-center gap-2 hover:bg-white transition-colors cursor-pointer">
                         CALCULADORA RÁPIDA <i data-lucide="calculator" class="w-4 h-4"></i>
-                    </button>
+                    </a>
                     <a href="#manifiesto" class="btn-3d border border-white/20 text-white px-8 py-4 hover:border-acid hover:text-acid bg-ocean/50 backdrop-blur-sm transition-colors text-center">
                         LEER MANIFIESTO
                     </a>
@@ -214,7 +224,7 @@
                     </div>
                     <h3 class="font-mono text-xl text-white mb-3">Asesoría Híbrida</h3>
                     <p class="text-gray-400 font-sans text-sm leading-relaxed">
-                        La potencia de la IA validada por expertos tributarios humanos. Tecnología para x, humanos para estrategizar.
+                        La potencia de la IA validada por expertos tributarios humanos. Tecnología para calcular, humanos para estrategizar.
                     </p>
                 </div>
             </div>
@@ -248,7 +258,7 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
                 
                 <div class="glass-panel p-8 rounded-none card-hover group relative flex flex-col justify-between h-[450px] border-acid/30 shadow-[0_0_30px_rgba(204,255,0,0.05)]">
                     <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-acid text-ocean px-3 py-1 font-mono text-[10px] font-bold tracking-widest uppercase">
@@ -267,9 +277,9 @@
                             Proyecta tu jubilación real cruzando datos de rentabilidad histórica, lagunas previsionales y esperanza de vida ajustada.
                         </p>
                     </div>
-                   <a href="simulador.html" class="mt-8 w-full block text-center btn-3d bg-acid text-ocean py-3 font-mono text-sm font-bold uppercase hover:bg-white transition-all">
-    Calcular Ahora
-</a>
+                    <a href="simulador.html" class="mt-8 w-full block text-center btn-3d bg-acid text-ocean py-3 font-mono text-sm font-bold uppercase hover:bg-white transition-all">
+                        Calcular Ahora
+                    </a>
                 </div>
 
                 <div class="glass-panel p-8 rounded-none card-hover group relative flex flex-col justify-between h-[450px]">
@@ -302,9 +312,28 @@
                             Decodificamos las ofertas del Sistema de Consultas de Ofertas de Montos de Pensión. Compara tasas reales vs. mercado.
                         </p>
                     </div>
-                   <a href="auditorscomp.html" class="mt-8 w-full block text-center btn-3d bg-transparent border border-acid text-acid py-3 font-mono text-sm hover:bg-acid hover:text-ocean font-bold uppercase transition-all">
-    AUDITAR OFERTAS
-</a>
+                    <a href="auditorscomp.html" class="mt-8 w-full block text-center btn-3d bg-transparent border border-acid text-acid py-3 font-mono text-sm hover:bg-acid hover:text-ocean font-bold uppercase transition-all">
+                        Auditar Ofertas
+                    </a>
+                </div>
+
+                <div class="glass-panel p-8 rounded-none card-hover group relative flex flex-col justify-between h-[450px]">
+                    <div class="absolute top-0 right-0 p-4 opacity-20 group-hover:opacity-100 transition-opacity">
+                        <i data-lucide="arrow-up-right" class="text-acid w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <div class="w-16 h-16 bg-oceanLight rounded-full flex items-center justify-center mb-6 border border-white/10 group-hover:border-acid/50 transition-colors">
+                            <i data-lucide="landmark" class="text-white w-8 h-8 group-hover:text-acid transition-colors"></i>
+                        </div>
+                        <h3 class="font-serif text-3xl text-white mb-2">Renta Privada</h3>
+                        <p class="font-mono text-xs text-acid mb-4">MODE: INVESTMENT</p>
+                        <p class="text-gray-400 text-sm leading-relaxed">
+                            Transforma tu patrimonio en flujos de UF garantizados. Simula rentas vitalicias privadas fuera del sistema AFP.
+                        </p>
+                    </div>
+                    <a href="rentaprivada.html" class="mt-8 w-full block text-center btn-3d bg-transparent border border-acid text-acid py-3 font-mono text-sm hover:bg-acid hover:text-ocean font-bold uppercase transition-all">
+                        Simular Renta
+                    </a>
                 </div>
 
             </div>
@@ -398,7 +427,7 @@
                 <div>
                     <h4 class="font-mono text-acid text-xs uppercase mb-4 tracking-widest">Navegación</h4>
                     <ul class="space-y-2 font-mono text-gray-400">
-                        <li><a href="#" class="hover:text-white transition-colors">Simuladores</a></li>
+                        <li><a href="simulador.html" class="hover:text-white transition-colors">Simuladores</a></li>
                         <li><a href="#" class="hover:text-white transition-colors">Metodología</a></li>
                         <li><a href="#" class="hover:text-white transition-colors">Prensa</a></li>
                     </ul>
@@ -422,92 +451,16 @@
         </div>
     </footer>
 
-    <div id="simuladorModal" class="fixed inset-0 z-[100] hidden">
-        <div class="absolute inset-0 bg-oceanDark/90 backdrop-blur-sm transition-opacity" onclick="toggleModal('simuladorModal')"></div>
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md px-4">
-            <div class="glass-panel p-8 border border-acid/30 relative shadow-2xl">
-                <button onclick="toggleModal('simuladorModal')" class="absolute top-4 right-4 text-gray-400 hover:text-acid">
-                    <i data-lucide="x" class="w-6 h-6"></i>
-                </button>
-                <h3 class="font-serif text-3xl text-white mb-6">Simulación Express</h3>
-                <form id="calcForm" class="space-y-4 font-mono text-sm">
-                    <div>
-                        <label class="block text-acid mb-2">Monto Acumulado (CLP)</label>
-                        <input type="number" id="monto" placeholder="Ej: 45000000" class="w-full bg-oceanDark border border-white/20 p-3 text-white focus:border-acid outline-none transition-colors">
-                    </div>
-                    <div>
-                        <label class="block text-acid mb-2">Edad Actual</label>
-                        <input type="number" id="edad" placeholder="Ej: 35" class="w-full bg-oceanDark border border-white/20 p-3 text-white focus:border-acid outline-none transition-colors">
-                    </div>
-                    <div>
-                        <label class="block text-acid mb-2">Sueldo Líquido</label>
-                        <input type="number" id="sueldo" placeholder="Ej: 1200000" class="w-full bg-oceanDark border border-white/20 p-3 text-white focus:border-acid outline-none transition-colors">
-                    </div>
-                    <button type="submit" class="w-full btn-3d bg-acid text-ocean py-3 font-bold mt-6 hover:bg-white transition-colors">
-                        CALCULAR AHORA
-                    </button>
-                </form>
-                <div id="resultado" class="hidden mt-6 pt-6 border-t border-white/10 text-center fade-in-up">
-                    <p class="text-gray-400 text-xs mb-1">PROYECCIÓN ESTIMADA (JUBILACIÓN 65 AÑOS)</p>
-                    <div class="text-4xl font-serif text-white mb-2" id="montoPension">$0</div>
-                    <p class="text-acid text-xs">Tasa de reemplazo: <span id="tasaReemplazo">0%</span></p>
-                    <p class="text-[10px] text-gray-500 mt-2">*Cálculo referencial base rentabilidad 4% real.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <script>
-        function toggleModal(modalID){
-            document.getElementById(modalID).classList.toggle('hidden');
-        }
-
-        document.getElementById('calcForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const monto = parseFloat(document.getElementById('monto').value) || 0;
-            const edad = parseFloat(document.getElementById('edad').value) || 30;
-            const sueldo = parseFloat(document.getElementById('sueldo').value) || 0;
-            
-            const edadJubilacion = 65;
-            const rentabilidadAnual = 0.04;
-            const expectativaVidaMeses = 20 * 12; // 20 años sobrevida
-            
-            const añosRestantes = Math.max(1, edadJubilacion - edad);
-            const aporteMensual = sueldo * 0.10; // 10% obligatorio
-            
-            // FV of current amount
-            const vfAcumulado = monto * Math.pow(1 + rentabilidadAnual, añosRestantes);
-            
-            // FV of monthly contributions (Annuity)
-            const vfAportes = (aporteMensual * 12) * ((Math.pow(1 + rentabilidadAnual, añosRestantes) - 1) / rentabilidadAnual);
-            
-            const totalFondo = vfAcumulado + vfAportes;
-            const pensionMensual = totalFondo / expectativaVidaMeses;
-            
-            let tasa = 0;
-            if(sueldo > 0) {
-                tasa = (pensionMensual / sueldo) * 100;
-            }
-
-            document.getElementById('montoPension').innerText = pensionMensual.toLocaleString('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 });
-            document.getElementById('tasaReemplazo').innerText = tasa.toFixed(1) + '%';
-            
-            document.getElementById('resultado').classList.remove('hidden');
-        });
-
-        // Initialize Icons and Smooth Scroll
         lucide.createIcons();
         
+        // Simple Interaction Script
         document.addEventListener('DOMContentLoaded', () => {
-            // Smooth Scroll fix
+            // Smooth Scroll fix for some browsers
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 anchor.addEventListener('click', function (e) {
-                    // Only apply if it's a valid ID
-                    const targetId = this.getAttribute('href');
-                    if (targetId === '#' || !document.querySelector(targetId)) return;
-                    
                     e.preventDefault();
-                    document.querySelector(targetId).scrollIntoView({
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
                         behavior: 'smooth'
                     });
                 });
