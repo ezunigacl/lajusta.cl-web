@@ -5,17 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulador La Justa - Motor Actuarial V3</title>
     
-    <!-- External Libraries -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
 
-    <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;600;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 
-    <!-- Configuración Tailwind -->
     <script>
         tailwind.config = {
             theme: {
@@ -45,7 +42,6 @@
         }
     </script>
     
-    <!-- Estilos CSS -->
     <style>
         body { background-color: #022C43; color: white; font-family: 'Inter', sans-serif; }
         .grid-bg {
@@ -87,13 +83,22 @@
         .input-error { border-color: #ef4444 !important; background-color: rgba(239, 68, 68, 0.1) !important; }
         #ufWidgetContainer input { color: #CCFF00 !important; font-family: var(--tw-font-family-mono); border-color: rgba(204, 255, 0, 0.3) !important; }
         .table-row-hover:hover td { background-color: rgba(204, 255, 0, 0.05); }
+        
+        /* Estilo btn-3d necesario para el botón de volver */
+        .btn-3d {
+            transition: all 0.1s ease;
+            box-shadow: 4px 4px 0px rgba(0,0,0,0.5);
+        }
+        .btn-3d:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px rgba(0,0,0,0.5);
+        }
     </style>
 </head>
-<body class="antialiased selection:bg-acid selection:text-ocean">
+<body class="antialiased selection:bg-acid selection:text-ocean flex flex-col min-h-screen">
 
     <div class="grid-bg"></div>
 
-    <!-- Navigation -->
     <nav class="bg-ocean/70 backdrop-blur-md shadow-lg sticky top-0 z-50 border-b border-paper/30">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-20 items-center">
@@ -118,14 +123,11 @@
         </div>
     </nav>
 
-    <!-- Main Content -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex-grow">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
             
-            <!-- LEFT PANEL: Inputs -->
             <div class="lg:col-span-4 space-y-8">
                 
-                <!-- Section 1 -->
                 <div class="glass-panel shadow-2xl border-paper/10 shadow-oceanLight/50">
                     <div class="p-6 border-b border-paper/20 bg-oceanLight/30 flex items-center gap-3">
                         <span class="bg-acid text-ocean w-7 h-7 rounded-full flex items-center justify-center font-bold text-sm font-mono">1</span>
@@ -182,7 +184,6 @@
                                     </select>
                                 </div>
                             </div>
-                            <!-- Nuevo Campo: Promedio Rentas -->
                             <div id="salaryContainer" class="bg-emerald-900/20 p-3 rounded border border-emerald-500/30">
                                 <label class="text-xs font-sans font-bold text-emerald-400 uppercase ml-1 flex items-center gap-1">
                                     <i class="ph ph-money"></i> Promedio Renta (10 años)
@@ -245,7 +246,6 @@
                     </div>
                 </div>
 
-                <!-- Section 2: Financials -->
                 <div class="glass-panel shadow-2xl border-paper/10 shadow-oceanLight/50">
                     <div class="p-6 border-b border-paper/20 bg-oceanLight/30 flex items-center gap-3">
                         <span class="bg-acid text-ocean w-7 h-7 rounded-full flex items-center justify-center font-bold text-sm font-mono">2</span>
@@ -295,7 +295,6 @@
                     </div>
                 </div>
 
-                <!-- Section 3: Scenario Config -->
                 <div class="glass-panel shadow-2xl shadow-acid/20 border-acid/30 relative">
                     <div class="absolute top-0 left-0 w-1 h-full bg-acid"></div>
                     <div class="p-6">
@@ -359,7 +358,6 @@
                 </div>
             </div>
 
-            <!-- RIGHT PANEL: Dashboard -->
             <div class="lg:col-span-8 space-y-10">
                 <div id="placeholderState" class="h-full min-h-[500px] flex flex-col items-center justify-center glass-panel rounded-3xl shadow-2xl border border-paper/10 p-12 text-center">
                     <div class="w-20 h-20 bg-oceanLight/50 rounded-full flex items-center justify-center mb-6 animate-pulse ring-4 ring-acid/20 text-acid"><i class="ph ph-calculator text-4xl"></i></div>
@@ -375,7 +373,6 @@
                         </button>
                     </div>
 
-                    <!-- KPI Cards -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                         <div class="glass-panel p-5 shadow-lg border-t-4 border-acid/50 relative overflow-hidden">
                             <span class="text-[10px] font-sans font-bold text-paper/60 uppercase tracking-widest">Capital Consolidado</span>
@@ -383,21 +380,18 @@
                             <div class="text-[10px] text-white/50 mt-1 font-sans">Incluye SIS si aplica</div>
                         </div>
                         
-                        <!-- ELD Card -->
                         <div id="cardELD" class="glass-panel bg-purple-900/20 p-5 shadow-lg border-t-4 border-purple-500 relative overflow-hidden hidden">
                             <span class="text-[10px] font-sans font-bold text-purple-400 uppercase tracking-widest">Monto Retirado ELD</span>
                             <div class="text-xl font-mono font-bold text-purple-300 mt-2 truncate" id="resEldAmount">$0</div>
                             <div class="text-[10px] text-purple-400/70 mt-1 font-sans">Pago Único Inicial</div>
                         </div>
 
-                        <!-- SIS Card -->
                         <div id="cardSIS" class="glass-panel bg-emerald-900/20 p-5 shadow-lg border-t-4 border-emerald-500 relative overflow-hidden hidden">
                             <span class="text-[10px] font-sans font-bold text-emerald-400 uppercase tracking-widest">Aporte Adicional SIS</span>
                             <div class="text-xl font-mono font-bold text-emerald-300 mt-2 truncate" id="resSISAmount">$0</div>
                             <div class="text-[10px] text-emerald-400/70 mt-1 font-sans">Seguro Inv/Sob</div>
                         </div>
 
-                        <!-- PGU Card -->
                         <div class="glass-panel p-5 shadow-lg border-t-4 relative overflow-hidden" id="cardPGU">
                             <span class="text-[10px] font-sans font-bold text-paper/60 uppercase tracking-widest">Estado PGU</span>
                             <div class="text-xl font-serif italic font-bold text-paper mt-2 truncate" id="resPguStatus">Pendiente</div>
@@ -406,14 +400,12 @@
                             </div>
                         </div>
 
-                        <!-- Bono Hijo Card -->
                         <div class="glass-panel p-5 shadow-lg border-t-4 border-pink-500 relative overflow-hidden group hover:border-pink-400 transition-transform duration-300">
                             <span class="text-[10px] font-sans font-bold text-paper/60 uppercase tracking-widest">Bono por Hijo</span>
                             <div class="text-xl font-mono font-bold text-pink-400 mt-2 truncate" id="resBonoHijo">$0</div>
                             <div class="text-[10px] text-white/50 mt-1 font-sans">Estimado</div>
                         </div>
 
-                        <!-- Beneficio Cotizacion Card -->
                         <div class="glass-panel p-5 shadow-lg border-t-4 border-sky-500 relative overflow-hidden">
                             <span class="text-[10px] font-sans font-bold text-paper/60 uppercase tracking-widest">Beneficio Cotización</span>
                             <div class="text-xl font-mono font-bold text-sky-400 mt-2 truncate" id="resBeneficioCotizacion">$0</div>
@@ -439,13 +431,24 @@
         </div>
     </div>
 
-    <!-- Toast -->
     <div id="toast-notification" class="fixed top-5 right-5 z-50 hidden transition-all duration-300 transform translate-y-[-20px] opacity-0">
         <div id="toast-content" class="flex items-center w-full max-w-xs p-4 text-gray-500 glass-panel rounded-lg shadow-xl dark:text-white/80" role="alert">
             <div id="toast-icon" class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 rounded-lg"></div>
             <div class="ml-3 text-sm font-sans font-medium" id="toast-message">Mensaje</div>
         </div>
     </div>
+
+    <footer class="bg-oceanDark pt-16 pb-8 border-t border-white/10 text-sm mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center text-xs text-gray-600 font-mono">
+                <p>&copy; 2025 La Justa Fintech SpA. Todos los derechos reservados.</p>
+                
+                <a href="index.html" class="mt-4 md:mt-0 text-xs border border-white/20 text-gray-400 hover:text-white hover:border-white px-4 py-2 rounded transition-colors flex items-center gap-2 btn-3d bg-oceanLight/30">
+                    <i class="ph ph-house"></i> Volver al Inicio
+                </a>
+            </div>
+        </div>
+    </footer>
 
     <script>
         // --- 1. CONSTANTES ACTUARIALES (V3) ---
