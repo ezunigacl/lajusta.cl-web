@@ -156,35 +156,59 @@
     <div class="grid-bg"></div>
 
     <!-- NAVBAR -->
-    <nav class="fixed w-full z-50 glass-panel border-b-0 border-white/5 rounded-none border-t-0 border-x-0 top-0">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-20">
-                <div class="flex-shrink-0 cursor-pointer flex items-center gap-4">
-                    <a href="#" class="font-serif text-3xl text-acid tracking-wide hover:opacity-80 transition-opacity">La Justa<span class="text-white">.</span></a>
-                    
-                    <!-- Widget UF -->
-                    <div class="hidden lg:flex items-center space-x-2 bg-oceanLight/50 border border-white/10 px-3 py-1 rounded-md ml-4">
-                        <span class="text-[10px] font-sans font-bold uppercase flex items-center gap-1 text-white/80">
-                            UF Hoy <i class="ph ph-trend-up text-acid"></i>
-                        </span>
+   <nav class="fixed w-full z-50 glass-panel border-b-0 border-white/5 rounded-none top-0">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-20">
+            <div class="flex items-center gap-6">
+                <a href="index.html" class="flex items-center gap-3 group flex-shrink-0">
+                    <img src="Logo.jpg" alt="Logo" class="h-10 w-10 rounded-lg border border-white/10 group-hover:border-acid transition-colors object-cover">
+                    <span class="font-serif text-2xl md:text-3xl text-acid tracking-wide">La Justa<span class="text-white">.</span></span>
+                </a>
+                <div class="hidden lg:flex items-center gap-4 bg-oceanLight/30 border border-white/10 px-4 py-1.5 rounded-lg backdrop-blur-md">
+                    <div class="flex flex-col items-start leading-none border-r border-white/10 pr-4">
+                        <span class="text-[9px] font-bold text-acid uppercase tracking-widest mb-0.5">UF HOY</span>
                         <div class="flex items-center">
                             <span class="text-white/60 font-mono mr-1 text-xs">$</span>
-                            <span id="headerUF" class="text-acid font-bold text-sm font-mono tracking-tight">39.651,25</span>
+                            <input type="text" id="inputUFValue" placeholder="..." class="w-20 text-white text-xs font-bold font-mono focus:outline-none text-left bg-transparent">
+                        </div>
+                    </div>
+                    <div class="flex flex-col items-start leading-none">
+                        <span class="text-[9px] font-bold text-acid uppercase tracking-widest mb-0.5">UTM MES</span>
+                        <div class="flex items-center">
+                            <span class="text-white/60 font-mono mr-1 text-xs">$</span>
+                            <input type="text" id="inputUTMNavbar" disabled placeholder="..." class="w-20 text-white text-xs font-bold font-mono focus:outline-none text-left bg-transparent">
                         </div>
                     </div>
                 </div>
-                <div class="hidden md:block">
-                    <div class="ml-10 flex items-baseline space-x-8 font-mono text-sm">
-                        <a href="#" class="text-white hover:text-acid transition-colors opacity-60">INICIO</a>
-                        <a href="#" class="text-white hover:text-acid transition-colors opacity-60">SIMULADOR</a>
-                        <a href="#" class="text-white hover:text-acid transition-colors opacity-60">AUDITOR</a>
-                        <a href="#" class="text-acid glow-sm font-bold border-b border-acid pb-1">[ RENTA PRIVADA ]</a>
-                        <button class="border border-acid text-acid px-4 py-2 hover:bg-acid hover:text-ocean transition-all btn-3d rounded-sm font-bold">ACCESO</button>
-                    </div>
+            </div>
+            
+            <div class="hidden md:block">
+                <div class="ml-10 flex items-baseline space-x-8 font-mono text-sm">
+                    <a href="index.html" class="text-white hover:text-acid transition-colors">INICIO</a>
+                    <a href="simulador.html" class="text-white hover:text-acid transition-colors">SIMULADOR</a>
+                    <a href="auditorscomp.html" class="text-white hover:text-acid transition-colors">AUDITOR</a>
+                    <a href="rentaprivada.html" class="text-acid glow-sm border-b border-acid pb-1">RENTA</a>
+                    <a href="eld.html" class="text-white hover:text-acid transition-colors">ELD</a>
+                    <a href="index.html#login" class="border border-acid text-acid px-4 py-2 hover:bg-acid hover:text-ocean transition-all btn-3d">ACCESO</a>
                 </div>
             </div>
+            <div class="md:hidden">
+                <button onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" class="text-white hover:text-acid p-2"><i data-lucide="menu" class="w-8 h-8"></i></button>
+            </div>
         </div>
-    </nav>
+    </div>
+    <div id="mobile-menu" class="hidden md:hidden bg-oceanDark/95 backdrop-blur-xl border-t border-white/10 absolute w-full left-0">
+        <div class="px-4 pt-2 pb-6 space-y-2 font-mono text-sm">
+            <a href="index.html" class="block px-3 py-4 text-white hover:text-acid border-b border-white/5">INICIO</a>
+            <a href="simulador.html" class="block px-3 py-4 text-white hover:text-acid border-b border-white/5">SIMULADOR</a>
+            <a href="auditorscomp.html" class="block px-3 py-4 text-white hover:text-acid border-b border-white/5">AUDITOR</a>
+            <a href="rentaprivada.html" class="block px-3 py-4 text-acid font-bold border-b border-white/5">RENTA PRIVADA</a>
+            <a href="eld.html" class="block px-3 py-4 text-white hover:text-acid border-b border-white/5">ELD</a>
+        </div>
+    </div>
+</nav>
+
+<div class="pt-32 lg:pt-40"></div>
 
     <!-- MAIN CONTENT -->
     <main class="flex-grow pt-28 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
