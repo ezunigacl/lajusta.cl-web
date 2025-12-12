@@ -19,12 +19,8 @@
             theme: {
                 extend: {
                     colors: {
-                        ocean: '#022C43',
-                        oceanLight: '#053b58',
-                        oceanDark: '#011826',
-                        acid: '#CCFF00',
-                        acidHover: '#b3e600',
-                        paper: '#F3F4F6',
+                        ocean: '#022C43', oceanLight: '#053b58', oceanDark: '#011826',
+                        acid: '#CCFF00', acidHover: '#b3e600', paper: '#F3F4F6',
                     },
                     fontFamily: {
                         serif: ['"Instrument Serif"', 'serif'],
@@ -48,54 +44,39 @@
     <style>
         body { background-color: #022C43; color: white; font-family: 'Inter', sans-serif; }
         .grid-bg {
-            background-image: 
-                linear-gradient(rgba(204, 255, 0, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(204, 255, 0, 0.05) 1px, transparent 1px);
-            background-size: 40px 40px;
-            position: fixed; inset: 0; z-index: -1; pointer-events: none;
+            background-image: linear-gradient(rgba(204, 255, 0, 0.05) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(204, 255, 0, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px; position: fixed; inset: 0; z-index: -1; pointer-events: none;
         }
         .cta-button {
-            background-color: var(--tw-colors-acid); color: var(--tw-colors-ocean);
-            font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;
-            border-radius: 0.25rem; transition: all 0.2s ease;
-            box-shadow: 0 4px 0px 0px #8eb300; font-family: var(--tw-font-family-sans);
+            background-color: var(--tw-colors-acid); color: var(--tw-colors-ocean); font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;
+            border-radius: 0.25rem; transition: all 0.2s ease; box-shadow: 0 4px 0px 0px #8eb300; font-family: var(--tw-font-family-sans);
         }
         .cta-button:active:not(:disabled) { transform: translateY(4px); box-shadow: 0 0px 0px 0px #8eb300; }
         .cta-button:hover:not(:disabled) { filter: brightness(1.1); }
-        .cta-button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            box-shadow: none;
-            background-color: #4b5563;
-            color: #d1d5db;
-        }
+        .cta-button:disabled { opacity: 0.6; cursor: not-allowed; box-shadow: none; background-color: #4b5563; color: #d1d5db; }
         .glass-panel {
-            background: rgba(5, 59, 88, 0.4); backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 0.75rem;
+            background: rgba(5, 59, 88, 0.4); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 0.75rem;
         }
         .text-glow { text-shadow: 0 0 10px rgba(204, 255, 0, 0.4); }
         .input-premium {
-            background-color: rgba(5, 59, 88, 0.2) !important; 
-            border: 1px solid rgba(255, 255, 255, 0.1) !important;
-            color: #F3F4F6 !important; transition: all 0.2s;
-            width: 100%; padding: 0.5rem; border-radius: 0.375rem;
+            background-color: rgba(5, 59, 88, 0.2) !important; border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            color: #F3F4F6 !important; transition: all 0.2s; width: 100%; padding: 0.5rem; border-radius: 0.375rem;
         }
-        .input-premium:focus {
-            border-color: #CCFF00 !important; box-shadow: 0 0 0 1px #CCFF00 !important; outline: none;
-        }
+        .input-premium:focus { border-color: #CCFF00 !important; box-shadow: 0 0 0 1px #CCFF00 !important; outline: none; }
         .input-error { border-color: #ef4444 !important; background-color: rgba(239, 68, 68, 0.1) !important; }
-        #ufWidgetContainer input { color: #CCFF00 !important; font-family: var(--tw-font-family-mono); border-color: rgba(204, 255, 0, 0.3) !important; }
         .table-row-hover:hover td { background-color: rgba(204, 255, 0, 0.05); }
+        .btn-3d { transition: all 0.1s ease; box-shadow: 4px 4px 0px rgba(0,0,0,0.5); }
+        .btn-3d:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px rgba(0,0,0,0.5); }
         
-        /* Estilo btn-3d necesario para el botón de volver */
-        .btn-3d {
-            transition: all 0.1s ease;
-            box-shadow: 4px 4px 0px rgba(0,0,0,0.5);
+        /* Ajuste para inputs del header */
+        #ufWidgetContainer input { 
+            font-family: 'Space Mono', monospace; 
+            border-color: transparent !important; 
+            background: transparent !important;
+            padding: 0 !important;
         }
-        .btn-3d:active {
-            transform: translate(2px, 2px);
-            box-shadow: 2px 2px 0px rgba(0,0,0,0.5);
-        }
+        #ufWidgetContainer input:focus { border-bottom: 1px solid #CCFF00 !important; }
     </style>
 </head>
 <body class="antialiased selection:bg-acid selection:text-ocean flex flex-col min-h-screen">
@@ -111,13 +92,22 @@
                         <span class="font-serif text-2xl md:text-3xl text-acid tracking-wide">La Justa<span class="text-white">.</span></span>
                     </a>
 
-                    <div class="hidden lg:flex items-center gap-2 bg-oceanLight/30 border border-white/10 px-4 py-1.5 rounded-lg backdrop-blur-md">
-                        <span class="text-[9px] font-bold text-acid uppercase tracking-widest flex items-center gap-2">
-                            UF HOY <button onclick="typeof fetchUF === 'function' && fetchUF()" title="Actualizar" class="hover:text-white cursor-pointer"><i class="ph ph-arrows-clockwise"></i></button>
-                        </span>
-                        <div class="flex items-center">
-                            <span class="text-white/60 font-mono mr-1 text-xs">$</span>
-                            <input type="text" id="inputUFValue" placeholder="..." class="w-20 bg-transparent text-white text-xs font-bold font-mono border-b border-white/20 focus:border-acid focus:outline-none text-right">
+                    <div class="hidden lg:flex items-center gap-4 bg-oceanLight/30 border border-white/10 px-4 py-1.5 rounded-lg backdrop-blur-md" id="ufWidgetContainer">
+                        <div class="flex flex-col items-start leading-none border-r border-white/10 pr-4">
+                            <span class="text-[9px] font-bold text-acid uppercase tracking-widest mb-0.5 flex gap-2">
+                                UF HOY <i onclick="fetchIndicators()" class="ph ph-arrows-clockwise cursor-pointer hover:text-white"></i>
+                            </span>
+                            <div class="flex items-center">
+                                <span class="text-white/60 font-mono mr-1 text-xs">$</span>
+                                <input type="text" id="inputUFValue" placeholder="..." class="w-20 text-white text-xs font-bold font-mono focus:outline-none text-left">
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-start leading-none">
+                            <span class="text-[9px] font-bold text-acid uppercase tracking-widest mb-0.5">UTM MES</span>
+                            <div class="flex items-center">
+                                <span class="text-white/60 font-mono mr-1 text-xs">$</span>
+                                <input type="text" id="inputUTMNavbar" disabled placeholder="..." class="w-20 text-white text-xs font-bold font-mono focus:outline-none text-left">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -153,7 +143,7 @@
         </div>
     </nav>
 
-    <div class="pt-28 lg:pt-36"></div>
+    <div class="pt-32 lg:pt-40"></div>
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 mb-20 flex-grow">
         <div class="text-center mb-10 fade-in-up">
@@ -548,21 +538,37 @@
             setTimeout(() => { toast.classList.add('translate-y-[-20px]', 'opacity-0'); setTimeout(() => toast.classList.add('hidden'), 300); }, 4000);
         }
 
-        // --- Auto Update UF ---
-        async function fetchUF() {
+        // --- Auto Update UF & UTM (MODIFICADO PARA TRAER AMBOS) ---
+        async function fetchIndicators() {
             const inputUF = document.getElementById('inputUFValue');
-            inputUF.placeholder = "Cargando...";
+            const inputUTM = document.getElementById('inputUTMNavbar');
+            
+            if(inputUF) inputUF.placeholder = "Cargando...";
+            
             try {
-                const response = await fetch('https://mindicador.cl/api/uf');
+                const response = await fetch('https://mindicador.cl/api');
                 if (!response.ok) throw new Error('API Error');
                 const data = await response.json();
-                inputUF.value = new Intl.NumberFormat('es-CL', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(data.serie[0].valor);
-                showToast("UF Actualizada", 'success');
+                
+                // Actualizar UF
+                if(inputUF && data.uf) {
+                     inputUF.value = new Intl.NumberFormat('es-CL', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(data.uf.valor);
+                     showToast("Indicadores Actualizados", 'success');
+                }
+                
+                // Actualizar UTM
+                if(inputUTM && data.utm) {
+                    inputUTM.value = new Intl.NumberFormat('es-CL', { maximumFractionDigits: 0 }).format(data.utm.valor);
+                }
+                
             } catch (error) {
-                showToast("Error al obtener UF automática", 'error');
-                inputUF.placeholder = "0,00";
+                showToast("Error al obtener indicadores", 'error');
+                if(inputUF) inputUF.placeholder = "0,00";
             }
         }
+        
+        // Alias para compatibilidad con botones antiguos
+        function fetchUF() { fetchIndicators(); }
 
         // --- Validation ---
         function fnValidaRut(rut) {
@@ -576,7 +582,7 @@
         }
 
         // Listeners for Inputs
-        window.addEventListener('DOMContentLoaded', fetchUF);
+        window.addEventListener('DOMContentLoaded', fetchIndicators);
         
         // RUT Input Listener & Validation
         const inputRut = document.getElementById('inputRut');
