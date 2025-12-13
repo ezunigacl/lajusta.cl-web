@@ -39,22 +39,14 @@
     </script>
 
     <style>
-        /* Base styles */
         body {
             background-color: #022C43;
             color: #E6F4F1;
             overflow-x: hidden;
         }
-
-        /* Typography Enforcers */
         .font-serif { font-family: 'Instrument Serif', serif; font-style: italic; }
         .font-mono { font-family: 'Space Mono', monospace; }
-        
-        /* Effects */
-        .text-glow { 
-            text-shadow: 0 0 20px rgba(204, 255, 0, 0.4); 
-        }
-        
+        .text-glow { text-shadow: 0 0 20px rgba(204, 255, 0, 0.4); }
         .glass-panel { 
             background: rgba(5, 59, 88, 0.3); 
             backdrop-filter: blur(16px); 
@@ -62,7 +54,6 @@
             border: 1px solid rgba(255, 255, 255, 0.08); 
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
         }
-
         .grid-bg { 
             background-image: 
                 linear-gradient(rgba(204, 255, 0, 0.03) 1px, transparent 1px), 
@@ -70,8 +61,6 @@
             background-size: 40px 40px; 
             background-position: center top;
         }
-
-        /* Micro-interactions */
         .btn-3d {
             transition: all 0.1s ease;
             box-shadow: 4px 4px 0px rgba(0,0,0,0.5);
@@ -80,40 +69,22 @@
             transform: translate(2px, 2px);
             box-shadow: 2px 2px 0px rgba(0,0,0,0.5);
         }
-
-        .card-hover {
-            transition: all 0.4s ease;
-        }
+        .card-hover { transition: all 0.4s ease; }
         .card-hover:hover {
             transform: translateY(-5px);
             border-color: rgba(204, 255, 0, 0.5);
             box-shadow: 0 10px 40px -10px rgba(204, 255, 0, 0.15);
         }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #022C43; 
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #053B58; 
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #CCFF00; 
-        }
-        
-        /* Fade In Animation */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #022C43; }
+        ::-webkit-scrollbar-thumb { background: #053B58; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #CCFF00; }
         .fade-in-up {
             animation: fadeInUp 0.8s ease-out forwards;
             opacity: 0;
             transform: translateY(20px);
         }
-        @keyframes fadeInUp {
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body class="grid-bg relative antialiased selection:bg-acid selection:text-ocean">
@@ -162,16 +133,15 @@
                 <a href="simulador.html" class="block px-3 py-4 text-white hover:text-acid border-b border-white/5">SIMULADOR</a>
                 <a href="auditorscomp.html" class="block px-3 py-4 text-white hover:text-acid border-b border-white/5">AUDITOR SCOMP</a>
                 <a href="rentaprivada.html" class="block px-3 py-4 text-white hover:text-acid border-b border-white/5">RENTA PRIVADA</a>
+                <a href="pgu.html" class="block px-3 py-4 text-white hover:text-acid border-b border-white/5">PGU / BONO HIJO</a>
                 <a href="eld.html" class="block px-3 py-4 text-white hover:text-acid border-b border-white/5">EFICIENCIA ELD</a>
-                <a href="#login" class="block px-3 py-4 text-acid font-bold">ACCESO CLIENTES</a>
             </div>
         </div>
     </nav>
 
     <section id="inicio" class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
         <div class="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-acid opacity-10 blur-[100px] rounded-full pointer-events-none"></div>
-        
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center lg:text-left">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center lg:text-left text-glow">
             <div class="lg:w-2/3 fade-in-up" style="animation-delay: 0.1s;">
                 <div class="inline-flex items-center gap-2 px-3 py-1 border border-acid/30 rounded-full bg-oceanLight/30 backdrop-blur-sm mb-6">
                     <span class="w-2 h-2 rounded-full bg-acid animate-pulse"></span>
@@ -185,172 +155,106 @@
                 <p class="mt-4 max-w-lg text-lg text-gray-300 font-light leading-relaxed font-sans mb-10 mx-auto lg:mx-0">
                     Desafiamos el status quo de las finanzas personales. Tecnología transparente para decisiones que definen tu futuro.
                 </p>
-                
                 <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start font-mono text-sm">
-                    <a href="simulador.html" class="btn-3d bg-acid text-ocean px-8 py-4 font-bold flex items-center justify-center gap-2 hover:bg-white transition-colors cursor-pointer">
+                    <a href="simulador.html" class="btn-3d bg-acid text-ocean px-8 py-4 font-bold flex items-center justify-center gap-2 hover:bg-white transition-colors">
                         CALCULADORA RÁPIDA <i data-lucide="calculator" class="w-4 h-4"></i>
                     </a>
                     <a href="#manifiesto" class="btn-3d border border-white/20 text-white px-8 py-4 hover:border-acid hover:text-acid bg-ocean/50 backdrop-blur-sm transition-colors text-center">
                         LEER MANIFIESTO
                     </a>
                 </div>
-
             </div>
-        </div>
-        
-        <div class="hidden lg:block absolute right-0 bottom-0 w-1/3 h-full opacity-20 pointer-events-none">
-            <div class="h-full w-full border-l border-acid/20 flex flex-col justify-end p-8 font-mono text-xs text-acid">
-                <div class="mb-2">MARKET_DATA_STREAM</div>
-                <div class="h-64 w-full border border-acid/20 relative">
-                    <div class="absolute bottom-0 left-0 w-full h-full bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxwb2x5bGluZSBwb2ludHM9IjAsMTAwIDUwLDgwIDEwMCwxMjAgMTUwLDYwIDIwMCw5MCAyNTAsNDAgMzAwLDgwIiBmaWxsPSJub25lIiBzdHJva2U9IiNDQ0ZGMDAiIHN0cm9rZS13aWR0aD0iMiIvPjwvc3ZnPg==')] bg-no-repeat bg-cover opacity-50"></div>
-                </div>
-                <div class="mt-2 flex justify-between">
-                    <span>SCOMP: 2.4%</span>
-                    <span>VAR: +0.8</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="que-hacemos" class="py-20 border-t border-white/5 relative bg-oceanDark/50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
-                <div class="group">
-                    <div class="w-12 h-12 border border-acid/30 rounded-full flex items-center justify-center mb-6 text-acid group-hover:bg-acid group-hover:text-ocean transition-all duration-300">
-                        <i data-lucide="cpu" class="w-6 h-6"></i>
-                    </div>
-                    <h3 class="font-mono text-xl text-white mb-3">Algoritmos, no Vendedores</h3>
-                    <p class="text-gray-400 font-sans text-sm leading-relaxed">
-                        Eliminamos el sesgo humano. Nuestras recomendaciones se basan en matemáticas puras y eficiencia fiscal, no en comisiones ocultas.
-                    </p>
-                </div>
-                <div class="group">
-                    <div class="w-12 h-12 border border-acid/30 rounded-full flex items-center justify-center mb-6 text-acid group-hover:bg-acid group-hover:text-ocean transition-all duration-300">
-                        <i data-lucide="shield-check" class="w-6 h-6"></i>
-                    </div>
-                    <h3 class="font-mono text-xl text-white mb-3">Auditoría Radical</h3>
-                    <p class="text-gray-400 font-sans text-sm leading-relaxed">
-                        Desglosamos cada oferta del mercado. Te mostramos lo que los bancos y aseguradoras prefieren mantener en letra chica.
-                    </p>
-                </div>
-                <div class="group">
-                    <div class="w-12 h-12 border border-acid/30 rounded-full flex items-center justify-center mb-6 text-acid group-hover:bg-acid group-hover:text-ocean transition-all duration-300">
-                        <i data-lucide="users" class="w-6 h-6"></i>
-                    </div>
-                    <h3 class="font-mono text-xl text-white mb-3">Asesoría Híbrida</h3>
-                    <p class="text-gray-400 font-sans text-sm leading-relaxed">
-                        La potencia de la IA validada por expertos tributarios humanos. Tecnología para calcular, humanos para estrategizar.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="manifiesto" class="py-32 bg-ocean relative overflow-hidden flex items-center justify-center">
-        <div class="absolute inset-0 grid-bg opacity-30"></div>
-        <div class="max-w-4xl mx-auto px-4 text-center relative z-10">
-            <span class="font-mono text-acid text-xs tracking-[0.3em] uppercase mb-4 block">Manifiesto 01</span>
-            <h2 class="font-serif text-5xl md:text-7xl leading-tight text-white mb-8">
-                "La asimetría de información es el impuesto más caro que pagas. <br/>
-                <span class="text-acid/80">Democratizar los datos</span> no es caridad,<br/>
-                es justicia."
-            </h2>
-            <div class="h-1 w-24 bg-acid mx-auto"></div>
         </div>
     </section>
 
     <section id="tools" class="py-24 relative">
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-acid opacity-5 blur-[120px] rounded-full pointer-events-none"></div>
-        
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="flex flex-col md:flex-row justify-between items-end mb-16">
                 <div>
                     <h2 class="font-serif text-5xl text-white mb-2">Hub de Herramientas</h2>
                     <p class="text-gray-400 font-mono text-sm">/ Acceso_Directo_Sistema_Central</p>
                 </div>
-                <div class="hidden md:block">
-                    <span class="text-acid font-mono text-xs animate-pulse">● SISTEMA OPERATIVO</span>
-                </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-6">
                 
-                <div class="glass-panel p-8 rounded-none card-hover group relative flex flex-col justify-between h-[450px] border-acid/30 shadow-[0_0_30px_rgba(204,255,0,0.05)]">
-                    <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-acid text-ocean px-3 py-1 font-mono text-[10px] font-bold tracking-widest uppercase">
-                        Más Utilizado
-                    </div>
-                    <div class="absolute top-0 right-0 p-4 opacity-20 group-hover:opacity-100 transition-opacity">
-                        <i data-lucide="arrow-up-right" class="text-acid w-6 h-6"></i>
-                    </div>
+                <div class="glass-panel p-6 rounded-none card-hover group relative flex flex-col justify-between h-[450px] border-acid/30">
                     <div>
-                        <div class="w-16 h-16 bg-acid/10 rounded-full flex items-center justify-center mb-6 border border-acid/20 group-hover:border-acid transition-colors">
-                            <i data-lucide="bar-chart-2" class="text-acid w-8 h-8"></i>
+                        <div class="w-14 h-14 bg-acid/10 rounded-full flex items-center justify-center mb-6 border border-acid/20 group-hover:border-acid transition-colors">
+                            <i data-lucide="bar-chart-2" class="text-acid w-7 h-7"></i>
                         </div>
-                        <h3 class="font-serif text-3xl text-white mb-2">Simulador de Pensión</h3>
-                        <p class="font-mono text-xs text-acid mb-4">MODE: PREDICTIVE</p>
-                        <p class="text-gray-400 text-sm leading-relaxed">
-                            Proyecta tu jubilación real cruzando datos de rentabilidad histórica, lagunas previsionales y esperanza de vida ajustada.
+                        <h3 class="font-serif text-2xl text-white mb-2">Simulador Pensión</h3>
+                        <p class="font-mono text-[10px] text-acid mb-4 tracking-widest uppercase">MODE: PREDICTIVE</p>
+                        <p class="text-gray-400 text-xs leading-relaxed">
+                            Proyecta tu jubilación real cruzando datos de rentabilidad histórica y lagunas previsionales.
                         </p>
                     </div>
-                    <a href="simulador.html" class="mt-8 w-full block text-center btn-3d bg-acid text-ocean py-3 font-mono text-sm font-bold uppercase hover:bg-white transition-all">
-                        Calcular Ahora
+                    <a href="simulador.html" class="mt-8 w-full block text-center btn-3d bg-acid text-ocean py-3 font-mono text-xs font-bold uppercase hover:bg-white transition-all">
+                        Calcular
                     </a>
                 </div>
 
-                <div class="glass-panel p-8 rounded-none card-hover group relative flex flex-col justify-between h-[450px]">
-                    <div class="absolute top-0 right-0 p-4 opacity-20 group-hover:opacity-100 transition-opacity">
-                        <i data-lucide="arrow-up-right" class="text-acid w-6 h-6"></i>
-                    </div>
+                <div class="glass-panel p-6 rounded-none card-hover group relative flex flex-col justify-between h-[450px]">
                     <div>
-                        <div class="w-16 h-16 bg-oceanLight rounded-full flex items-center justify-center mb-6 border border-white/10 group-hover:border-acid/50 transition-colors">
-                            <i data-lucide="zap" class="text-white w-8 h-8 group-hover:text-acid transition-colors"></i>
+                        <div class="w-14 h-14 bg-oceanLight rounded-full flex items-center justify-center mb-6 border border-white/10 group-hover:border-acid transition-colors">
+                            <i data-lucide="scale" class="text-white w-7 h-7 group-hover:text-acid transition-colors"></i>
                         </div>
-                        <h3 class="font-serif text-3xl text-white mb-2">Eficiencia ELD</h3>
-                        <p class="font-mono text-xs text-acid mb-4">MODE: OPTIMIZATION</p>
-                        <p class="text-gray-400 text-sm leading-relaxed">
-                            Analizador de Eficiencia Legal Tributaria. Descubre cuánto impuesto puedes recuperar legalmente mediante APV y 57 Bis.
+                        <h3 class="font-serif text-2xl text-white mb-2">Auditor SCOMP</h3>
+                        <p class="font-mono text-[10px] text-acid mb-4 tracking-widest uppercase">MODE: COMPARATIVE</p>
+                        <p class="text-gray-400 text-xs leading-relaxed">
+                            Decodificamos las ofertas de pensión. Compara tasas reales vs. mercado analizando tu certificado.
                         </p>
                     </div>
-                    <a href="eld.html" class="mt-8 w-full block text-center btn-3d bg-transparent border border-acid text-acid py-3 font-mono text-sm hover:bg-acid hover:text-ocean font-bold uppercase transition-all">
-                        Iniciar Análisis
+                    <a href="auditorscomp.html" class="mt-8 w-full block text-center btn-3d bg-transparent border border-acid text-acid py-3 font-mono text-xs hover:bg-acid hover:text-ocean font-bold uppercase transition-all">
+                        Auditar
                     </a>
                 </div>
 
-                <div class="glass-panel p-8 rounded-none card-hover group relative flex flex-col justify-between h-[450px]">
-                    <div class="absolute top-0 right-0 p-4 opacity-20 group-hover:opacity-100 transition-opacity">
-                        <i data-lucide="arrow-up-right" class="text-acid w-6 h-6"></i>
-                    </div>
+                <div class="glass-panel p-6 rounded-none card-hover group relative flex flex-col justify-between h-[450px]">
                     <div>
-                        <div class="w-16 h-16 bg-oceanLight rounded-full flex items-center justify-center mb-6 border border-white/10 group-hover:border-acid/50 transition-colors">
-                            <i data-lucide="scale" class="text-white w-8 h-8 group-hover:text-acid transition-colors"></i>
+                        <div class="w-14 h-14 bg-oceanLight rounded-full flex items-center justify-center mb-6 border border-white/10 group-hover:border-acid transition-colors">
+                            <i data-lucide="landmark" class="text-white w-7 h-7 group-hover:text-acid transition-colors"></i>
                         </div>
-                        <h3 class="font-serif text-3xl text-white mb-2">Auditor SCOMP</h3>
-                        <p class="font-mono text-xs text-acid mb-4">MODE: COMPARATIVE</p>
-                        <p class="text-gray-400 text-sm leading-relaxed">
-                            Decodificamos las ofertas del Sistema de Consultas de Ofertas de Montos de Pensión. Compara tasas reales vs. mercado.
+                        <h3 class="font-serif text-2xl text-white mb-2">Renta Privada</h3>
+                        <p class="font-mono text-[10px] text-acid mb-4 tracking-widest uppercase">MODE: INVESTMENT</p>
+                        <p class="text-gray-400 text-xs leading-relaxed">
+                            Transforma tu patrimonio en flujos de UF garantizados de por vida fuera del sistema AFP.
                         </p>
                     </div>
-                    <a href="auditorscomp.html" class="mt-8 w-full block text-center btn-3d bg-transparent border border-acid text-acid py-3 font-mono text-sm hover:bg-acid hover:text-ocean font-bold uppercase transition-all">
-                        Auditar Ofertas
+                    <a href="rentaprivada.html" class="mt-8 w-full block text-center btn-3d bg-transparent border border-acid text-acid py-3 font-mono text-xs hover:bg-acid hover:text-ocean font-bold uppercase transition-all">
+                        Simular
                     </a>
                 </div>
 
-                <div class="glass-panel p-8 rounded-none card-hover group relative flex flex-col justify-between h-[450px]">
-                    <div class="absolute top-0 right-0 p-4 opacity-20 group-hover:opacity-100 transition-opacity">
-                        <i data-lucide="arrow-up-right" class="text-acid w-6 h-6"></i>
-                    </div>
+                <div class="glass-panel p-6 rounded-none card-hover group relative flex flex-col justify-between h-[450px] border-acid/10 shadow-[0_0_20px_rgba(204,255,0,0.02)]">
                     <div>
-                        <div class="w-16 h-16 bg-oceanLight rounded-full flex items-center justify-center mb-6 border border-white/10 group-hover:border-acid/50 transition-colors">
-                            <i data-lucide="landmark" class="text-white w-8 h-8 group-hover:text-acid transition-colors"></i>
+                        <div class="w-14 h-14 bg-oceanLight rounded-full flex items-center justify-center mb-6 border border-white/10 group-hover:border-acid transition-colors">
+                            <i data-lucide="users" class="text-white w-7 h-7 group-hover:text-acid transition-colors"></i>
                         </div>
-                        <h3 class="font-serif text-3xl text-white mb-2">Renta Privada</h3>
-                        <p class="font-mono text-xs text-acid mb-4">MODE: INVESTMENT</p>
-                        <p class="text-gray-400 text-sm leading-relaxed">
-                            Transforma tu patrimonio en flujos de UF garantizados. Simula rentas vitalicias privadas fuera del sistema AFP.
+                        <h3 class="font-serif text-2xl text-white mb-2">PGU / Bono Hijo</h3>
+                        <p class="font-mono text-[10px] text-acid mb-4 tracking-widest uppercase">MODE: STATE_AID</p>
+                        <p class="text-gray-400 text-xs leading-relaxed">
+                            Calcula el aporte estatal de la Pensión Garantizada Universal y el incremento por bono por hijo.
                         </p>
                     </div>
-                    <a href="rentaprivada.html" class="mt-8 w-full block text-center btn-3d bg-transparent border border-acid text-acid py-3 font-mono text-sm hover:bg-acid hover:text-ocean font-bold uppercase transition-all">
-                        Simular Renta
+                    <a href="pgu.html" class="mt-8 w-full block text-center btn-3d bg-transparent border border-acid text-acid py-3 font-mono text-xs hover:bg-acid hover:text-ocean font-bold uppercase transition-all">
+                        Consultar
+                    </a>
+                </div>
+
+                <div class="glass-panel p-6 rounded-none card-hover group relative flex flex-col justify-between h-[450px]">
+                    <div>
+                        <div class="w-14 h-14 bg-oceanLight rounded-full flex items-center justify-center mb-6 border border-white/10 group-hover:border-acid transition-colors">
+                            <i data-lucide="zap" class="text-white w-7 h-7 group-hover:text-acid transition-colors"></i>
+                        </div>
+                        <h3 class="font-serif text-2xl text-white mb-2">Eficiencia ELD</h3>
+                        <p class="font-mono text-[10px] text-acid mb-4 tracking-widest uppercase">MODE: OPTIMIZATION</p>
+                        <p class="text-gray-400 text-xs leading-relaxed">
+                            Descubre cuánto impuesto puedes recuperar legalmente mediante APV y 57 Bis.
+                        </p>
+                    </div>
+                    <a href="eld.html" class="mt-8 w-full block text-center btn-3d bg-transparent border border-acid text-acid py-3 font-mono text-xs hover:bg-acid hover:text-ocean font-bold uppercase transition-all">
+                        Optimizar
                     </a>
                 </div>
 
@@ -358,82 +262,7 @@
         </div>
     </section>
 
-    <section id="blog" class="py-20 border-t border-white/5">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="font-serif text-4xl text-white mb-12">La Verdad <span class="font-sans text-lg text-gray-500 not-italic ml-4">// Artículos Recientes</span></h2>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <article class="group cursor-pointer">
-                    <div class="h-48 w-full bg-oceanLight mb-4 relative overflow-hidden border border-white/5">
-                        <div class="absolute inset-0 bg-acid/10 group-hover:bg-acid/20 transition-colors"></div>
-                        <div class="absolute bottom-4 left-4 font-mono text-xs bg-ocean px-2 py-1 text-acid">09 DIC 2025</div>
-                    </div>
-                    <h3 class="font-serif text-2xl text-white mb-2 group-hover:text-acid transition-colors">¿Tu APV realmente rinde?</h3>
-                    <p class="text-gray-500 text-sm font-sans line-clamp-3">
-                        Desglosamos las comisiones fantasmas de las principales administradoras. El resultado te va a molestar.
-                    </p>
-                </article>
-
-                <article class="group cursor-pointer">
-                    <div class="h-48 w-full bg-oceanLight mb-4 relative overflow-hidden border border-white/5">
-                        <div class="absolute inset-0 bg-acid/10 group-hover:bg-acid/20 transition-colors"></div>
-                        <div class="absolute bottom-4 left-4 font-mono text-xs bg-ocean px-2 py-1 text-acid">05 DIC 2025</div>
-                    </div>
-                    <h3 class="font-serif text-2xl text-white mb-2 group-hover:text-acid transition-colors">El mito de la Rentabilidad Garantizada</h3>
-                    <p class="text-gray-500 text-sm font-sans line-clamp-3">
-                        Por qué "seguridad" suele ser sinónimo de perder poder adquisitivo frente a la inflación real.
-                    </p>
-                </article>
-
-                <article class="group cursor-pointer">
-                    <div class="h-48 w-full bg-oceanLight mb-4 relative overflow-hidden border border-white/5">
-                        <div class="absolute inset-0 bg-acid/10 group-hover:bg-acid/20 transition-colors"></div>
-                        <div class="absolute bottom-4 left-4 font-mono text-xs bg-ocean px-2 py-1 text-acid">01 DIC 2025</div>
-                    </div>
-                    <h3 class="font-serif text-2xl text-white mb-2 group-hover:text-acid transition-colors">SCOMP Hacks: Guía Avanzada</h3>
-                    <p class="text-gray-500 text-sm font-sans line-clamp-3">
-                        Cómo leer el certificado de ofertas para encontrar las brechas que los agentes no te explican.
-                    </p>
-                </article>
-            </div>
-        </div>
-    </section>
-
-    <section id="login" class="py-24 bg-oceanDark relative">
-        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="glass-panel p-1 border-acid/20">
-                <div class="grid grid-cols-1 md:grid-cols-2">
-                    
-                    <div class="p-10 md:border-r border-white/10 flex flex-col items-center text-center hover:bg-white/5 transition-colors">
-                        <div class="w-16 h-16 rounded-full bg-ocean border border-acid text-acid flex items-center justify-center mb-6">
-                            <i data-lucide="user" class="w-8 h-8"></i>
-                        </div>
-                        <h3 class="font-serif text-3xl text-white mb-2">Soy Cliente</h3>
-                        <p class="text-gray-400 text-sm mb-8 max-w-xs">Accede a tu dashboard personal, evolución de fondos y documentos tributarios.</p>
-                        <button class="btn-3d w-48 bg-acid text-ocean py-3 font-mono text-sm font-bold uppercase hover:bg-white transition-all">
-                            Entrar
-                        </button>
-                    </div>
-
-                    <div class="p-10 flex flex-col items-center text-center hover:bg-white/5 transition-colors relative overflow-hidden">
-                         <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjEiIGZpbGw9IiNDQ0ZGMDAiIGZpbGwtb3BhY2l0eT0iMC4xIi8+PC9zdmc+')] opacity-20"></div>
-                        
-                        <div class="w-16 h-16 rounded-full bg-ocean border border-gray-600 text-gray-400 flex items-center justify-center mb-6">
-                            <i data-lucide="briefcase" class="w-8 h-8"></i>
-                        </div>
-                        <h3 class="font-serif text-3xl text-white mb-2">Soy Asesor</h3>
-                        <p class="text-gray-400 text-sm mb-8 max-w-xs">Plataforma de gestión CRM, herramientas de cálculo avanzado y leads.</p>
-                        <button class="btn-3d w-48 bg-transparent border border-gray-500 text-white py-3 font-mono text-sm font-bold uppercase hover:border-acid hover:text-acid transition-all">
-                            Acceso Pro
-                        </button>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <footer class="bg-oceanDark pt-16 pb-8 border-t border-white/10 text-sm">
+    <footer class="bg-oceanDark pt-16 pb-8 border-t border-white/10 text-sm mt-auto">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
                 <div class="col-span-1 md:col-span-2">
@@ -441,90 +270,29 @@
                         <img src="logo.jpg" alt="Logo" class="h-8 w-8 rounded-md border border-white/10 opacity-80 grayscale hover:grayscale-0 transition-all">
                         <span class="font-serif text-3xl text-white italic tracking-wide">La Justa.</span>
                     </div>
-                    <p class="text-gray-500 max-w-sm font-sans">
-                        Reingeniería financiera para una nueva generación. Sin sucursales, sin corbatas, sin mentiras.
-                    </p>
-                </div>
-                <div>
-                    <h4 class="font-mono text-acid text-xs uppercase mb-4 tracking-widest">Navegación</h4>
-                    <ul class="space-y-2 font-mono text-gray-400">
-                        <li><a href="simulador.html" class="hover:text-white transition-colors">Simuladores</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Metodología</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Prensa</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="font-mono text-acid text-xs uppercase mb-4 tracking-widest">Legal</h4>
-                    <ul class="space-y-2 font-mono text-gray-400">
-                        <li><a href="#" class="hover:text-white transition-colors">Términos y Condiciones</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Privacidad de Datos</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Normativa CMF</a></li>
-                    </ul>
+                    <p class="text-gray-500 max-w-sm font-sans">Reingeniería financiera para una nueva generación.</p>
                 </div>
             </div>
-            
             <div class="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-gray-600 font-mono">
                 <p>&copy; 2025 La Justa Fintech SpA. Todos los derechos reservados.</p>
-                <p class="mt-2 md:mt-0 text-center md:text-right max-w-lg">
-                    DISCLAIMER: Las proyecciones SCOMP son referenciales y no garantizan rentabilidad futura. La Justa está regulada por la Comisión para el Mercado Financiero.
-                </p>
             </div>
         </div>
     </footer>
 
     <script>
         lucide.createIcons();
-        
-        // Fetch Financial Indicators (UF & UTM)
         async function fetchFinancialIndicators() {
             try {
                 const response = await fetch('https://mindicador.cl/api');
-                if (!response.ok) throw new Error('API Error');
                 const data = await response.json();
-                
-                const formatter = new Intl.NumberFormat('es-CL', { 
-                    style: 'currency', 
-                    currency: 'CLP',
-                    maximumFractionDigits: 0 
-                });
-
-                // Update UF
-                const ufVal = data.uf.valor;
-                const ufEl = document.getElementById('navUF');
-                if(ufEl) {
-                    ufEl.innerText = formatter.format(ufVal);
-                    ufEl.classList.remove('animate-pulse');
-                }
-
-                // Update UTM
-                const utmVal = data.utm.valor;
-                const utmEl = document.getElementById('navUTM');
-                if(utmEl) {
-                    utmEl.innerText = formatter.format(utmVal);
-                    utmEl.classList.remove('animate-pulse');
-                }
-
-            } catch (error) {
-                console.error("Error fetching indicators:", error);
-                document.getElementById('navUF').innerText = "---";
-                document.getElementById('navUTM').innerText = "---";
-            }
+                const fmt = new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 });
+                document.getElementById('navUF').innerText = fmt.format(data.uf.valor);
+                document.getElementById('navUTM').innerText = fmt.format(data.utm.valor);
+                document.getElementById('navUF').classList.remove('animate-pulse');
+                document.getElementById('navUTM').classList.remove('animate-pulse');
+            } catch (e) { console.error("Error fetching indicators"); }
         }
-
-        // Init
-        document.addEventListener('DOMContentLoaded', () => {
-            fetchFinancialIndicators();
-            
-            // Smooth Scroll
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    document.querySelector(this.getAttribute('href')).scrollIntoView({
-                        behavior: 'smooth'
-                    });
-                });
-            });
-        });
+        document.addEventListener('DOMContentLoaded', fetchFinancialIndicators);
     </script>
 </body>
 </html>
