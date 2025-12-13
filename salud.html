@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Justa - Verificador Exención 7% Salud</title>
+    
+    <!-- Fuentes: Instrument Serif, Inter, Space Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Tailwind CSS (Configuración Híbrida para Estilos Personalizados) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        ocean: '#022C43',
+                        acid: '#CCFF00',
+                        glass: 'rgba(5, 59, 88, 0.4)',
+                        'glass-hover': 'rgba(5, 59, 88, 0.6)',
+                        'acid-dim': 'rgba(204, 255, 0, 0.1)',
+                    },
+                    fontFamily: {
+                        serif: ['"Instrument Serif"', 'serif'],
+                        sans: ['"Inter"', 'sans-serif'],
+                        mono: ['"Space Mono"', 'monospace'],
+                    },
+                    backdropBlur: {
+                        xs: '2px',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Estilos Base y Utilidades Personalizadas */
+        body {
+            background-color: #022C43;
+            color: white;
+            font-family: 'Inter', sans-serif;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(204, 255, 0, 0.03) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(204, 255, 0, 0.03) 0%, transparent 20%);
+        }
+
+        .glass-panel {
+            background: rgba(5, 59, 88, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        .input-field {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #CCFF00;
+            box-shadow: 0 0 10px rgba(204, 255, 0, 0.2);
+        }
+
+        /* Toggle Switch Personalizado */
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #CCFF00;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #CCFF00;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #022C43; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #114B6B; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #CCFF00; 
+        }
+
+        /* Animación suave para el panel de Isapre */
+        .isapre-section {
+            transition: all 0.4s ease-in-out;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+        }
+        .isapre-section.active {
+            max-height: 200px;
+            opacity: 1;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Navbar Fijo -->
+    <nav class="fixed w-full z-50 glass-panel border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded bg-acid flex items-center justify-center text-ocean font-bold font-serif text-xl italic">
+                        L
+                    </div>
+                    <span class="font-serif text-2xl italic tracking-wide text-white">lajusta.cl</span>
+                </div>
+                
+                <!-- Nav Links & UF Widget -->
+                <div class="hidden md:flex items-center gap-8">
+                    <a href="#" class="text-sm text-gray-300 hover:text-acid transition-colors">Pensiones</a>
+                    <a href="#" class="text-sm text-gray-300 hover:text-acid transition-colors">PGU</a>
+                    <a href="#" class="text-sm text-acid font-medium border-b border-acid pb-1">Salud (7%)</a>
+                    
+                    <!-- UF Widget -->
+                    <div class="glass-panel px-4 py-1.5 rounded-full flex items-center gap-2 border border-white/10">
+                        <span class="text-xs text-acid font-mono">UF HOY</span>
+                        <span class="text-xs font-mono font-bold" id="uf-display">$38.120</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow pt-24 pb-12 px-4 sm:px-6">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            <!-- Columna Izquierda: Inputs (4 Columnas) -->
+            <div class="lg:col-span-4 space-y-6">
+                
+                <!-- Header Mobile -->
+                <div class="lg:hidden mb-4">
+                    <h1 class="font-serif text-3xl italic text-white mb-2">Exención 7% Salud</h1>
+                    <p class="text-gray-400 text-sm">Verifica si calificas para eliminar o rebajar tu cotización.</p>
+                </div>
+
+                <!-- Panel de Inputs -->
+                <div class="glass-panel rounded-2xl p-6 lg:p-8 space-y-6">
+                    <div class="border-b border-white/10 pb-4 mb-2 hidden lg:block">
+                        <h2 class="font-serif text-2xl italic text-white">Tus Datos</h2>
+                        <p class="text-gray-400 text-xs mt-1">Simulación basada en Ley 20.531</p>
+                    </div>
+
+                    <!-- Edad -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Edad Actual</label>
+                        <input type="number" id="edad" value="65" class="w-full input-field rounded-lg px-4 py-3 font-mono text-lg focus:ring-1 focus:ring-acid" placeholder="Ej: 65">
+                    </div>
+
+                    <!-- Pensión Bruta -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Pensión Bruta Total ($)</label>
+                        <div class="relative">
+                            <span class="absolute left-4 top-3.5 text-gray-500 font-mono">$</span>
+                            <input type="text" id="pension" value="450.000" class="w-full input-field rounded-lg pl-8 pr-4 py-3 font-mono text-lg focus:ring-1 focus:ring-acid currency-input" placeholder="0">
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">Suma AFP + PGU + Bonos</p>
+                    </div>
+
+                    <!-- PGU Toggle -->
+                    <div class="glass-panel bg-acid-dim border-acid/20 rounded-xl p-4 flex items-center justify-between">
+                        <div>
+                            <span class="block text-sm font-medium text-white">¿Tienes PGU o APS?</span>
+                            <span class="text-xs text-gray-400">Pensión Garantizada Universal</span>
+                        </div>
+                        
+                        <div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+                            <input type="checkbox" name="toggle" id="hasPGU" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer transition-all duration-300 left-0 top-0 checked:left-6 checked:bg-ocean border-gray-300 checked:border-acid" checked/>
+                            <label for="hasPGU" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-700 cursor-pointer transition-colors duration-300 checked:bg-acid"></label>
+                        </div>
+                    </div>
+
+                    <!-- Sistema Salud -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Sistema de Salud</label>
+                        <select id="sistemaSalud" class="w-full input-field rounded-lg px-4 py-3 font-sans text-lg focus:ring-1 focus:ring-acid appearance-none cursor-pointer">
+                            <option value="FONASA">FONASA (Público)</option>
+                            <option value="ISAPRE">ISAPRE (Privado)</option>
+                        </select>
+                    </div>
+
+                    <!-- Costo Isapre (Condicional) -->
+                    <div id="isapreInputs" class="isapre-section">
+                        <label class="block text-sm font-medium text-acid mb-2">Costo Plan de Salud (UF)</label>
+                        <div class="flex gap-2">
+                            <div class="relative w-full">
+                                <span class="absolute left-4 top-3.5 text-gray-500 font-mono text-xs mt-0.5">UF</span>
+                                <input type="number" step="0.01" id="costoIsapreUF" value="2.5" class="w-full input-field rounded-lg pl-10 pr-4 py-3 font-mono text-lg focus:ring-1 focus:ring-acid">
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-2 font-mono">Valor aprox: <span id="valorPlanCLP" class="text-white">$0</span></p>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Columna Derecha: Dashboard (8 Columnas) -->
+            <div class="lg:col-span-8 space-y-6">
+                
+                <!-- Encabezado de Resultados -->
+                <div class="glass-panel rounded-2xl p-6 lg:p-8 relative overflow-hidden">
+                    <!-- Decoración de fondo -->
+                    <div class="absolute -top-20 -right-20 w-64 h-64 bg-acid opacity-5 rounded-full blur-3xl"></div>
+
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+                        <div>
+                            <h2 class="font-serif text-3xl italic text-white">Resultado del Análisis</h2>
+                            <p class="text-gray-400 text-sm mt-1">Cálculo estimado según normativa vigente.</p>
+                        </div>
+                        <!-- Badge de Estado -->
+                        <div id="statusBadge" class="px-6 py-2 rounded-full border border-acid bg-acid text-ocean font-bold text-sm tracking-wider shadow-[0_0_15px_rgba(204,255,0,0.3)] transition-all duration-300">
+                            TOTALMENTE EXENTO
+                        </div>
+                    </div>
+
+                    <!-- Grid de Tarjetas -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                        <!-- Tarjeta Ahorro -->
+                        <div class="bg-ocean/50 rounded-xl p-5 border border-acid/30 hover:border-acid transition-colors group">
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="text-gray-400 text-xs uppercase tracking-widest font-semibold">Tu Ahorro Mensual</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-acid group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
+                            <div class="text-3xl lg:text-4xl font-mono font-bold text-white mb-1" id="ahorroMensual">$31.500</div>
+                            <p class="text-xs text-acid">Dinero que dejas de pagar</p>
+                        </div>
+
+                        <!-- Tarjeta Nuevo Pago -->
+                        <div class="bg-ocean/50 rounded-xl p-5 border border-white/10 hover:border-white/30 transition-colors">
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="text-gray-400 text-xs uppercase tracking-widest font-semibold">Nuevo Pago Salud</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                            </div>
+                            <div class="text-3xl lg:text-4xl font-mono font-bold text-white mb-1" id="nuevoPago">$0</div>
+                            <p class="text-xs text-gray-400">Descuento en tu colilla</p>
+                        </div>
+                    </div>
+
+                    <!-- Área del Gráfico -->
+                    <div class="bg-ocean/30 rounded-xl p-4 border border-white/5 h-64 relative">
+                         <canvas id="incomeChart"></canvas>
+                    </div>
+
+                    <div class="mt-4 text-xs text-center text-gray-500 font-mono">
+                        * Cálculo referencial. La exención es automática a través de IPS.
+                    </div>
+                </div>
+
+                <!-- Call to Action -->
+                <div class="flex justify-end">
+                    <a href="pgu.html" class="group flex items-center gap-2 text-gray-400 hover:text-acid transition-colors text-sm font-medium">
+                        <span>Volver al Simulador PGU</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transform group-hover:-translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass-panel border-t border-white/10 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="text-center md:text-left">
+                    <p class="font-serif italic text-lg text-white">lajusta.cl</p>
+                    <p class="text-xs text-gray-500 mt-1">Herramientas de seguridad social independientes.</p>
+                </div>
+                <div class="text-xs text-gray-500 font-mono">
+                    &copy; 2024 La Justa. Diseñado para pensionados.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Lógica de la Aplicación -->
+    <script>
+        // Configuración Inicial
+        const UF_VALUE = 38120; // Valor UF Hardcoded para demo
+        const ChartFont = "'Space Mono', monospace";
+        
+        // Elementos del DOM
+        const inputs = {
+            edad: document.getElementById('edad'),
+            pension: document.getElementById('pension'),
+            hasPGU: document.getElementById('hasPGU'),
+            sistema: document.getElementById('sistemaSalud'),
+            costoIsapreUF: document.getElementById('costoIsapreUF'),
+            valorPlanCLP: document.getElementById('valorPlanCLP')
+        };
+
+        const outputs = {
+            badge: document.getElementById('statusBadge'),
+            ahorro: document.getElementById('ahorroMensual'),
+            nuevoPago: document.getElementById('nuevoPago')
+        };
+
+        const sectionIsapre = document.getElementById('isapreInputs');
+        let chartInstance = null;
+
+        // Formateador de Moneda (CLP)
+        const formatCLP = (num) => {
+            return new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 }).format(num);
+        };
+
+        // Utilidad para limpiar inputs de moneda
+        const parseCurrency = (str) => {
+            return parseInt(str.replace(/[^0-9]/g, '')) || 0;
+        };
+
+        // 1. Inicialización del Gráfico
+        function initChart() {
+            const ctx = document.getElementById('incomeChart').getContext('2d');
+            
+            // Gradiente para las barras
+            const gradientCurrent = ctx.createLinearGradient(0, 0, 0, 400);
+            gradientCurrent.addColorStop(0, 'rgba(255, 255, 255, 0.2)');
+            gradientCurrent.addColorStop(1, 'rgba(255, 255, 255, 0.05)');
+
+            const gradientNew = ctx.createLinearGradient(0, 0, 0, 400);
+            gradientNew.addColorStop(0, 'rgba(204, 255, 0, 0.8)');
+            gradientNew.addColorStop(1, 'rgba(204, 255, 0, 0.2)');
+
+            chartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Líquido Actual', 'Con Beneficio'],
+                    datasets: [{
+                        label: 'Ingreso Líquido Mensual',
+                        data: [0, 0],
+                        backgroundColor: [gradientCurrent, gradientNew],
+                        borderColor: ['rgba(255,255,255,0.3)', '#CCFF00'],
+                        borderWidth: 1,
+                        borderRadius: 6,
+                        barPercentage: 0.5,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: 'rgba(2, 44, 67, 0.9)',
+                            titleFont: { family: 'Inter' },
+                            bodyFont: { family: 'Space Mono' },
+                            borderColor: 'rgba(255,255,255,0.1)',
+                            borderWidth: 1,
+                            padding: 10,
+                            callbacks: {
+                                label: function(context) {
+                                    return formatCLP(context.raw);
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            grid: { color: 'rgba(255,255,255,0.05)' },
+                            ticks: { 
+                                color: 'rgba(255,255,255,0.5)', 
+                                font: { family: 'Space Mono', size: 10 },
+                                callback: function(value) { return '$' + value/1000 + 'k'; }
+                            }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { 
+                                color: 'white', 
+                                font: { family: 'Inter', weight: 500 } 
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // 2. Motor Matemático (Ley 20.531)
+        function calculate() {
+            // Obtener valores
+            const edad = parseInt(inputs.edad.value) || 0;
+            const pensionBruta = parseCurrency(inputs.pension.value);
+            const tienePGU = inputs.hasPGU.checked;
+            const sistema = inputs.sistema.value;
+            const costoIsapreUF = parseFloat(inputs.costoIsapreUF.value) || 0;
+            const costoPlanCLP = Math.round(costoIsapreUF * UF_VALUE);
+
+            // Actualizar display UF -> CLP en tiempo real
+            if (sistema === 'ISAPRE') {
+                inputs.valorPlanCLP.textContent = formatCLP(costoPlanCLP);
+            }
+
+            // Lógica de Elegibilidad
+            // Regla: Mujer/Hombre >= 65 años Y pertenecer al 80% (implícito en tener PGU/APS)
+            const esElegible = (edad >= 65) && tienePGU;
+
+            // Cálculo Base
+            const monto7Porciento = Math.round(pensionBruta * 0.07);
+            
+            let nuevoPagoSalud = 0;
+            let ahorroMensual = 0;
+            let estadoTexto = "";
+            let estadoColor = "";
+            let estadoBg = "";
+            let estadoBorder = "";
+
+            if (esElegible) {
+                if (sistema === 'FONASA') {
+                    // FONASA Exento
+                    nuevoPagoSalud = 0;
+                    ahorroMensual = monto7Porciento;
+                    
+                    estadoTexto = "TOTALMENTE EXENTO";
+                    estadoBg = "#CCFF00"; // Acid
+                    estadoColor = "#022C43"; // Ocean
+                    estadoBorder = "#CCFF00";
+                } else {
+                    // ISAPRE Bonificado
+                    // El estado paga el 7%. El usuario paga la diferencia si el plan es más caro.
+                    const diferencia = costoPlanCLP - monto7Porciento;
+                    nuevoPagoSalud = Math.max(0, diferencia);
+                    
+                    // El ahorro es el 7% completo, a menos que el plan fuera más barato que el 7% (raro, pero posible)
+                    ahorroMensual = Math.min(costoPlanCLP, monto7Porciento);
+
+                    estadoTexto = "BONIFICACIÓN ESTATAL";
+                    estadoBg = "rgba(255, 193, 7, 0.2)"; // Amarillo vidrio
+                    estadoColor = "#FFC107"; // Amarillo texto
+                    estadoBorder = "#FFC107";
+                }
+            } else {
+                // NO Elegible
+                estadoTexto = "SIN BENEFICIO AÚN";
+                estadoBg = "rgba(255, 255, 255, 0.1)";
+                estadoColor = "#9CA3AF";
+                estadoBorder = "#4B5563";
+
+                if (sistema === 'FONASA') {
+                    nuevoPagoSalud = monto7Porciento;
+                    ahorroMensual = 0;
+                } else {
+                    // En Isapre sin beneficio, paga su plan completo
+                    // (Asumiendo que paga al menos el 7% legal o el costo del plan)
+                    nuevoPagoSalud = Math.max(costoPlanCLP, monto7Porciento);
+                    ahorroMensual = 0;
+                }
+            }
+
+            // Actualizar UI - Textos
+            outputs.ahorro.textContent = formatCLP(ahorroMensual);
+            outputs.nuevoPago.textContent = formatCLP(nuevoPagoSalud);
+            
+            outputs.badge.textContent = estadoTexto;
+            outputs.badge.style.backgroundColor = estadoBg;
+            outputs.badge.style.color = estadoColor;
+            outputs.badge.style.borderColor = estadoBorder;
+            
+            if (esElegible && sistema === 'ISAPRE') {
+                outputs.badge.style.boxShadow = "0 0 15px rgba(255, 193, 7, 0.3)";
+            } else if (esElegible) {
+                outputs.badge.style.boxShadow = "0 0 15px rgba(204, 255, 0, 0.3)";
+            } else {
+                outputs.badge.style.boxShadow = "none";
+            }
+
+            // Actualizar UI - Gráfico
+            // Escenario Base: Asumimos que hoy paga su 7% (Fonasa) o su Plan (Isapre)
+            let pagoActual = 0;
+            if (sistema === 'FONASA') {
+                pagoActual = monto7Porciento;
+            } else {
+                pagoActual = Math.max(costoPlanCLP, monto7Porciento);
+            }
+
+            const liquidoActual = pensionBruta - pagoActual;
+            const liquidoNuevo = pensionBruta - nuevoPagoSalud;
+
+            chartInstance.data.datasets[0].data = [liquidoActual, liquidoNuevo];
+            chartInstance.update();
+        }
+
+        // 3. Listeners y Utilidades de UI
+        function toggleIsapreInputs() {
+            if (inputs.sistema.value === 'ISAPRE') {
+                sectionIsapre.classList.add('active');
+            } else {
+                sectionIsapre.classList.remove('active');
+            }
+            calculate();
+        }
+
+        // Formatear input de pensión mientras se escribe
+        inputs.pension.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, "");
+            if (value === "") {
+                e.target.value = "";
+            } else {
+                e.target.value = new Intl.NumberFormat('es-CL').format(value);
+            }
+            calculate();
+        });
+
+        // Event Listeners para recálculo
+        inputs.edad.addEventListener('input', calculate);
+        inputs.hasPGU.addEventListener('change', calculate);
+        inputs.sistema.addEventListener('change', toggleIsapreInputs);
+        inputs.costoIsapreUF.addEventListener('input', calculate);
+
+        // Inicialización
+        window.addEventListener('DOMContentLoaded', () => {
+            initChart();
+            toggleIsapreInputs(); // Set initial state
+            calculate(); // First calculation
+        });
+
+    </script>
+</body>
+</html>
