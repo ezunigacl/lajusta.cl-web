@@ -10,11 +10,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@1&family=Inter:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Using Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <script>
-        let currentUF = 37985.50;
-        const defaultUFValue = 37985.50;
+        // Global variable for current UF value, updated by fetchFinancialIndicators
+        let currentUF = 37985.50; 
+        const defaultUFValue = 37985.50; 
 
         tailwind.config = {
             theme: {
@@ -31,6 +33,27 @@
                         serif: ['Instrument Serif', 'serif'],
                         sans: ['Inter', 'sans-serif'],
                         mono: ['Space Mono', 'monospace'],
+                    },
+                    backgroundImage: {
+                        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+                    },
+                    keyframes: {
+                        'modal-open': {
+                            '0%': { opacity: '0', transform: 'scale(0.95)' },
+                            '100%': { opacity: '1', transform: 'scale(1)' },
+                        },
+                        'modal-close': {
+                            '0%': { opacity: '1', transform: 'scale(1)' },
+                            '100%': { opacity: '0', transform: 'scale(0.95)' },
+                        },
+                        'fade-in': {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        'fade-in-up': {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
                     },
                     animation: {
                         'modal-open': 'modal-open 0.3s ease-out forwards',
@@ -61,9 +84,19 @@
         }
         .btn-3d { transition: all 0.1s ease; box-shadow: 4px 4px 0px rgba(0,0,0,0.5); }
         .btn-3d:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px rgba(0,0,0,0.5); }
+        .card-hover { transition: all 0.4s ease; }
+        .card-hover:hover {
+            transform: translateY(-5px); border-color: rgba(204, 255, 0, 0.5);
+            box-shadow: 0 10px 40px -10px rgba(204, 255, 0, 0.15);
+        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #022C43; }
+        ::-webkit-scrollbar-thumb { background: #053B58; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #CCFF00; }
         .fade-in-up { animation: fadeInUp 0.8s ease-out forwards; opacity: 0; transform: translateY(20px); }
         @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
 
+        /* Estilos específicos del Simulador Express */
         .input-premium {
             background: rgba(1, 24, 38, 0.5);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -77,34 +110,55 @@
             box-shadow: 0 0 10px rgba(204, 255, 0, 0.2); 
             background: rgba(1, 24, 38, 0.8);
         }
+        .input-premium::placeholder {
+            color: #4a5c70; /* lighter ocean color */
+        }
     </style>
 </head>
 <body class="grid-bg relative antialiased selection:bg-acid selection:text-ocean">
 
+    <!-- Simple Message Box for Notifications -->
     <div id="messageBox" class="fixed top-4 left-1/2 -translate-x-1/2 hidden z-[1000] transition-all duration-300 max-w-sm w-full animate-fade-in-up" role="alert">
         <div class="p-4 rounded-xl shadow-xl font-mono" id="messageBoxContent">
             <p id="messageText" class="font-bold text-center"></p>
         </div>
     </div>
     
+    <!-- START MODAL DE CÁLCULO RÁPIDO (Quick Calc Modal) -->
     <div id="expressModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4">
+        <!-- Overlay for closing -->
         <div class="absolute inset-0 bg-oceanDark/90 backdrop-blur-md" onclick="toggleExpressModal()"></div>
+        
+        <!-- Modal Content Container -->
         <div class="relative w-full max-w-[380px] animate-fade-in">
             <div class="glass-panel rounded-2xl p-6 shadow-2xl border border-white/10 flex flex-col overflow-hidden">
+                
+                <!-- Background Glow -->
+                <div class="absolute top-0 right-0 w-32 h-32 bg-acid opacity-5 blur-2xl rounded-full -mr-10 -mt-10"></div>
+                
+                <!-- Close Button -->
                 <button onclick="toggleExpressModal()" class="absolute top-4 right-4 text-gray-400 hover:text-acid z-20">
                     <i data-lucide="x" class="w-6 h-6"></i>
                 </button>
+                
+                <!-- Header (Re-inserted UF Display) -->
                 <div class="text-center mb-6 relative z-10">
-                    <h1 class="font-serif text-3xl italic text-acid tracking-wide inline-flex items-center gap-2">La Justa<span class="text-white">.</span></h1>
+                    <h1 class="font-serif text-3xl italic text-acid tracking-wide inline-flex items-center gap-2">
+                        La Justa<span class="text-white">.</span>
+                    </h1>
                     <p class="font-mono text-[9px] uppercase tracking-[0.25em] text-white/50 mt-1">Simulador Express v1.0</p>
                     <div class="mt-3 inline-block bg-oceanLight/50 border border-white/10 px-2 py-1 rounded-md">
                         <span class="text-[9px] font-bold text-acid uppercase tracking-widest block">UF HOY: <span id="modalUFShow" class="text-white font-mono font-bold">...</span></span>
                     </div>
                 </div>
+
+                <!-- FORM INPUTS -->
                 <div id="express-form" class="space-y-4 relative z-10 animate-fade-in">
+                    
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             <label class="block text-[10px] font-bold text-acid uppercase mb-1.5 ml-1 font-mono">Tu Edad</label>
+                            <!-- Added min/max from previous version -->
                             <input type="number" id="ex-edad" value="65" class="input-premium w-full rounded-lg px-3 py-2 text-center text-lg font-bold" min="18" max="99">
                         </div>
                         <div>
@@ -115,6 +169,7 @@
                             </div>
                         </div>
                     </div>
+                    
                     <div>
                         <label class="block text-[10px] font-bold text-acid uppercase mb-1.5 ml-1 font-mono">Estado Civil</label>
                         <select id="ex-estadoCivil" class="input-premium w-full rounded-lg px-3 py-2.5 text-xs appearance-none cursor-pointer">
@@ -123,37 +178,50 @@
                             <option value="viudo">Viudo(a)</option>
                         </select>
                     </div>
+                    
                     <div>
                         <label class="block text-[10px] font-bold text-acid uppercase mb-1.5 ml-1 font-mono">Saldo Acumulado AFP</label>
+                        <!-- Reverting placeholder to more helpful value and adding text-glow -->
                         <input type="text" id="ex-saldo" placeholder="10.000.000" oninput="formatExCLP(this)" class="input-premium w-full rounded-lg px-3 py-2.5 font-bold text-lg text-center text-acid text-glow">
                     </div>
+                    
                     <div class="flex items-center justify-between p-3 bg-oceanLight/30 rounded-lg border border-white/5">
-                        <span class="text-xs font-bold text-white font-mono">¿Incluir PGU? (Si edad ≥ 65)</span>
+                        <!-- Adding conditional text to PGU for clarity -->
+                        <span class="text-xs font-bold text-white font-mono">¿Incluir PGU? (Si edad $\ge$ 65)</span>
                         <label class="relative inline-flex items-center cursor-pointer">
                             <input type="checkbox" id="ex-pgu-toggle" class="sr-only peer" checked>
                             <div class="w-9 h-5 bg-oceanDark rounded-full peer peer-checked:after:translate-x-full peer-checked:bg-acid after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white/80 after:rounded-full after:h-4 after:w-4 after:transition-all"></div>
                         </label>
                     </div>
+                    
                     <button onclick="calcularExpress()" class="btn-3d w-full bg-acid text-ocean font-extrabold py-3.5 rounded-lg uppercase tracking-widest text-xs">Simular Pensión</button>
                 </div>
+
+                <!-- RESULT VIEW (Reverting text color and ensuring animation) -->
                 <div id="express-result" class="hidden text-center py-4 relative z-10 animate-fade-in-up">
                     <span class="text-[9px] font-mono text-white/50 uppercase tracking-[0.2em]">Monto Mensual Estimado (CLP)</span>
                     <div id="ex-resultado-monto" class="text-4xl font-mono font-bold text-acid my-4 text-glow">$0</div>
+                    
                     <a href="simulador.html" class="btn-3d block w-full bg-acid text-ocean font-extrabold py-3.5 rounded-lg uppercase tracking-widest text-[10px] hover:bg-white transition-all">Ver Informe Completo →</a>
+                    
                     <button onclick="resetExpress()" class="text-[9px] font-mono text-white/40 uppercase hover:text-white transition-colors mt-4">Reiniciar Cálculo</button>
                 </div>
             </div>
         </div>
     </div>
+    <!-- END MODAL DE CÁLCULO RÁPIDO -->
+
 
     <nav class="fixed w-full z-50 glass-panel border-b-0 border-white/5">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-20">
                 <div class="flex items-center gap-6">
                     <a href="index.html" class="flex items-center gap-3 group flex-shrink-0">
+                        <!-- LOGO RESTORED: Using your original reference to Logo.jpg -->
                         <img src="Logo.jpg" alt="Logo" class="h-10 w-10 rounded-lg border border-white/10 group-hover:border-acid transition-colors object-cover">
                         <span class="font-serif text-2xl md:text-3xl text-acid tracking-wide">La Justa<span class="text-white">.</span></span>
                     </a>
+
                     <div class="hidden lg:flex items-center gap-4 bg-oceanLight/30 border border-white/10 px-4 py-1.5 rounded-lg backdrop-blur-md">
                         <div class="flex flex-col items-start leading-none border-r border-white/10 pr-4">
                             <span class="text-[9px] font-bold text-acid uppercase tracking-widest mb-0.5">UF HOY</span>
@@ -165,14 +233,16 @@
                         </div>
                     </div>
                 </div>
+                
                 <div class="hidden md:block">
                     <div class="ml-10 flex items-baseline space-x-8 font-mono text-sm">
-                        <a href="index.html" class="text-white hover:text-acid transition-colors">INICIO</a>
-                        <a href="#que-hacemos" class="text-white hover:text-acid transition-colors">SERVICIOS</a>
-                        <a href="#tools" class="text-acid hover:text-white transition-colors glow-sm">[ HERRAMIENTAS ]</a>
-                        <a href="#login" class="border border-acid text-acid px-4 py-2 hover:bg-acid hover:text-ocean transition-all btn-3d">ACCESO</a>
+                        <a href="#inicio" class="text-white hover:text-acid transition-colors duration-300">INICIO</a>
+                        <a href="#que-hacemos" class="text-white hover:text-acid transition-colors duration-300">SERVICIOS</a>
+                        <a href="#tools" class="text-acid hover:text-white transition-colors duration-300 glow-sm">[ HERRAMIENTAS ]</a>
+                        <a href="#login" class="border border-acid text-acid px-4 py-2 hover:bg-acid hover:text-ocean transition-all duration-300 btn-3d">ACCESO</a>
                     </div>
                 </div>
+
                 <div class="md:hidden">
                     <button onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" class="text-white hover:text-acid p-2 focus:outline-none">
                         <i data-lucide="menu" class="w-8 h-8"></i>
@@ -180,59 +250,165 @@
                 </div>
             </div>
         </div>
+
+        <div id="mobile-menu" class="hidden md:hidden bg-oceanDark/95 backdrop-blur-xl border-t border-white/10 absolute w-full left-0">
+            <div class="px-4 pt-2 pb-6 space-y-2 font-mono text-sm">
+                <a href="#inicio" class="block px-3 py-4 text-white hover:text-acid border-b border-white/5">INICIO</a>
+                <a href="simulador.html" class="block px-3 py-4 text-white hover:text-acid border-b border-white/5">SIMULADOR</a>
+                <a href="auditorscomp.html" class="block px-3 py-4 text-white hover:text-acid border-b border-white/5">AUDITOR SCOMP</a>
+                <a href="rentaprivada.html" class="block px-3 py-4 text-white hover:text-acid border-b border-white/5">RENTA PRIVADA</a>
+                <a href="pgu.html" class="block px-3 py-4 text-white hover:text-acid border-b border-white/5">PGU / BONO HIJO</a>
+                <a href="salud.html" class="block px-3 py-4 text-white hover:text-acid border-b border-white/5">EXENCIÓN SALUD</a>
+                <a href="eld.html" class="block px-3 py-4 text-white hover:text-acid border-b border-white/5">EFICIENCIA ELD</a>
+                <a href="#login" class="block px-3 py-4 text-acid hover:text-white border-b border-white/5">ACCESO</a>
+            </div>
+        </div>
     </nav>
 
     <section id="inicio" class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
         <div class="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-acid opacity-10 blur-[100px] rounded-full pointer-events-none"></div>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center lg:text-left">
-            <div class="lg:w-2/3 fade-in-up">
+            <div class="lg:w-2/3 fade-in-up" style="animation-delay: 0.1s;">
                 <div class="inline-flex items-center gap-2 px-3 py-1 border border-acid/30 rounded-full bg-oceanLight/30 backdrop-blur-sm mb-6">
                     <span class="w-2 h-2 rounded-full bg-acid animate-pulse"></span>
                     <span class="text-xs font-mono text-acid tracking-widest uppercase">Beta Pública v1.0</span>
                 </div>
                 <h1 class="font-serif text-6xl md:text-8xl leading-[0.9] mb-6 text-white text-glow">
-                    La verdad <br/> financiera <br/> <span class="text-acid text-glow">sin letra chica.</span>
+                    La verdad <br/>
+                    financiera <br/>
+                    <span class="text-acid text-glow">sin letra chica.</span>
                 </h1>
-                <p class="mt-4 max-w-lg text-lg text-gray-300 font-light font-sans mb-10 mx-auto lg:mx-0">
+                <p class="mt-4 max-w-lg text-lg text-gray-300 font-light leading-relaxed font-sans mb-10 mx-auto lg:mx-0">
                     Tecnología transparente para decisiones que definen tu futuro. Herramientas actuariales para optimizar tu jubilación.
                 </p>
                 <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start font-mono text-sm">
-                    <button onclick="toggleExpressModal()" class="btn-3d bg-acid text-ocean px-8 py-4 font-bold flex items-center justify-center gap-2">
+                    <button onclick="toggleExpressModal()" class="btn-3d bg-acid text-ocean px-8 py-4 font-bold flex items-center justify-center gap-2 hover:bg-white transition-colors cursor-pointer">
                         CALCULADORA RÁPIDA <i data-lucide="calculator" class="w-4 h-4"></i>
                     </button>
-                    <a href="#manifiesto" class="btn-3d border border-white/20 text-white px-8 py-4 hover:border-acid hover:text-acid text-center">LEER MANIFIESTO</a>
+                    <a href="#manifiesto" class="btn-3d border border-white/20 text-white px-8 py-4 hover:border-acid hover:text-acid bg-ocean/50 backdrop-blur-sm transition-colors text-center">
+                        LEER MANIFIESTO
+                    </a>
                 </div>
             </div>
         </div>
     </section>
 
+    <section id="que-hacemos" class="py-20 border-t border-white/5 relative bg-oceanDark/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-glow">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                <div class="group">
+                    <div class="w-12 h-12 border border-acid/30 rounded-full flex items-center justify-center mb-6 text-acid group-hover:bg-acid group-hover:text-ocean transition-all duration-300">
+                        <i data-lucide="cpu" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="font-mono text-xl text-white mb-3">Algoritmos, no Vendedores</h3>
+                    <p class="text-gray-400 font-sans text-sm leading-relaxed">Nuestras recomendaciones se basan en matemáticas puras y eficiencia fiscal.</p>
+                </div>
+                <div class="group">
+                    <div class="w-12 h-12 border border-acid/30 rounded-full flex items-center justify-center mb-6 text-acid group-hover:bg-acid group-hover:text-ocean transition-all duration-300">
+                        <i data-lucide="shield-check" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="font-mono text-xl text-white mb-3">Auditoría Radical</h3>
+                    <p class="text-gray-400 font-sans text-sm leading-relaxed">Desglosamos cada oferta del mercado. Transparencia total en pensiones.</p>
+                </div>
+                <div class="group">
+                    <div class="w-12 h-12 border border-acid/30 rounded-full flex items-center justify-center mb-6 text-acid group-hover:bg-acid group-hover:text-ocean transition-all duration-300">
+                        <i data-lucide="users" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="font-mono text-xl text-white mb-3">Asesoría Híbrida</h3>
+                    <p class="text-gray-400 font-sans text-sm leading-relaxed">Tecnología para calcular, expertos para estrategizar tu plan futuro.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="manifiesto" class="py-32 bg-ocean relative overflow-hidden flex items-center justify-center">
+        <div class="absolute inset-0 grid-bg opacity-30"></div>
+        <div class="max-w-4xl mx-auto px-4 text-center relative z-10">
+            <span class="font-mono text-acid text-xs tracking-[0.3em] uppercase mb-4 block">Manifiesto 01</span>
+            <h2 class="font-serif text-5xl md:text-7xl leading-tight text-white mb-8">
+                "La asimetría de información es el impuesto más caro que pagas. <br/>
+                <span class="text-acid/80 text-glow">Democratizar los datos</span> no es caridad, es justicia."
+            </h2>
+            <div class="h-1 w-24 bg-acid mx-auto"></div>
+        </div>
+    </section>
+
     <section id="tools" class="py-24 relative border-t border-white/5">
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-acid opacity-5 blur-[120px] rounded-full pointer-events-none"></div>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <h2 class="font-serif text-5xl text-white mb-16 text-glow">Hub de Herramientas</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-                <div class="glass-panel p-8 card-hover group relative flex flex-col justify-between h-[450px] border-acid/30">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-16">
+                <div>
+                    <h2 class="font-serif text-5xl text-white mb-2 text-glow">Hub de Herramientas</h2>
+                    <p class="text-gray-400 font-mono text-sm">/ Acceso_Directo_Sistema_Central</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
+                <div class="glass-panel p-8 rounded-none card-hover group relative flex flex-col justify-between h-[450px] border-acid/30 shadow-[0_0_30px_rgba(204,255,0,0.05)]">
+                    <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-acid text-ocean px-3 py-1 font-mono text-[10px] font-bold tracking-widest uppercase">Más Utilizado</div>
+                    <div class="absolute top-0 right-0 p-4 opacity-20"><i data-lucide="arrow-up-right" class="text-acid w-6 h-6"></i></div>
                     <div>
-                        <div class="w-16 h-16 bg-acid/10 rounded-full flex items-center justify-center mb-6 border border-acid/20"><i data-lucide="bar-chart-2" class="text-acid w-8 h-8"></i></div>
+                        <div class="w-16 h-16 bg-acid/10 rounded-full flex items-center justify-center mb-6 border border-acid/20 group-hover:border-acid transition-colors"><i data-lucide="bar-chart-2" class="text-acid w-8 h-8"></i></div>
                         <h3 class="font-serif text-3xl text-white mb-2">Simulador Pensión</h3>
-                        <p class="text-gray-400 text-sm">Proyecta tu jubilación real cruzando datos de rentabilidad histórica y lagunas.</p>
+                        <p class="font-mono text-xs text-acid mb-4 uppercase">Mode: Predictive</p>
+                        <p class="text-gray-400 text-sm leading-relaxed">Proyecta tu jubilación real cruzando datos de rentabilidad histórica y lagunas.</p>
                     </div>
-                    <a href="simulador.html" class="mt-8 w-full block text-center btn-3d bg-acid text-ocean py-3 font-mono text-sm font-bold uppercase">Calcular Ahora</a>
+                    <a href="simulador.html" class="mt-8 w-full block text-center btn-3d bg-acid text-ocean py-3 font-mono text-sm font-bold uppercase hover:bg-white transition-all">Calcular Ahora</a>
                 </div>
-                <div class="glass-panel p-8 card-hover group relative flex flex-col justify-between h-[450px]">
+
+                <div class="glass-panel p-8 rounded-none card-hover group relative flex flex-col justify-between h-[450px]">
+                    <div class="absolute top-0 right-0 p-4 opacity-20"><i data-lucide="arrow-up-right" class="text-acid w-6 h-6"></i></div>
                     <div>
-                        <div class="w-16 h-16 bg-oceanLight rounded-full flex items-center justify-center mb-6 border border-white/10"><i data-lucide="scale" class="text-white w-8 h-8 group-hover:text-acid"></i></div>
+                        <div class="w-16 h-16 bg-oceanLight rounded-full flex items-center justify-center mb-6 border border-white/10 transition-colors"><i data-lucide="scale" class="text-white w-8 h-8 group-hover:text-acid"></i></div>
                         <h3 class="font-serif text-3xl text-white mb-2">Auditor SCOMP</h3>
-                        <p class="text-gray-400 text-sm">Analizamos las ofertas del certificado SCOMP comparando tasas reales vs mercado.</p>
+                        <p class="font-mono text-xs text-acid mb-4 uppercase">Mode: Comparative</p>
+                        <p class="text-gray-400 text-sm leading-relaxed">Analizamos las ofertas del certificado SCOMP comparando tasas reales vs mercado.</p>
                     </div>
-                    <a href="auditorscomp.html" class="mt-8 w-full block text-center btn-3d border border-acid text-acid py-3 font-mono text-sm font-bold uppercase hover:bg-acid hover:text-ocean transition-all">Auditar Ofertas</a>
+                    <a href="auditorscomp.html" class="mt-8 w-full block text-center btn-3d bg-transparent border border-acid text-acid py-3 font-mono text-sm hover:bg-acid hover:text-ocean font-bold uppercase transition-all">Auditar Ofertas</a>
                 </div>
-                <div class="glass-panel p-8 card-hover group relative flex flex-col justify-between h-[450px]">
+
+                <div class="glass-panel p-8 rounded-none card-hover group relative flex flex-col justify-between h-[450px]">
+                    <div class="absolute top-0 right-0 p-4 opacity-20"><i data-lucide="arrow-up-right" class="text-acid w-6 h-6"></i></div>
                     <div>
-                        <div class="w-16 h-16 bg-oceanLight rounded-full flex items-center justify-center mb-6 border border-white/10"><i data-lucide="users" class="text-white w-8 h-8 group-hover:text-acid"></i></div>
-                        <h3 class="font-serif text-3xl text-white mb-2">PGU / Bono Hijo</h3>
-                        <p class="text-gray-400 text-sm">Calcula la PGU y el estimador mensual de bono por hijo nacido vivo.</p>
+                        <div class="w-16 h-16 bg-oceanLight rounded-full flex items-center justify-center mb-6 border border-white/10 group-hover:border-acid/50 transition-colors"><i data-lucide="landmark" class="text-white w-8 h-8 group-hover:text-acid transition-colors"></i></div>
+                        <h3 class="font-serif text-3xl text-white mb-2">Renta Privada</h3>
+                        <p class="font-mono text-xs text-acid mb-4 uppercase">Mode: Investment</p>
+                        <p class="text-gray-400 text-sm leading-relaxed">Estructura flujos de capital fuera del sistema de seguridad social AFP.</p>
                     </div>
-                    <a href="pgu.html" class="mt-8 w-full block text-center btn-3d border border-acid text-acid py-3 font-mono text-sm font-bold uppercase hover:bg-acid hover:text-ocean transition-all">Consultar PGU</a>
+                    <a href="rentaprivada.html" class="mt-8 w-full block text-center btn-3d bg-transparent border border-acid text-acid py-3 font-mono text-sm hover:bg-acid hover:text-ocean font-bold uppercase transition-all">Simular Renta</a>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="glass-panel p-8 rounded-none card-hover group relative flex flex-col justify-between h-[450px]">
+                    <div class="absolute top-0 right-0 p-4 opacity-20"><i data-lucide="arrow-up-right" class="text-acid w-6 h-6"></i></div>
+                    <div>
+                        <div class="w-16 h-16 bg-oceanLight rounded-full flex items-center justify-center mb-6 border border-white/10 group-hover:border-acid/50 transition-colors"><i data-lucide="users" class="text-white w-8 h-8 group-hover:text-acid transition-colors"></i></div>
+                        <h3 class="font-serif text-3xl text-white mb-2">PGU / Bono Hijo</h3>
+                        <p class="font-mono text-xs text-acid mb-4 uppercase">Mode: State_Aid</p>
+                        <p class="text-gray-400 text-sm leading-relaxed">Calcula la PGU y el estimador mensual de bono por hijo nacido vivo.</p>
+                    </div>
+                    <a href="pgu.html" class="mt-8 w-full block text-center btn-3d bg-transparent border border-acid text-acid py-3 font-mono text-sm hover:bg-acid hover:text-ocean font-bold uppercase transition-all">Consultar PGU</a>
+                </div>
+
+                <div class="glass-panel p-8 rounded-none card-hover group relative flex flex-col justify-between h-[450px] border-acid/10 shadow-[0_0_30px_rgba(204,255,0,0.02)]">
+                    <div>
+                        <div class="w-16 h-16 bg-oceanLight rounded-full flex items-center justify-center mb-6 border border-white/10 group-hover:border-acid/50 transition-colors"><i data-lucide="activity" class="text-white w-8 h-8 group-hover:text-acid transition-colors"></i></div>
+                        <h3 class="font-serif text-3xl text-white mb-2">Exención Salud</h3>
+                        <p class="font-mono text-xs text-acid mb-4 uppercase">Mode: Tax_Rebate</p>
+                        <p class="text-gray-400 text-sm leading-relaxed">Verifica si calificas para la eliminación del 7% legal de salud.</p>
+                    </div>
+                    <a href="salud.html" class="mt-8 w-full block text-center btn-3d bg-transparent border border-acid text-acid py-3 font-mono text-sm hover:bg-acid hover:text-ocean font-bold uppercase transition-all">Verificar 7%</a>
+                </div>
+
+                <div class="glass-panel p-8 rounded-none card-hover group relative flex flex-col justify-between h-[450px]">
+                    <div>
+                        <div class="w-16 h-16 bg-oceanLight rounded-full flex items-center justify-center mb-6 border border-white/10 group-hover:border-acid/50 transition-colors"><i data-lucide="zap" class="text-white w-8 h-8 group-hover:text-acid transition-colors"></i></div>
+                        <h3 class="font-serif text-3xl text-white mb-2">Eficiencia ELD</h3>
+                        <p class="font-mono text-xs text-acid mb-4 uppercase">Mode: Optimization</p>
+                        <p class="text-gray-400 text-sm leading-relaxed">Analizador de eficiencia tributaria para retiros de Excedentes de Libre Disposición.</p>
+                    </div>
+                    <a href="eld.html" class="mt-8 w-full block text-center btn-3d bg-transparent border border-acid text-acid py-3 font-mono text-sm hover:bg-acid hover:text-ocean font-bold uppercase transition-all">Iniciar Análisis</a>
                 </div>
             </div>
         </div>
@@ -242,18 +418,14 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="font-serif text-4xl text-white mb-12">La Verdad <span class="font-sans text-lg text-gray-500 not-italic ml-4">// Artículos Recientes</span></h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-glow">
-                
-                <a href="apv-deuda.html" class="group cursor-pointer">
-                    <article>
-                        <div class="h-48 w-full bg-oceanLight mb-4 border border-white/5 relative overflow-hidden">
-                            <div class="absolute inset-0 bg-acid/10 group-hover:bg-acid/20 transition-colors"></div>
-                            <div class="absolute bottom-4 left-4 font-mono text-xs bg-ocean px-2 py-1 text-acid">18 DIC 2025</div>
-                        </div>
-                        <h3 class="font-serif text-2xl text-white group-hover:text-acid">Deuda Técnica: El costo de tu inercia</h3>
-                        <p class="text-gray-500 text-sm mt-2">Mantener tu APV en la misma AFP podría costarte hasta un 0.95% anual extra.</p>
-                    </article>
-                </a>
-
+                <article class="group cursor-pointer">
+                    <div class="h-48 w-full bg-oceanLight mb-4 border border-white/5 relative overflow-hidden">
+                        <div class="absolute inset-0 bg-acid/10 group-hover:bg-acid/20 transition-colors"></div>
+                        <div class="absolute bottom-4 left-4 font-mono text-xs bg-ocean px-2 py-1 text-acid">09 DIC 2025</div>
+                    </div>
+                    <h3 class="font-serif text-2xl text-white group-hover:text-acid">¿Tu APV realmente rinde?</h3>
+                    <p class="text-gray-500 text-sm mt-2">Desglosamos las comisiones fantasmas de las principales administradoras.</p>
+                </article>
                 <article class="group cursor-pointer">
                     <div class="h-48 w-full bg-oceanLight mb-4 border border-white/5 relative overflow-hidden">
                         <div class="absolute inset-0 bg-acid/10 group-hover:bg-acid/20 transition-colors"></div>
@@ -274,8 +446,58 @@
         </div>
     </section>
 
+    <section id="login" class="py-24 bg-oceanDark relative">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+            <div class="glass-panel p-1 border-acid/20">
+                <div class="grid grid-cols-1 md:grid-cols-2">
+                    <div class="p-10 md:border-r border-white/10 hover:bg-white/5 transition-colors">
+                        <div class="w-16 h-16 rounded-full bg-ocean border border-acid text-acid flex items-center justify-center mb-6 mx-auto">
+                             <i data-lucide="user" class="w-8 h-8"></i>
+                        </div>
+                        <h3 class="font-serif text-3xl text-white mb-2">Soy Cliente</h3>
+                        <p class="text-gray-400 text-sm mb-8">Accede a tu dashboard personal y evolución de fondos.</p>
+                        <button class="btn-3d w-48 bg-acid text-ocean py-3 font-mono text-sm font-bold uppercase hover:bg-white transition-all">Entrar</button>
+                    </div>
+                    <div class="p-10 hover:bg-white/5 transition-colors relative overflow-hidden">
+                        <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjEiIGZpbGw9IiNDQ0ZGMDAiIGZpbGwtb3BhY2l0eT0iMC4xIi8+PC9zdmc+')] opacity-20"></div>
+                        <div class="w-16 h-16 rounded-full bg-ocean border border-gray-600 text-gray-400 flex items-center justify-center mb-6 mx-auto">
+                            <i data-lucide="briefcase" class="w-8 h-8"></i>
+                        </div>
+                        <h3 class="font-serif text-3xl text-white mb-2">Soy Asesor</h3>
+                        <p class="text-gray-400 text-sm mb-8">Gestión profesional de clientes y herramientas avanzadas.</p>
+                        <button class="btn-3d w-48 bg-transparent border border-gray-500 text-white py-3 font-mono text-sm font-bold uppercase hover:border-acid hover:text-acid transition-all">Acceso Pro</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <footer class="bg-oceanDark pt-16 pb-8 border-t border-white/10 text-sm mt-auto">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center md:text-left">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <div class="col-span-1 md:col-span-2">
+                    <div class="flex items-center gap-3 mb-4 justify-center md:justify-start">
+                        <!-- LOGO RESTORED: Using your original reference to Logo.jpg -->
+                        <img src="Logo.jpg" alt="Logo" class="h-8 w-8 rounded-md border border-white/10 opacity-80 grayscale hover:grayscale-0 transition-all">
+                        <span class="font-serif text-3xl text-white italic tracking-wide">La Justa.</span>
+                    </div>
+                    <p class="text-gray-500 max-w-sm font-sans">Reingeniería financiera para una nueva generación.</p>
+                </div>
+                <div>
+                    <h4 class="font-mono text-acid text-xs uppercase mb-4 tracking-widest">Navegación</h4>
+                    <ul class="space-y-2 font-mono text-gray-400">
+                        <li><a href="simulador.html" class="hover:text-white transition-colors">Simuladores</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Metodología</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-mono text-acid text-xs uppercase mb-4 tracking-widest">Legal</h4>
+                    <ul class="space-y-2 font-mono text-gray-400">
+                        <li><a href="#" class="hover:text-white transition-colors">Términos</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Privacidad</a></li>
+                    </ul>
+                </div>
+            </div>
             <div class="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-gray-600 font-mono">
                 <p>&copy; 2025 La Justa Fintech SpA. Todos los derechos reservados.</p>
                 <p class="mt-2 md:mt-0 max-w-lg">DISCLAIMER: Las proyecciones son referenciales.</p>
@@ -287,88 +509,210 @@
         lucide.createIcons();
         
         let exGender = 'M';
-        const PGU_MONTO = 214296;
+        const PGU_MONTO = 214296; // Monto referencial PGU
         const modal = document.getElementById('expressModal');
         const formDiv = document.getElementById('express-form');
         const resultDiv = document.getElementById('express-result');
 
+        // --- Utility Functions ---
+
+        // Function to show a temporary message box instead of alert()
         function showMessage(message, type = 'error') {
             const msgBox = document.getElementById('messageBox');
             const msgText = document.getElementById('messageText');
             const contentBox = document.getElementById('messageBoxContent');
             msgText.innerText = message;
+            
             msgBox.classList.remove('hidden');
-            const themeClass = type === 'error' ? 'bg-red-900/80 border border-red-700/80 text-white' : 'bg-green-900/80 border border-green-700/80 text-acid';
+            
+            // Apply theme colors based on type
+            const themeClass = type === 'error' 
+                ? 'bg-red-900/80 border border-red-700/80 text-white' 
+                : 'bg-green-900/80 border border-green-700/80 text-acid';
+                
             contentBox.className = `p-4 rounded-xl shadow-xl ${themeClass}`;
-            setTimeout(() => { msgBox.classList.add('hidden'); }, 4000);
+            
+            setTimeout(() => {
+                msgBox.classList.add('hidden');
+            }, 4000);
         }
 
+        // Modal Controls
         function toggleExpressModal() {
             const isHidden = modal.classList.contains('hidden');
+
             if (isHidden) {
+                // OPEN MODAL
                 modal.classList.remove('hidden');
+                // The new modal structure handles centering with flex, so we don't need complex positioning logic here.
+                // We ensure it gets the 'open' animation class (using the container class 'animate-fade-in' which is fine for the whole modal block)
                 modal.classList.remove('animate-modal-close');
                 document.body.style.overflow = 'hidden';
-                document.getElementById('modalUFShow').innerText = new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 2 }).format(currentUF);
+                
+                // Update UF display in modal
+                document.getElementById('modalUFShow').innerText = new Intl.NumberFormat('es-CL', { 
+                    style: 'currency', 
+                    currency: 'CLP',
+                    maximumFractionDigits: 2
+                }).format(currentUF);
+
+                // Ensure initial visual state is correct
                 setExGender(exGender);
                 resetExpress();
+
             } else {
+                // CLOSE MODAL
                 modal.classList.add('animate-modal-close');
-                setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('animate-modal-close'); document.body.style.overflow = ''; }, 300);
+                
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                    modal.classList.remove('animate-modal-close');
+                    document.body.style.overflow = '';
+                }, 300); // Wait for animation to finish
             }
         }
 
+        // Visual update for gender buttons
         function setExGender(g) {
             exGender = g;
             const bM = document.getElementById('ex-btn-M'), bF = document.getElementById('ex-btn-F');
-            [bM, bF].forEach(b => b.className = "flex-1 border border-white/10 bg-oceanLight/50 text-xs font-bold text-white/70 transition-colors rounded-lg");
+            
+            // Unselected state
+            [bM, bF].forEach(b => b.className = "flex-1 border border-white/10 bg-oceanLight/50 text-xs font-bold text-white/70 transition-colors rounded-lg hover:bg-oceanLight/80");
+            
+            // Selected state
             const active = g === 'M' ? bM : bF;
             active.className = "flex-1 border border-acid bg-acid text-ocean text-xs font-bold transition-colors rounded-lg";
         }
 
+        // Format currency input on type
         function formatExCLP(i) { 
-            let v = i.value.replace(/\D/g, '');
-            i.value = v ? new Intl.NumberFormat('es-CL').format(v) : '';
+            let v = i.value.replace(/\D/g, ''); 
+            i.value = v ? new Intl.NumberFormat('es-CL').format(v) : ''; 
         }
 
-        function resetExpress() { resultDiv.classList.add('hidden'); formDiv.classList.remove('hidden'); }
+        // Reset the calculator view
+        function resetExpress() {
+            resultDiv.classList.add('hidden');
+            formDiv.classList.remove('hidden');
+            // Remove animation classes after reset if present
+            resultDiv.classList.remove('animate-fade-in-up'); 
+        }
 
+        // --- Core Calculation Logic (Actuarial Estimation) ---
         function calcularExpress() {
             const balanceRaw = document.getElementById('ex-saldo').value.replace(/\./g, '');
             const balance = parseInt(balanceRaw) || 0;
             const age = parseInt(document.getElementById('ex-edad').value);
+            const estadoCivil = document.getElementById('ex-estadoCivil').value;
             const includePgu = document.getElementById('ex-pgu-toggle').checked;
             
-            if (!age || age < 18 || age > 99) { showMessage("Edad no válida.", 'error'); return; }
-            if (balance < 1000000) { showMessage("Mínimo $1.000.000.", 'error'); return; }
+            const uf = currentUF;
+            
+            // --- Validation ---
+            if (!age || age < 18 || age > 99) {
+                showMessage("Por favor, ingresa una edad válida (18-99).", 'error');
+                document.getElementById('ex-edad').focus();
+                return;
+            }
+            if (balance < 1000000) { // Set minimum balance to 1M CLP for a meaningful calculation
+                showMessage("Por favor, ingresa el saldo total estimado (mínimo $1.000.000).", 'error');
+                document.getElementById('ex-saldo').focus();
+                return;
+            }
 
-            const r = 0.042;
-            let yearsToLive = Math.max((exGender === 'M' ? 88 : 93) - Math.max(age, 65), 5);
+            // --- MOTOR ACTUARIAL SIMPLIFICADO ---
+            const retAge = (exGender === 'M') ? 65 : 60;
+            const lifeExpM = 88; // Expected end of payments (Male)
+            const lifeExpF = 93; // Expected end of payments (Female)
+            const r = 0.042; // Tasa de Interés Técnica (4.2%)
+
+            let lifeExp = (exGender === 'M') ? lifeExpM : lifeExpF;
+            
+            // Use current age if already past retirement age, otherwise use retirement age
+            let startingAge = Math.max(age, retAge);
+            let yearsToLive = Math.max(lifeExp - startingAge, 5); 
+            
+            // Calculate Present Value of 1 per period (Annuity Factor)
+            // cnuFactor = PV of an Ordinary Annuity of 1 for N periods
             let cnuFactor = (1 - Math.pow(1 + r, -yearsToLive)) / r;
-            let totalMonto = ((balance / currentUF) / (cnuFactor * 12)) * 0.92 * currentUF;
             
-            if (includePgu && age >= 65) totalMonto += PGU_MONTO;
+            // Approximation of required capital to pay 1 UF per month over the period
+            const monthlyAnnuityFactor = cnuFactor * 12; // Approximation is needed to simplify the monthly conversion
             
-            document.getElementById('ex-resultado-monto').innerText = new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 }).format(totalMonto);
+            const capitalUF = balance / uf;
+            
+            let basePensionUF = capitalUF / monthlyAnnuityFactor;
+            
+            // Simplified Adjustment for Survivorship (Renta Vitalicia with dependents is costly)
+            let survivorshipAdjustment = 1.0;
+            if (estadoCivil === 'casado') {
+                // Penaliza la pensión base por la Renta Vitalicia con sobrevivencia (costo de incluir cónyuge)
+                survivorshipAdjustment = 0.75; 
+            }
+            
+            // Apply Renta Vitalicia discount (fees, conservative mortality projection) and survivorship adjustment
+            const factorRV = 0.92 * survivorshipAdjustment;
+            let finalPensionCLP = (basePensionUF * factorRV) * uf;
+            
+            // Add PGU if eligible (age >= 65 and toggled on)
+            let pguMonto = 0;
+            if (includePgu && age >= 65) {
+                pguMonto = PGU_MONTO;
+            }
+            
+            let totalMonto = finalPensionCLP + pguMonto;
+            
+            // --- Display Results ---
+            document.getElementById('ex-resultado-monto').innerText = new Intl.NumberFormat('es-CL', { 
+                style: 'currency', 
+                currency: 'CLP', 
+                maximumFractionDigits: 0 
+            }).format(totalMonto);
+            
+            // Transition to results screen
             formDiv.classList.add('hidden');
             resultDiv.classList.remove('hidden');
+            resultDiv.classList.add('animate-fade-in-up');
         }
 
+        // 3. Financial Indicators Fetch (Updated to store UF globally)
         async function fetchFinancialIndicators() {
             try {
-                const response = await fetch('https://mindicador.cl/api');
-                const data = await response.json();
-                currentUF = data.uf.valor;
-                document.getElementById('navUF').innerText = new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 }).format(currentUF);
-                document.getElementById('navUTM').innerText = new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 }).format(data.utm.valor);
-                document.getElementById('navUF').classList.remove('animate-pulse');
+                // Use exponential backoff for retries
+                for (let i = 0; i < 3; i++) {
+                    const response = await fetch('https://mindicador.cl/api');
+                    if (response.ok) {
+                        const data = await response.json();
+                        const fmt = new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 });
+                        
+                        // Store UF globally
+                        currentUF = data.uf.valor;
+                        
+                        // Update navbar display
+                        document.getElementById('navUF').innerText = fmt.format(currentUF);
+                        document.getElementById('navUTM').innerText = fmt.format(data.utm.valor);
+                        
+                        // Remove loading indicators
+                        document.getElementById('navUF').classList.remove('animate-pulse');
+                        document.getElementById('navUTM').classList.remove('animate-pulse');
+                        return;
+                    }
+                    await new Promise(resolve => setTimeout(resolve, Math.pow(2, i) * 1000));
+                }
             } catch (e) { 
+                console.error("Error fetching financial indicators:", e); 
+                // Fallback display
                 document.getElementById('navUF').innerText = `$${defaultUFValue.toFixed(0)}`;
+                document.getElementById('navUTM').innerText = '$65.770'; 
             }
         }
 
+
+        // --- Initialization ---
         document.addEventListener('DOMContentLoaded', () => {
             fetchFinancialIndicators();
+            setExGender('M'); // Set default visual state
             lucide.createIcons();
         });
     </script>
