@@ -1,40 +1,129 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Deuda Técnica APV | La Justa</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@1&family=Inter:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        ocean: '#022C43',
+                        oceanLight: '#053B58',
+                        oceanDark: '#011826',
+                        acid: '#CCFF00',
+                        lightText: '#E6F4F1'
+                    },
+                    fontFamily: {
+                        serif: ['Instrument Serif', 'serif'],
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Space Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { background-color: #022C43; color: #E6F4F1; }
+        .grid-bg { 
+            background-image: linear-gradient(rgba(204, 255, 0, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(204, 255, 0, 0.03) 1px, transparent 1px); 
+            background-size: 40px 40px;
+        }
+        .glass-panel { 
+            background: rgba(5, 59, 88, 0.3); 
+            backdrop-filter: blur(16px); 
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+        }
+        .btn-3d { transition: all 0.1s ease; box-shadow: 4px 4px 0px rgba(0,0,0,0.5); }
+        .btn-3d:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px rgba(0,0,0,0.5); }
+    </style>
 </head>
-<body class="grid-bg bg-ocean text-lightText antialiased">
-    <main class="pt-32 pb-20 max-w-4xl mx-auto px-4">
-        <header class="text-center mb-12">
-            <span class="font-mono text-acid text-xs tracking-[0.3em] uppercase mb-4 block">Análisis Técnico 04</span>
-            <h1 class="font-serif text-5xl md:text-7xl text-white italic leading-none mb-6">
-                Deuda Técnica: <br/>
-                <span class="text-acid">El costo de tu inercia.</span>
-            </h1>
-        </header>
+<body class="grid-bg min-h-screen antialiased">
 
-        <div class="glass-panel p-8 md:p-12 space-y-8 font-sans leading-relaxed text-gray-300">
-            <p class="text-xl text-white font-light">
-                Mantener tu APV en la misma AFP donde cotizas obligatoriamente podría estar costándote hasta un <span class="text-acid font-mono">0.95% extra</span> anual en comisiones.
-            </p>
-
-            <div class="bg-oceanDark/50 border-l-4 border-acid p-6 font-mono text-sm">
-                <h3 class="text-acid font-bold mb-2 uppercase tracking-widest">// EL DATO CRUDO (Fuente: SP/CMF)</h3>
-                <p>Comisión AFP Promedio: 1.10%</p>
-                <p>Comisión Institución Externa: 0.35%</p>
-                <p class="text-white mt-2">Diferencia: <span class="bg-acid text-ocean px-2 font-bold">0.75% Anual</span></p>
-            </div>
-
-            <p>
-                A 20 años plazo, esta "deuda técnica" no es solo un número; es capital que dejas de percibir por no optimizar tu vehículo de inversión.
-            </p>
-
-            <div class="pt-10 border-t border-white/10">
-                <a href="simulador.html" class="btn-3d w-full bg-acid text-ocean py-4 font-bold text-center block uppercase tracking-widest text-sm">
-                    Simular impacto en mi jubilación
-                </a>
-            </div>
+    <nav class="fixed w-full z-50 glass-panel border-b border-white/5">
+        <div class="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-3">
+                <img src="Logo.jpg" alt="Logo" class="h-10 w-10 rounded-lg object-cover">
+                <span class="font-serif text-2xl text-acid italic">La Justa.</span>
+            </a>
+            <a href="index.html" class="font-mono text-sm text-white hover:text-acid transition-colors">← VOLVER</a>
         </div>
+    </nav>
+
+    <main class="pt-32 pb-20 max-w-4xl mx-auto px-4">
+        <article class="space-y-12">
+            <header class="text-center space-y-4">
+                <span class="font-mono text-acid text-xs tracking-[0.3em] uppercase block">// REVELACIÓN_TÉCNICA_02</span>
+                <h1 class="font-serif text-5xl md:text-7xl italic leading-none text-white">
+                    Deuda Técnica: <br>
+                    <span class="text-acid text-glow">El costo de tu inercia.</span>
+                </h1>
+                <div class="flex justify-center gap-8 pt-4 font-mono text-[10px] text-white/40 uppercase tracking-widest">
+                    <span>Publicado: 18 DIC 2025</span>
+                    <span>Fuente: SP / CMF</span>
+                </div>
+            </header>
+
+            <div class="glass-panel rounded-2xl p-8 md:p-12 space-y-8">
+                <p class="text-xl md:text-2xl font-sans font-light leading-relaxed">
+                    Mantener tu APV en la misma AFP donde cotizas obligatoriamente es, en la mayoría de los casos, un error de eficiencia. Tu fidelidad te está costando dinero.
+                </p>
+
+                <div class="bg-oceanDark/50 border-l-4 border-acid p-6 font-mono space-y-2">
+                    <p class="text-acid text-xs font-bold uppercase tracking-widest mb-4">// DATOS_SISTEMA_ACTUAL</p>
+                    <p class="text-white flex justify-between"><span>Comisión APV en AFP (Promedio):</span> <span>0.95%</span></p>
+                    <p class="text-white flex justify-between"><span>Comisión Institución Externa:</span> <span>0.25%</span></p>
+                    <div class="border-t border-white/10 mt-4 pt-4">
+                        <p class="text-acid text-lg flex justify-between font-bold">
+                            <span>AHORRO POTENCIAL:</span> 
+                            <span>0.70% ANUAL</span>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="space-y-6 font-sans text-gray-300 leading-relaxed">
+                    <p>
+                        Un 0.70% puede parecer insignificante en el reporte mensual, pero aplicado al interés compuesto durante 20 años, se transforma en una cifra escandalosa. Es capital que dejas de percibir simplemente por no mover tu saldo a un vehículo más eficiente.
+                    </p>
+                    
+                    <h3 class="font-serif text-3xl text-white italic pt-4 underline decoration-acid">El Escándalo en Cifras</h3>
+                    <p>
+                        Para un saldo acumulado de $20.000.000, esta diferencia de comisión representa una pérdida proyectada de:
+                    </p>
+                    <div class="text-center py-6">
+                        <span class="font-mono text-5xl md:text-6xl text-acid font-bold">**$3.500.000**</span>
+                        <p class="font-mono text-[10px] text-white/50 mt-2 uppercase tracking-tighter">Pérdida estimada a largo plazo por inercia administrativa</p>
+                    </div>
+                </div>
+
+                <div class="pt-8 border-t border-white/10">
+                    <a href="simulador.html" class="btn-3d w-full bg-acid text-ocean py-5 rounded-lg font-mono font-bold text-center block uppercase tracking-widest hover:bg-white transition-all">
+                        Simular impacto en mi jubilación →
+                    </a>
+                    <p class="text-center mt-4 font-mono text-[9px] text-white/30 uppercase">
+                        Cálculo basado en normativas de la Superintendencia de Pensiones.
+                    </p>
+                </div>
+            </div>
+        </article>
     </main>
+
+    <footer class="py-12 border-t border-white/5 text-center font-mono text-[10px] text-white/20 uppercase tracking-[0.2em]">
+        &copy; 2025 La Justa Fintech SpA // Justicia Financiera.
+    </footer>
+
+    <script>
+        lucide.createIcons();
+    </script>
 </body>
 </html>
