@@ -407,8 +407,8 @@
                             <div class="absolute inset-0 bg-acid/10 group-hover:bg-acid/20 transition-colors"></div>
                             <div class="absolute bottom-4 left-4 font-mono text-xs bg-ocean px-2 py-1 text-acid">18 DIC 2025</div>
                         </div>
-                        <h3 class="font-serif text-2xl text-white group-hover:text-acid">Deuda Técnica: El costo de tu inercia</h3>
-                        <p class="text-gray-500 text-sm mt-2">Mantener tu APV en la misma AFP podría costarte hasta un 0.95% anual extra.</p>
+                        <h3 class="font-serif text-2xl text-white group-hover:text-acid italic">Deuda Técnica: El costo de tu inercia</h3>
+                        <p class="text-gray-500 text-sm mt-2 font-sans">Mantener tu APV en la misma AFP podría costarte hasta un 0.95% anual extra.</p>
                     </article>
                 </a>
                 <article class="group cursor-pointer">
@@ -528,19 +528,15 @@
             if (isHidden) {
                 // OPEN MODAL
                 modal.classList.remove('hidden');
-                // The new modal structure handles centering with flex, so we don't need complex positioning logic here.
-                // We ensure it gets the 'open' animation class (using the container class 'animate-fade-in' which is fine for the whole modal block)
                 modal.classList.remove('animate-modal-close');
                 document.body.style.overflow = 'hidden';
                 
-                // Update UF display in modal
                 document.getElementById('modalUFShow').innerText = new Intl.NumberFormat('es-CL', { 
                     style: 'currency', 
                     currency: 'CLP',
                     maximumFractionDigits: 2
                 }).format(currentUF);
 
-                // Ensure initial visual state is correct
                 setExGender(exGender);
                 resetExpress();
 
@@ -561,29 +557,23 @@
             exGender = g;
             const bM = document.getElementById('ex-btn-M'), bF = document.getElementById('ex-btn-F');
             
-            // Unselected state
             [bM, bF].forEach(b => b.className = "flex-1 border border-white/10 bg-oceanLight/50 text-xs font-bold text-white/70 transition-colors rounded-lg hover:bg-oceanLight/80");
             
-            // Selected state
             const active = g === 'M' ? bM : bF;
             active.className = "flex-1 border border-acid bg-acid text-ocean text-xs font-bold transition-colors rounded-lg";
         }
 
-        // Format currency input on type
         function formatExCLP(i) { 
             let v = i.value.replace(/\D/g, ''); 
             i.value = v ? new Intl.NumberFormat('es-CL').format(v) : ''; 
         }
 
-        // Reset the calculator view
         function resetExpress() {
             resultDiv.classList.add('hidden');
             formDiv.classList.remove('hidden');
-            // Remove animation classes after reset if present
             resultDiv.classList.remove('animate-fade-in-up'); 
         }
 
-        // --- Core Calculation Logic (Actuarial Estimation) ---
         function calcularExpress() {
             const balanceRaw = document.getElementById('ex-saldo').value.replace(/\./g, '');
             const balance = parseInt(balanceRaw) || 0;
@@ -593,110 +583,63 @@
             
             const uf = currentUF;
             
-            // --- Validation ---
             if (!age || age < 18 || age > 99) {
                 showMessage("Por favor, ingresa una edad válida (18-99).", 'error');
                 document.getElementById('ex-edad').focus();
                 return;
             }
-            if (balance < 1000000) { // Set minimum balance to 1M CLP for a meaningful calculation
+            if (balance < 1000000) {
                 showMessage("Por favor, ingresa el saldo total estimado (mínimo $1.000.000).", 'error');
                 document.getElementById('ex-saldo').focus();
                 return;
             }
 
-            // --- MOTOR ACTUARIAL SIMPLIFICADO ---
             const retAge = (exGender === 'M') ? 65 : 60;
-            const lifeExpM = 88; // Expected end of payments (Male)
-            const lifeExpF = 93; // Expected end of payments (Female)
-            const r = 0.042; // Tasa de Interés Técnica (4.2%)
-
-            let lifeExp = (exGender === 'M') ? lifeExpM : lifeExpF;
-            
-            // Use current age if already past retirement age, otherwise use retirement age
+            const r = 0.042;
             let startingAge = Math.max(age, retAge);
-            let yearsToLive = Math.max(lifeExp - startingAge, 5); 
-            
-            // Calculate Present Value of 1 per period (Annuity Factor)
-            // cnuFactor = PV of an Ordinary Annuity of 1 for N periods
+            let yearsToLive = Math.max((exGender === 'M' ? 88 : 93) - startingAge, 5); 
             let cnuFactor = (1 - Math.pow(1 + r, -yearsToLive)) / r;
-            
-            // Approximation of required capital to pay 1 UF per month over the period
-            const monthlyAnnuityFactor = cnuFactor * 12; // Approximation is needed to simplify the monthly conversion
-            
+            const monthlyAnnuityFactor = cnuFactor * 12; 
             const capitalUF = balance / uf;
-            
             let basePensionUF = capitalUF / monthlyAnnuityFactor;
-            
-            // Simplified Adjustment for Survivorship (Renta Vitalicia with dependents is costly)
-            let survivorshipAdjustment = 1.0;
-            if (estadoCivil === 'casado') {
-                // Penaliza la pensión base por la Renta Vitalicia con sobrevivencia (costo de incluir cónyuge)
-                survivorshipAdjustment = 0.75; 
-            }
-            
-            // Apply Renta Vitalicia discount (fees, conservative mortality projection) and survivorship adjustment
+            let survivorshipAdjustment = (estadoCivil === 'casado') ? 0.75 : 1.0;
             const factorRV = 0.92 * survivorshipAdjustment;
             let finalPensionCLP = (basePensionUF * factorRV) * uf;
-            
-            // Add PGU if eligible (age >= 65 and toggled on)
-            let pguMonto = 0;
-            if (includePgu && age >= 65) {
-                pguMonto = PGU_MONTO;
-            }
-            
+            let pguMonto = (includePgu && age >= 65) ? PGU_MONTO : 0;
             let totalMonto = finalPensionCLP + pguMonto;
             
-            // --- Display Results ---
             document.getElementById('ex-resultado-monto').innerText = new Intl.NumberFormat('es-CL', { 
                 style: 'currency', 
                 currency: 'CLP', 
                 maximumFractionDigits: 0 
             }).format(totalMonto);
             
-            // Transition to results screen
             formDiv.classList.add('hidden');
             resultDiv.classList.remove('hidden');
             resultDiv.classList.add('animate-fade-in-up');
         }
 
-        // 3. Financial Indicators Fetch (Updated to store UF globally)
         async function fetchFinancialIndicators() {
             try {
-                // Use exponential backoff for retries
-                for (let i = 0; i < 3; i++) {
-                    const response = await fetch('https://mindicador.cl/api');
-                    if (response.ok) {
-                        const data = await response.json();
-                        const fmt = new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 });
-                        
-                        // Store UF globally
-                        currentUF = data.uf.valor;
-                        
-                        // Update navbar display
-                        document.getElementById('navUF').innerText = fmt.format(currentUF);
-                        document.getElementById('navUTM').innerText = fmt.format(data.utm.valor);
-                        
-                        // Remove loading indicators
-                        document.getElementById('navUF').classList.remove('animate-pulse');
-                        document.getElementById('navUTM').classList.remove('animate-pulse');
-                        return;
-                    }
-                    await new Promise(resolve => setTimeout(resolve, Math.pow(2, i) * 1000));
+                const response = await fetch('https://mindicador.cl/api');
+                if (response.ok) {
+                    const data = await response.json();
+                    const fmt = new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 });
+                    currentUF = data.uf.valor;
+                    document.getElementById('navUF').innerText = fmt.format(currentUF);
+                    document.getElementById('navUTM').innerText = fmt.format(data.utm.valor);
+                    document.getElementById('navUF').classList.remove('animate-pulse');
+                    document.getElementById('navUTM').classList.remove('animate-pulse');
                 }
             } catch (e) { 
-                console.error("Error fetching financial indicators:", e); 
-                // Fallback display
                 document.getElementById('navUF').innerText = `$${defaultUFValue.toFixed(0)}`;
                 document.getElementById('navUTM').innerText = '$65.770'; 
             }
         }
 
-
-        // --- Initialization ---
         document.addEventListener('DOMContentLoaded', () => {
             fetchFinancialIndicators();
-            setExGender('M'); // Set default visual state
+            setExGender('M');
             lucide.createIcons();
         });
     </script>
