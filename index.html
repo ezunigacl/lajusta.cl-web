@@ -10,7 +10,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@1&family=Inter:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Using Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <script>
@@ -117,31 +116,24 @@
 </head>
 <body class="grid-bg relative antialiased selection:bg-acid selection:text-ocean">
 
-    <!-- Simple Message Box for Notifications -->
     <div id="messageBox" class="fixed top-4 left-1/2 -translate-x-1/2 hidden z-[1000] transition-all duration-300 max-w-sm w-full animate-fade-in-up" role="alert">
         <div class="p-4 rounded-xl shadow-xl font-mono" id="messageBoxContent">
             <p id="messageText" class="font-bold text-center"></p>
         </div>
     </div>
     
-    <!-- START MODAL DE CÁLCULO RÁPIDO (Quick Calc Modal) -->
     <div id="expressModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4">
-        <!-- Overlay for closing -->
         <div class="absolute inset-0 bg-oceanDark/90 backdrop-blur-md" onclick="toggleExpressModal()"></div>
         
-        <!-- Modal Content Container -->
         <div class="relative w-full max-w-[380px] animate-fade-in">
             <div class="glass-panel rounded-2xl p-6 shadow-2xl border border-white/10 flex flex-col overflow-hidden">
                 
-                <!-- Background Glow -->
                 <div class="absolute top-0 right-0 w-32 h-32 bg-acid opacity-5 blur-2xl rounded-full -mr-10 -mt-10"></div>
                 
-                <!-- Close Button -->
                 <button onclick="toggleExpressModal()" class="absolute top-4 right-4 text-gray-400 hover:text-acid z-20">
                     <i data-lucide="x" class="w-6 h-6"></i>
                 </button>
                 
-                <!-- Header (Re-inserted UF Display) -->
                 <div class="text-center mb-6 relative z-10">
                     <h1 class="font-serif text-3xl italic text-acid tracking-wide inline-flex items-center gap-2">
                         La Justa<span class="text-white">.</span>
@@ -152,13 +144,11 @@
                     </div>
                 </div>
 
-                <!-- FORM INPUTS -->
                 <div id="express-form" class="space-y-4 relative z-10 animate-fade-in">
                     
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             <label class="block text-[10px] font-bold text-acid uppercase mb-1.5 ml-1 font-mono">Tu Edad</label>
-                            <!-- Added min/max from previous version -->
                             <input type="number" id="ex-edad" value="65" class="input-premium w-full rounded-lg px-3 py-2 text-center text-lg font-bold" min="18" max="99">
                         </div>
                         <div>
@@ -181,12 +171,10 @@
                     
                     <div>
                         <label class="block text-[10px] font-bold text-acid uppercase mb-1.5 ml-1 font-mono">Saldo Acumulado AFP</label>
-                        <!-- Reverting placeholder to more helpful value and adding text-glow -->
                         <input type="text" id="ex-saldo" placeholder="10.000.000" oninput="formatExCLP(this)" class="input-premium w-full rounded-lg px-3 py-2.5 font-bold text-lg text-center text-acid text-glow">
                     </div>
                     
                     <div class="flex items-center justify-between p-3 bg-oceanLight/30 rounded-lg border border-white/5">
-                        <!-- Adding conditional text to PGU for clarity -->
                         <span class="text-xs font-bold text-white font-mono">¿Incluir PGU? (Si edad $\ge$ 65)</span>
                         <label class="relative inline-flex items-center cursor-pointer">
                             <input type="checkbox" id="ex-pgu-toggle" class="sr-only peer" checked>
@@ -197,7 +185,6 @@
                     <button onclick="calcularExpress()" class="btn-3d w-full bg-acid text-ocean font-extrabold py-3.5 rounded-lg uppercase tracking-widest text-xs">Simular Pensión</button>
                 </div>
 
-                <!-- RESULT VIEW (Reverting text color and ensuring animation) -->
                 <div id="express-result" class="hidden text-center py-4 relative z-10 animate-fade-in-up">
                     <span class="text-[9px] font-mono text-white/50 uppercase tracking-[0.2em]">Monto Mensual Estimado (CLP)</span>
                     <div id="ex-resultado-monto" class="text-4xl font-mono font-bold text-acid my-4 text-glow">$0</div>
@@ -209,15 +196,11 @@
             </div>
         </div>
     </div>
-    <!-- END MODAL DE CÁLCULO RÁPIDO -->
-
-
     <nav class="fixed w-full z-50 glass-panel border-b-0 border-white/5">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-20">
                 <div class="flex items-center gap-6">
                     <a href="index.html" class="flex items-center gap-3 group flex-shrink-0">
-                        <!-- LOGO RESTORED: Using your original reference to Logo.jpg -->
                         <img src="Logo.jpg" alt="Logo" class="h-10 w-10 rounded-lg border border-white/10 group-hover:border-acid transition-colors object-cover">
                         <span class="font-serif text-2xl md:text-3xl text-acid tracking-wide">La Justa<span class="text-white">.</span></span>
                     </a>
@@ -418,14 +401,16 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="font-serif text-4xl text-white mb-12">La Verdad <span class="font-sans text-lg text-gray-500 not-italic ml-4">// Artículos Recientes</span></h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-glow">
-                <article class="group cursor-pointer">
-                    <div class="h-48 w-full bg-oceanLight mb-4 border border-white/5 relative overflow-hidden">
-                        <div class="absolute inset-0 bg-acid/10 group-hover:bg-acid/20 transition-colors"></div>
-                        <div class="absolute bottom-4 left-4 font-mono text-xs bg-ocean px-2 py-1 text-acid">09 DIC 2025</div>
-                    </div>
-                    <h3 class="font-serif text-2xl text-white group-hover:text-acid">¿Tu APV realmente rinde?</h3>
-                    <p class="text-gray-500 text-sm mt-2">Desglosamos las comisiones fantasmas de las principales administradoras.</p>
-                </article>
+                <a href="apv-deuda.html" class="group cursor-pointer">
+                    <article>
+                        <div class="h-48 w-full bg-oceanLight mb-4 border border-white/5 relative overflow-hidden">
+                            <div class="absolute inset-0 bg-acid/10 group-hover:bg-acid/20 transition-colors"></div>
+                            <div class="absolute bottom-4 left-4 font-mono text-xs bg-ocean px-2 py-1 text-acid">18 DIC 2025</div>
+                        </div>
+                        <h3 class="font-serif text-2xl text-white group-hover:text-acid">Deuda Técnica: El costo de tu inercia</h3>
+                        <p class="text-gray-500 text-sm mt-2">Mantener tu APV en la misma AFP podría costarte hasta un 0.95% anual extra.</p>
+                    </article>
+                </a>
                 <article class="group cursor-pointer">
                     <div class="h-48 w-full bg-oceanLight mb-4 border border-white/5 relative overflow-hidden">
                         <div class="absolute inset-0 bg-acid/10 group-hover:bg-acid/20 transition-colors"></div>
@@ -477,7 +462,6 @@
             <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
                 <div class="col-span-1 md:col-span-2">
                     <div class="flex items-center gap-3 mb-4 justify-center md:justify-start">
-                        <!-- LOGO RESTORED: Using your original reference to Logo.jpg -->
                         <img src="Logo.jpg" alt="Logo" class="h-8 w-8 rounded-md border border-white/10 opacity-80 grayscale hover:grayscale-0 transition-all">
                         <span class="font-serif text-3xl text-white italic tracking-wide">La Justa.</span>
                     </div>
