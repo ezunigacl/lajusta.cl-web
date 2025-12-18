@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SCOMP Hacks - La Justa</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <style>
+        :root { --ocean: #0a0f14; --ocean-dark: #05070a; --acid: #d4ff00; }
+        body { background-color: var(--ocean); color: #fff; font-family: 'Space Mono', monospace; }
+        .font-serif { font-family: 'Instrument Serif', serif; }
+        .glass-panel { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .text-acid { color: var(--acid); }
+        .bg-acid { background-color: var(--acid); }
+        .grid-bg { background-image: radial-gradient(rgba(212, 255, 0, 0.1) 1px, transparent 1px); background-size: 30px 30px; }
+    </style>
+</head>
+<body class="min-h-screen grid-bg">
+    <nav class="fixed w-full z-50 glass-panel border-b border-white/5">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <a href="index.html" class="font-serif text-2xl tracking-tighter flex items-center gap-2">
+                <span class="text-acid underline decoration-1">La</span> Justa
+            </a>
+            <a href="index.html" class="text-xs font-mono hover:text-acid transition-colors">/ RETORNAR</a>
+        </div>
+    </nav>
+
+    <main class="pt-32 pb-20 px-4">
+        <article class="max-w-3xl mx-auto">
+            <header class="mb-12">
+                <div class="flex items-center gap-4 mb-6">
+                    <span class="px-3 py-1 bg-acid/10 border border-acid/20 text-acid text-[10px] font-mono rounded-full uppercase tracking-widest">Análisis Técnico // 03</span>
+                    <span class="text-gray-500 text-[10px] font-mono">ESTADO: PUBLICADO</span>
+                </div>
+                <h1 class="font-serif text-5xl md:text-7xl leading-none mb-8 italic">
+                    SCOMP Hacks: Descifrando la brecha entre ofertas y realidad.
+                </h1>
+                <div class="h-48 md:h-64 w-full bg-white/5 border border-white/10 rounded-2xl overflow-hidden relative">
+                    <div class="absolute inset-0 flex items-center justify-center opacity-20">
+                        <span class="font-mono text-xs italic">[ IMG_DATA: AUDITORIA_MERCADO ]</span>
+                    </div>
+                </div>
+            </header>
+
+            <section class="space-y-8 text-gray-300 leading-relaxed font-sans text-lg">
+                <p>
+                    El Sistema de Consultas de Ofertas de Montos de Pensión (SCOMP) fue diseñado para inyectar transparencia en un mercado históricamente opaco. Sin embargo, en la práctica, se ha convertido en una <span class="text-white italic">"caja negra"</span>. Aceptar la oferta con el monto más alto sin auditar los parámetros subyacentes es el segundo error más caro en una jubilación.
+                </p>
+
+                <div class="glass-panel p-8 rounded-2xl border-l-2 border-acid my-12">
+                    <h2 class="font-serif text-2xl text-white mb-4 italic italic">La Trampa de la Tasa de Interés</h2>
+                    <p class="text-sm">Las compañías de seguros no compiten solo en montos, sino en la <span class="text-acid">tasa de interés técnico</span> que aplican a tu capital. Una oferta puede parecer superior hoy, pero ocultar condiciones de garantía que merman tu patrimonio a largo plazo.</p>
+                </div>
+
+                <h3 class="font-serif text-3xl text-white italic mt-12">El Dato Crudo: Dispersión Silenciosa</h3>
+                <ul class="list-none space-y-4 text-base font-mono">
+                    <li class="flex gap-4 items-start"><span class="text-acid">→</span> <span><b class="text-white">Arbitraje de Tasas:</b> Existe una brecha de hasta 1.2% en las tasas implícitas entre distintas compañías para un mismo perfil.</span></li>
+                    <li class="flex gap-4 items-start"><span class="text-acid">→</span> <span><b class="text-white">El Costo del Error:</b> Elegir una oferta sin auditar el factor de conversión puede significar una pérdida de hasta 2.5 UF mensuales.</span></li>
+                </ul>
+
+                <h3 class="font-serif text-3xl text-white italic mt-12">La Revelación: Auditoría V4.0</h3>
+                <p>
+                    No basta con leer la primera página del certificado. Es imperativo cruzar los datos de mortalidad, cargas de salud y beneficiarios legales. Nuestro motor actuarial desglosa cada oferta, comparando la Renta Vitalicia Simple contra un <span class="italic">benchmark</span> técnico para asegurar que no se quede capital en la mesa.
+                </p>
+            </section>
+
+            <footer class="mt-20 pt-12 border-t border-white/10 text-center">
+                <a href="auditorscomp.html" class="inline-block bg-acid text-ocean px-12 py-5 font-mono text-sm font-bold hover:scale-105 transition-transform rounded-full">
+                    AUDITAR MI CERTIFICADO SCOMP
+                </a>
+            </footer>
+        </article>
+    </main>
+</body>
+</html>
