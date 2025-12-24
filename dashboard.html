@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Maestro | La Justa</title>
+    
+    <!-- React Core -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Babel para compilar JSX en el navegador -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Iconos Lucide -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        ocean: '#022C43',
+                        acid: '#CCFF00',
+                    },
+                    fontFamily: {
+                        serif: ['"Instrument Serif"', 'serif'],
+                        mono: ['"Space Mono"', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { background-color: #022C43; color: white; }
+        .grid-bg {
+            background-image: 
+                linear-gradient(rgba(204, 255, 0, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(204, 255, 0, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        .glass-panel {
+            background: rgba(5, 59, 88, 0.3);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+        /* Animaciones suaves */
+        .fade-in { animation: fadeIn 0.5s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="grid-bg min-h-screen selection:bg-acid selection:text-ocean overflow-x-hidden">
+
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useMemo } = React;
+
+        // --- DATA INICIAL ---
+        const INITIAL_TASKS = [
+            {
+                id: 'CORE-01', category: 'TECH', task: 'Ecosistema de Herramientas V1', owner: 'Dev Team', month: 1, status: 'done', progress: 100,
+                description: 'Despliegue de herramientas base (HTML/JS Vanilla + Tailwind).',
+                subtasks: [
+                    { id: 'c1-1', title: 'Simulador Pensión V3 (Motor Actuarial)', status: 'done' },
+                    { id: 'c1-2', title: 'Auditor SCOMP V4 (PDF.js Integration)', status: 'done' },
+                    { id: 'c1-3', title: 'Calculadoras Nicho (ELD, PGU, Salud)', status: 'done' },
+                    { id: 'c1-4', title: 'Landing Page & Navegación', status: 'done' }
+                ]
+            },
+            {
+                id: 'CORE-02', category: 'TECH', task: 'Infraestructura de Datos (Backend)', owner: 'Lead Arch', month: 1, status: 'pending', progress: 30,
+                description: 'Migración de localStorage a Base de Datos persistente.',
+                subtasks: [
+                    { id: 'c2-1', title: 'Diseño Schema Firestore/PostgreSQL', status: 'pending' },
+                    { id: 'c2-2', title: 'API Endpoints para guardar simulaciones', status: 'locked' },
+                    { id: 'c2-3', title: 'Migración lógica JS a Serverless Functions', status: 'locked' }
+                ]
+            },
+            {
+                id: 'CORE-03', category: 'TECH', task: 'Sistema de Autenticación (Auth)', owner: 'Dev Team', month: 2, status: 'pending', progress: 0,
+                description: 'Implementar Login funcional.',
+                subtasks: [
+                    { id: 'c3-1', title: 'Integración Auth0 / Firebase Auth', status: 'pending' },
+                    { id: 'c3-2', title: 'Protección de rutas privadas', status: 'locked' },
+                    { id: 'c3-3', title: 'Recuperación de contraseña', status: 'locked' }
+                ]
+            },
+            {
+                id: 'GROWTH-01', category: 'EEAT', task: 'SEO Técnico & Performance', owner: 'Growth', month: 1, status: 'pending', progress: 60,
+                description: 'Optimización de Core Web Vitals.',
+                subtasks: [
+                    { id: 'g1-1', title: 'Lazy Loading de librerías', status: 'done' },
+                    { id: 'g1-2', title: 'Meta Tags Dinámicos', status: 'pending' },
+                    { id: 'g1-3', title: 'Schema Markup Calculadoras', status: 'pending' }
+                ]
+            },
+            {
+                id: 'GROWTH-02', category: 'EEAT', task: 'Content Hub "Verdad Financiera"', owner: 'Content', month: 2, status: 'pending', progress: 15,
+                description: 'Expansión del blog a centro de recursos.',
+                subtasks: [
+                    { id: 'g2-1', title: 'Guía paso a paso Auditor SCOMP', status: 'pending' },
+                    { id: 'g2-2', title: 'Video-tutoriales TikTok', status: 'pending' },
+                    { id: 'g2-3', title: 'E-book "Estrategias ELD"', status: 'locked' }
+                ]
+            },
+            {
+                id: 'BIZ-01', category: 'B2B', task: 'Validación Comercial B2B', owner: 'Product Owner', month: 3, status: 'locked', progress: 0,
+                description: 'Piloto "Salud Financiera Corporativa".',
+                subtasks: [
+                    { id: 'b1-1', title: 'Dashboard Multi-usuario Empresas', status: 'locked' },
+                    { id: 'b1-2', title: 'Reportes Agregados Anónimos', status: 'locked' },
+                    { id: 'b1-3', title: 'Venta piloto (Empresa A)', status: 'locked' }
+                ]
+            }
+        ];
+
+        // --- COMPONENTES UI ---
+        const Icon = ({ name, size = 18, className = "" }) => {
+            useEffect(() => {
+                lucide.createIcons();
+            }, [name]); 
+            return <i data-lucide={name} width={size} height={size} className={className}></i>;
+        };
+
+        const StatusBadge = ({ status }) => {
+            const styles = {
+                done: 'bg-acid text-ocean shadow-[0_0_10px_#CCFF00]',
+                pending: 'bg-transparent border border-acid/50 text-acid/70',
+                locked: 'bg-red-500/10 border border-red-500/30 text-red-400 opacity-70',
+            };
+            const labels = { done: 'COMPLETADO', pending: 'EN PROGRESO', locked: 'BLOQUEADO' };
+            return (
+                <span className={`px-2 py-0.5 rounded text-[9px] font-mono font-bold tracking-widest ${styles[status]}`}>
+                    {labels[status]}
+                </span>
+            );
+        };
+
+        const MiniProgressBar = ({ progress, status }) => {
+            const color = status === 'locked' ? 'bg-red-500/50' : 'bg-acid';
+            return (
+                <div className="w-16 h-1 bg-white/10 rounded-full overflow-hidden ml-2">
+                    <div className={`h-full ${color} transition-all duration-500`} style={{ width: `${progress}%` }} />
+                </div>
+            );
+        };
+
+        // --- APP PRINCIPAL ---
+        function App() {
+            // Estado persistente: Carga inicial desde localStorage
+            const [tasks, setTasks] = useState(() => {
+                const saved = localStorage.getItem('lajusta_roadmap_data');
+                return saved ? JSON.parse(saved) : INITIAL_TASKS;
+            });
+
+            const [lastUpdated, setLastUpdated] = useState(() => {
+                return localStorage.getItem('lajusta_roadmap_last_update') || 'Inicial';
+            });
+
+            const [expandedRows, setExpandedRows] = useState({});
+            const [activeTab, setActiveTab] = useState('ALL');
+
+            // Efecto de Guardado Automático
+            useEffect(() => {
+                localStorage.setItem('lajusta_roadmap_data', JSON.stringify(tasks));
+                lucide.createIcons(); // Refrescar iconos al renderizar
+            }, [tasks]);
+
+            // Lógica de negocio
+            const handleUpdate = (newTasks) => {
+                setTasks(newTasks);
+                const now = new Date().toLocaleString('es-CL', { day: '2-digit', month: 'short', hour: '2-digit', minute:'2-digit' });
+                setLastUpdated(now);
+                localStorage.setItem('lajusta_roadmap_last_update', now);
+            };
+
+            const toggleRow = (id) => {
+                setExpandedRows(prev => ({ ...prev, [id]: !prev[id] }));
+            };
+
+            const handleSubtaskToggle = (taskId, subtaskId) => {
+                const newTasks = tasks.map(task => {
+                    if (task.id !== taskId) return task;
+                    if (task.status === 'locked') return task;
+
+                    const updatedSubtasks = task.subtasks.map(st => 
+                        st.id === subtaskId ? { ...st, status: st.status === 'done' ? 'pending' : 'done' } : st
+                    );
+
+                    const completedCount = updatedSubtasks.filter(st => st.status === 'done').length;
+                    const newProgress = Math.round((completedCount / updatedSubtasks.length) * 100);
+                    
+                    let newStatus = task.status;
+                    if (newProgress === 100) newStatus = 'done';
+                    else if (newProgress > 0) newStatus = 'pending';
+
+                    return { ...task, subtasks: updatedSubtasks, progress: newProgress, status: newStatus };
+                });
+                
+                handleUpdate(newTasks);
+            };
+
+            const metrics = useMemo(() => {
+                let totalSub = 0, doneSub = 0;
+                tasks.forEach(t => {
+                    totalSub += t.subtasks.length;
+                    doneSub += t.subtasks.filter(st => st.status === 'done').length;
+                });
+                return { progress: totalSub === 0 ? 0 : Math.round((doneSub / totalSub) * 100) };
+            }, [tasks]);
+
+            const filteredTasks = useMemo(() => {
+                return activeTab === 'ALL' ? tasks : tasks.filter(t => t.category === activeTab);
+            }, [tasks, activeTab]);
+
+            // Resetear datos (útil para debug)
+            const resetData = () => {
+                if(confirm('¿Reiniciar todo el progreso a valores por defecto?')) {
+                    handleUpdate(INITIAL_TASKS);
+                    setExpandedRows({});
+                }
+            };
+
+            return (
+                <div className="max-w-7xl mx-auto p-4 md:p-8 fade-in">
+                    
+                    {/* HEADER */}
+                    <header className="mb-12 border-b border-acid/20 pb-6 flex flex-col md:flex-row justify-between items-end gap-6">
+                        <div>
+                            <div className="flex items-center gap-2 mb-2">
+                                <span className="px-2 py-0.5 bg-acid text-ocean text-[10px] font-bold font-mono rounded-sm">FASE 2</span>
+                                <span className="font-mono text-acid text-xs tracking-widest opacity-80">ESCALAMIENTO</span>
+                            </div>
+                            <h1 className="font-serif italic text-5xl md:text-6xl text-white leading-none">
+                                LaJusta<span className="text-acid">.cl</span> <span className="text-2xl not-italic font-sans font-light text-slate-400">/ Roadmap</span>
+                            </h1>
+                            <div className="mt-2 text-xs font-mono text-gray-500 flex items-center gap-2">
+                                <Icon name="clock" size={12} /> Última actualización: <span className="text-acid">{lastUpdated}</span>
+                            </div>
+                        </div>
+
+                        <div className="flex gap-8">
+                            <div className="text-right">
+                                <p className="font-mono text-[10px] text-slate-400 uppercase mb-1">Health Score</p>
+                                <div className="text-acid font-mono text-2xl font-bold flex items-center justify-end gap-2">
+                                    <Icon name="zap" size={18} /> 94%
+                                </div>
+                            </div>
+                            <div className="text-right">
+                                <p className="font-mono text-[10px] text-slate-400 uppercase mb-1">Progreso Global</p>
+                                <div className="text-white font-mono text-2xl font-bold">
+                                    {metrics.progress}%
+                                </div>
+                            </div>
+                        </div>
+                    </header>
+
+                    {/* CONTROLS */}
+                    <div className="flex justify-between items-center mb-6">
+                        <div className="flex bg-oceanLight/50 p-1 rounded-lg border border-white/10">
+                            {['ALL', 'TECH', 'EEAT', 'B2B'].map(tab => (
+                                <button key={tab} onClick={() => setActiveTab(tab)}
+                                    className={`px-4 py-2 rounded-md font-mono text-xs transition-all ${activeTab === tab ? 'bg-acid text-ocean font-bold' : 'text-slate-400 hover:text-white'}`}>
+                                    {tab}
+                                </button>
+                            ))}
+                        </div>
+                        <button onClick={resetData} className="text-xs text-red-400 hover:text-red-300 font-mono flex items-center gap-1">
+                            <Icon name="rotate-ccw" size={12} /> Reset
+                        </button>
+                    </div>
+
+                    {/* TABLE */}
+                    <div className="glass-panel rounded-xl overflow-hidden min-h-[600px]">
+                        <table className="w-full text-left border-collapse">
+                            <thead>
+                                <tr className="bg-ocean/80 border-b border-white/10 text-xs font-mono text-slate-400 uppercase tracking-wider">
+                                    <th className="p-4 w-16"></th>
+                                    <th className="p-4">Epic / Tarea Maestra</th>
+                                    <th className="p-4 w-32 hidden md:table-cell">Responsable</th>
+                                    <th className="p-4 w-32 text-right">Progreso</th>
+                                    <th className="p-4 w-28 text-right">Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-white/5">
+                                {filteredTasks.map(task => (
+                                    <React.Fragment key={task.id}>
+                                        <tr onClick={() => toggleRow(task.id)} className={`cursor-pointer transition-colors hover:bg-white/5 ${expandedRows[task.id] ? 'bg-white/5' : ''} ${task.status === 'locked' ? 'opacity-50' : ''}`}>
+                                            <td className="p-4 text-center text-slate-500">
+                                                <Icon name={expandedRows[task.id] ? "chevron-down" : "chevron-right"} size={16} />
+                                            </td>
+                                            <td className="p-4">
+                                                <div className="flex items-center gap-3">
+                                                    <div className={`p-2 rounded-lg ${task.category === 'TECH' ? 'bg-blue-500/10 text-blue-400' : task.category === 'EEAT' ? 'bg-purple-500/10 text-purple-400' : 'bg-orange-500/10 text-orange-400'}`}>
+                                                        <Icon name={task.category === 'TECH' ? 'terminal' : task.category === 'EEAT' ? 'globe' : 'users'} size={18} />
+                                                    </div>
+                                                    <div>
+                                                        <div className="font-bold text-white text-sm md:text-base flex items-center gap-2">
+                                                            {task.task}
+                                                            {task.status === 'locked' && <Icon name="lock" size={12} className="text-red-400" />}
+                                                        </div>
+                                                        <div className="text-xs text-slate-400 font-light mt-0.5">{task.description}</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td className="p-4 hidden md:table-cell text-sm text-slate-300">
+                                                <div className="flex items-center gap-2">
+                                                    <div className="w-6 h-6 rounded-full bg-ocean border border-white/10 flex items-center justify-center text-[10px] font-mono text-slate-300">{task.owner.charAt(0)}</div>
+                                                    {task.owner}
+                                                </div>
+                                            </td>
+                                            <td className="p-4 text-right">
+                                                <div className="flex items-center justify-end gap-2">
+                                                    <span className="font-mono text-xs text-slate-400">{task.progress}%</span>
+                                                    <MiniProgressBar progress={task.progress} status={task.status} />
+                                                </div>
+                                            </td>
+                                            <td className="p-4 text-right"><StatusBadge status={task.status} /></td>
+                                        </tr>
+                                        {expandedRows[task.id] && (
+                                            <tr className="bg-black/20 shadow-inner">
+                                                <td colSpan="5" className="p-0">
+                                                    <div className="px-4 py-4 md:pl-20 md:pr-8 border-l-4 border-acid/50 ml-4 my-2 space-y-2">
+                                                        <p className="text-[10px] font-mono text-slate-500 uppercase tracking-widest mb-3">Subtareas</p>
+                                                        {task.subtasks.map(st => (
+                                                            <div key={st.id} onClick={(e) => { e.stopPropagation(); handleSubtaskToggle(task.id, st.id); }}
+                                                                className={`flex items-center justify-between p-3 rounded border transition-all cursor-pointer group ${st.status === 'done' ? 'bg-acid/5 border-acid/20' : 'bg-ocean border-white/5 hover:border-white/20'} ${st.status === 'locked' ? 'opacity-50 pointer-events-none' : ''}`}>
+                                                                <div className="flex items-center gap-3">
+                                                                    <div className={`w-5 h-5 rounded flex items-center justify-center border transition-colors ${st.status === 'done' ? 'bg-acid border-acid' : 'border-slate-600 bg-transparent'}`}>
+                                                                        {st.status === 'done' && <Icon name="check" size={12} className="text-ocean" />}
+                                                                    </div>
+                                                                    <span className={`text-sm ${st.status === 'done' ? 'text-white line-through opacity-50' : 'text-slate-200'}`}>{st.title}</span>
+                                                                </div>
+                                                                {st.status === 'locked' && <span className="text-[10px] text-red-400 font-mono flex items-center gap-1"><Icon name="lock" size={10} /> BLOQUEADO</span>}
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        )}
+                                    </React.Fragment>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
