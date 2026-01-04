@@ -1,9 +1,0 @@
-{
-  "redirects": [
-    {
-      "source": "/(.*)",
-      "destination": "https://tu-link-de-proyectos.vercel.app",
-      "permanent": false
-    }
-  ]
-}
