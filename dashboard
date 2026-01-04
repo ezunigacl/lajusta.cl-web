@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Justa | HR Command Center</title>
+    
+    <!-- Fuentes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@1&family=Inter:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        oceanDark: '#022C43',
+                        acid: '#CCFF00',
+                        paper: '#F3F4F6',
+                        oceanPanel: 'rgba(2, 44, 67, 0.6)', 
+                        oceanLight: '#053B58',
+                        oceanDeep: '#011826'
+                    },
+                    fontFamily: {
+                        serif: ['Instrument Serif', 'serif'],
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Space Mono', 'monospace'],
+                    },
+                    boxShadow: {
+                        'hard': '4px 4px 0px 0px rgba(0,0,0,0.4)',
+                        'hard-hover': '6px 6px 0px 0px rgba(0,0,0,0.3)',
+                        'hard-active': '2px 2px 0px 0px rgba(0,0,0,0.4)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { 
+            background-color: #022C43; 
+            color: #F3F4F6;
+            background-image: 
+                linear-gradient(rgba(204, 255, 0, 0.03) 1px, transparent 1px), 
+                linear-gradient(90deg, rgba(204, 255, 0, 0.03) 1px, transparent 1px); 
+            background-size: 40px 40px; 
+            background-position: center top;
+        }
+        .glass-panel { 
+            background: rgba(5, 59, 88, 0.3); 
+            backdrop-filter: blur(12px); 
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+        .nav-item.active {
+            background: rgba(204, 255, 0, 0.1);
+            border-left: 3px solid #CCFF00;
+            color: #CCFF00;
+        }
+        .btn-brand {
+            transition: all 0.1s ease;
+            box-shadow: 4px 4px 0px 0px rgba(0,0,0,0.4); 
+        }
+        .btn-brand:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 6px 6px 0px 0px rgba(0,0,0,0.3);
+        }
+        .btn-brand:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px 0px rgba(0,0,0,0.4);
+        }
+        .card-hover { transition: transform 0.2s; }
+        .card-hover:hover {
+            transform: translateY(-4px);
+            border-color: rgba(204, 255, 0, 0.3);
+        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #022C43; }
+        ::-webkit-scrollbar-thumb { background: #053B58; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #CCFF00; }
+    </style>
+</head>
+<body class="antialiased selection:bg-acid selection:text-oceanDark flex h-screen overflow-hidden">
+
+    <!-- SIDEBAR -->
+    <aside class="w-64 bg-oceanDark/90 border-r border-white/10 flex flex-col hidden md:flex z-20 backdrop-blur-sm">
+        <div class="h-20 flex items-center px-6 border-b border-white/10">
+            <div class="flex items-center gap-2">
+                <div class="h-8 w-8 bg-acid rounded-none border border-white/20 flex items-center justify-center text-oceanDark font-serif italic font-bold shadow-hard">LJ</div>
+                <span class="font-serif text-xl text-paper">La Justa <span class="text-[10px] font-mono font-normal text-acid tracking-widest ml-1 border border-acid px-1 rounded-sm">B2B</span></span>
+            </div>
+        </div>
+
+        <div class="flex-1 overflow-y-auto py-6 space-y-1">
+            <p class="px-6 text-[10px] font-mono text-white/40 uppercase tracking-widest mb-2">Principal</p>
+            <a href="#" class="nav-item active flex items-center gap-3 px-6 py-3 text-sm font-medium transition-all text-paper hover:text-acid hover:bg-white/5 font-sans">
+                <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard
+            </a>
+            <!-- LINK AL SIMULADOR -->
+            <a href="simulador.html" class="nav-item flex items-center gap-3 px-6 py-3 text-sm font-medium transition-all text-white/60 hover:text-acid hover:bg-white/5 font-sans">
+                <i data-lucide="calculator" class="w-4 h-4"></i> Simulador PRO
+                <span class="bg-acid text-oceanDark text-[9px] font-bold font-mono px-1 rounded-sm ml-auto">V2.0</span>
+            </a>
+            <a href="#" class="nav-item flex items-center gap-3 px-6 py-3 text-sm font-medium transition-all text-white/60 hover:text-acid hover:bg-white/5 font-sans">
+                <i data-lucide="users" class="w-4 h-4"></i> Colaboradores
+            </a>
+
+            <p class="px-6 text-[10px] font-mono text-white/40 uppercase tracking-widest mb-2 mt-6">Recursos</p>
+            <a href="#" class="nav-item flex items-center gap-3 px-6 py-3 text-sm font-medium transition-all text-white/60 hover:text-acid hover:bg-white/5 font-sans">
+                <i data-lucide="graduation-cap" class="w-4 h-4"></i> Academia
+            </a>
+            <a href="#" class="nav-item flex items-center gap-3 px-6 py-3 text-sm font-medium transition-all text-white/60 hover:text-acid hover:bg-white/5 font-sans">
+                <i data-lucide="calendar" class="w-4 h-4"></i> Eventos
+            </a>
+            <a href="#" class="nav-item flex items-center gap-3 px-6 py-3 text-sm font-medium transition-all text-white/60 hover:text-acid hover:bg-white/5 font-sans">
+                <i data-lucide="scale" class="w-4 h-4"></i> Ley Karin
+            </a>
+
+            <p class="px-6 text-[10px] font-mono text-white/40 uppercase tracking-widest mb-2 mt-6">Soporte</p>
+            <a href="#" class="nav-item flex items-center gap-3 px-6 py-3 text-sm font-medium transition-all text-white/60 hover:text-acid hover:bg-white/5 font-sans">
+                <i data-lucide="message-circle" class="w-4 h-4"></i> Asesor Virtual
+            </a>
+        </div>
+
+        <div class="p-4 border-t border-white/10 bg-oceanDark/50">
+            <div class="flex items-center gap-3">
+                <div class="h-9 w-9 rounded-sm bg-acid p-[1px]">
+                    <div class="h-full w-full rounded-none bg-oceanDark flex items-center justify-center">
+                        <span id="avatarInitials" class="text-xs font-bold text-acid font-mono">HR</span>
+                    </div>
+                </div>
+                <div class="overflow-hidden">
+                    <p id="sidebarName" class="text-xs font-bold text-paper font-mono truncate">Cargando...</p>
+                    <p id="sidebarEmail" class="text-[10px] text-white/50 truncate">...</p>
+                </div>
+                <button id="btnLogout" class="ml-auto text-white/40 hover:text-red-400 transition-colors" title="Cerrar Sesión"><i data-lucide="log-out" class="w-4 h-4"></i></button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-1 flex flex-col h-screen overflow-hidden relative">
+        <header class="md:hidden h-16 bg-oceanDark border-b border-white/10 flex items-center justify-between px-4 sticky top-0 z-30">
+            <span class="font-serif text-lg text-paper italic">La Justa B2B</span>
+            <button class="text-white"><i data-lucide="menu" class="w-6 h-6"></i></button>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-4 md:p-8 relative">
+            
+            <!-- Hero Welcome -->
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+                <div>
+                    <h1 class="text-3xl md:text-4xl font-serif italic text-paper">Hola, <span id="welcomeName" class="text-acid">...</span></h1>
+                    <p class="text-sm text-white/60 font-sans mt-1">Monitoreo de Salud Financiera & Cumplimiento Normativo.</p>
+                </div>
+                <div class="flex gap-3">
+                    <button class="btn-brand flex items-center gap-2 bg-oceanLight hover:bg-white hover:text-oceanDark border border-white/10 text-paper px-4 py-2 rounded-sm text-xs font-mono transition-colors uppercase tracking-wide">
+                        <i data-lucide="download" class="w-3 h-3"></i> Reporte PDF
+                    </button>
+                    <button class="btn-brand flex items-center gap-2 bg-acid text-oceanDark hover:bg-white px-4 py-2 rounded-sm text-xs font-bold font-mono transition-colors uppercase tracking-wide">
+                        <i data-lucide="plus" class="w-3 h-3"></i> Agendar Charla
+                    </button>
+                </div>
+            </div>
+
+            <!-- GRID PRINCIPAL (KPIs) -->
+            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8">
+                <!-- KPI 1 -->
+                <div class="glass-panel p-5 rounded-sm border-l-4 border-acid relative group">
+                    <div class="absolute right-2 top-2 opacity-10 group-hover:opacity-20 transition-opacity"><i data-lucide="activity" class="w-12 h-12 text-acid"></i></div>
+                    <div class="flex justify-between items-start mb-2 relative z-10">
+                        <p class="text-[10px] font-mono text-acid/80 uppercase tracking-widest">Índice Bienestar</p>
+                    </div>
+                    <h3 class="text-3xl font-mono font-bold text-white relative z-10">72<span class="text-sm text-white/40">/100</span></h3>
+                    <p class="text-[10px] text-acid mt-2 flex items-center gap-1 font-mono relative z-10">
+                        <i data-lucide="arrow-up-right" class="w-3 h-3"></i> +5% vs mes anterior
+                    </p>
+                </div>
+
+                <!-- KPI 2 -->
+                <div class="glass-panel p-5 rounded-sm border-l-4 border-white/20 relative group">
+                    <div class="flex justify-between items-start mb-2">
+                        <p class="text-[10px] font-mono text-white/50 uppercase tracking-widest">Simulaciones</p>
+                    </div>
+                    <h3 class="text-3xl font-mono font-bold text-white">148</h3>
+                    <p class="text-[10px] text-white/40 mt-2 font-mono">Colaboradores informados</p>
+                </div>
+
+                <!-- KPI 3 -->
+                <div class="glass-panel p-5 rounded-sm border-l-4 border-white/20 bg-oceanLight/20">
+                    <div class="flex justify-between items-start mb-2">
+                        <p class="text-[10px] font-mono text-white/50 uppercase tracking-widest">Próxima Charla</p>
+                    </div>
+                    <h3 class="text-lg font-bold text-white leading-tight mt-1 font-sans">Estrategias APV</h3>
+                    <p class="text-[10px] text-white/60 mt-2 border border-white/10 inline-block px-2 py-1 rounded-sm font-mono">15 Oct • 11:00 AM</p>
+                </div>
+                
+                <!-- KPI 4 -->
+                <div class="glass-panel p-5 rounded-sm border-l-4 border-acid bg-acid/5">
+                    <div class="flex justify-between items-start mb-2">
+                        <p class="text-[10px] font-mono text-acid uppercase tracking-widest">Ley Karin</p>
+                        <i data-lucide="shield-check" class="w-4 h-4 text-acid"></i>
+                    </div>
+                    <h3 class="text-sm font-bold text-white mt-1">Cumplimiento Activo</h3>
+                    <p class="text-[10px] text-white/50 mt-1 font-mono">Plan preventivo vigente.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                
+                <!-- COLUMNA IZQUIERDA -->
+                <div class="lg:col-span-2 space-y-6">
+                    
+                    <!-- Tarjeta Simulador PRO (LINK DIRECTO) -->
+                    <div onclick="window.location.href='simulador.html'" class="glass-panel rounded-sm p-8 relative overflow-hidden group border-acid/20 hover:border-acid/50 transition-colors cursor-pointer">
+                        <div class="absolute right-0 top-0 p-6 opacity-5 group-hover:scale-110 transition-transform">
+                            <i data-lucide="cpu" class="w-40 h-40 text-acid"></i>
+                        </div>
+                        <div class="relative z-10">
+                            <span class="bg-acid text-oceanDark text-[9px] font-bold px-2 py-1 rounded-sm uppercase tracking-widest mb-4 inline-block font-mono border border-acid shadow-[2px_2px_0px_rgba(0,0,0,0.5)]">Herramienta Exclusiva</span>
+                            <h2 class="text-3xl font-serif italic text-white mb-2">Simulador de Pensiones PRO</h2>
+                            <p class="text-sm text-paper max-w-lg mb-8 font-sans leading-relaxed">
+                                Acceso irrestricto al motor actuarial completo. Proyecta SCOMP, Rentas Vitalicias, Garantías y Tributación. Sin cajas negras.
+                            </p>
+                            <div class="flex flex-wrap gap-4">
+                                <button class="btn-brand bg-acid text-oceanDark font-bold px-6 py-3 rounded-sm text-xs uppercase tracking-widest transition-colors flex items-center gap-2 font-mono">
+                                    Iniciar Simulador <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                                </button>
+                                <button onclick="event.stopPropagation()" class="btn-brand bg-transparent text-white border border-white/20 px-6 py-3 rounded-sm text-xs uppercase tracking-widest flex items-center gap-2 transition-colors font-mono hover:border-acid hover:text-acid">
+                                    <i data-lucide="share-2" class="w-4 h-4"></i> Enviar Acceso
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-3 mt-8 mb-4">
+                         <h3 class="text-white font-serif italic text-2xl">Kits de Difusión</h3>
+                         <div class="h-px flex-grow bg-white/10"></div>
+                    </div>
+                    
+                    <!-- Material Grid -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="glass-panel p-5 rounded-sm card-hover group cursor-pointer border-white/5 hover:border-acid/30">
+                            <div class="flex items-start justify-between mb-3">
+                                <div class="bg-white/5 p-2 rounded-sm text-white group-hover:bg-acid group-hover:text-oceanDark transition-colors"><i data-lucide="briefcase" class="w-5 h-5"></i></div>
+                                <i data-lucide="download" class="w-4 h-4 text-white/20 hover:text-acid"></i>
+                            </div>
+                            <h4 class="text-white font-bold text-sm font-mono uppercase tracking-tight">Kit Onboarding</h4>
+                            <p class="text-xs text-white/50 mt-1">Guía PDF + Video: "Tu Primer Sueldo".</p>
+                        </div>
+                        <div class="glass-panel p-5 rounded-sm card-hover group cursor-pointer border-white/5 hover:border-acid/30">
+                            <div class="flex items-start justify-between mb-3">
+                                <div class="bg-white/5 p-2 rounded-sm text-white group-hover:bg-acid group-hover:text-oceanDark transition-colors"><i data-lucide="sunset" class="w-5 h-5"></i></div>
+                                <i data-lucide="download" class="w-4 h-4 text-white/20 hover:text-acid"></i>
+                            </div>
+                            <h4 class="text-white font-bold text-sm font-mono uppercase tracking-tight">Kit Pre-Retiro</h4>
+                            <p class="text-xs text-white/50 mt-1">Checklist colaboradores +60 años.</p>
+                        </div>
+                        <div class="glass-panel p-5 rounded-sm card-hover group cursor-pointer border-white/5 hover:border-acid/30">
+                            <div class="flex items-start justify-between mb-3">
+                                <div class="bg-white/5 p-2 rounded-sm text-white group-hover:bg-acid group-hover:text-oceanDark transition-colors"><i data-lucide="heart-pulse" class="w-5 h-5"></i></div>
+                                <i data-lucide="download" class="w-4 h-4 text-white/20 hover:text-acid"></i>
+                            </div>
+                            <h4 class="text-white font-bold text-sm font-mono uppercase tracking-tight">Píldoras Anti-Estrés</h4>
+                            <p class="text-xs text-white/50 mt-1">Infografías rápidas para WhatsApp.</p>
+                        </div>
+                        <div class="glass-panel p-5 rounded-sm card-hover group cursor-pointer border-white/5 hover:border-acid/30">
+                            <div class="flex items-start justify-between mb-3">
+                                <div class="bg-white/5 p-2 rounded-sm text-white group-hover:bg-acid group-hover:text-oceanDark transition-colors"><i data-lucide="mail" class="w-5 h-5"></i></div>
+                                <i data-lucide="external-link" class="w-4 h-4 text-white/20 hover:text-acid"></i>
+                            </div>
+                            <h4 class="text-white font-bold text-sm font-mono uppercase tracking-tight">Newsletter</h4>
+                            <p class="text-xs text-white/50 mt-1">Plantilla correo mensual lista.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- COLUMNA DERECHA -->
+                <div class="space-y-6">
+                    <div class="glass-panel p-6 rounded-sm border-t border-acid/20">
+                        <h3 class="text-sm font-bold text-white mb-6 flex items-center gap-2 font-mono uppercase tracking-wider">
+                            <i data-lucide="pie-chart" class="w-4 h-4 text-acid"></i> Termómetro Salud
+                        </h3>
+                        <div class="relative h-48 w-full"><canvas id="wellnessChart"></canvas></div>
+                        <div class="mt-4 grid grid-cols-3 gap-1 text-center">
+                            <div class="bg-acid/10 p-1 rounded-sm"><span class="block text-[10px] text-acid font-mono font-bold">55% OK</span></div>
+                            <div class="bg-white/5 p-1 rounded-sm"><span class="block text-[10px] text-white/70 font-mono">30% Riesgo</span></div>
+                            <div class="bg-white/5 p-1 rounded-sm"><span class="block text-[10px] text-white/70 font-mono">15% Crítico</span></div>
+                        </div>
+                    </div>
+
+                    <div class="glass-panel p-6 rounded-sm">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-sm font-bold text-white font-mono uppercase tracking-wider">Live Feed</h3>
+                            <div class="h-2 w-2 bg-acid rounded-full animate-pulse"></div>
+                        </div>
+                        <div class="space-y-5">
+                            <div class="relative pl-4 border-l border-white/10 hover:border-acid transition-colors cursor-pointer group">
+                                <div class="absolute -left-[5px] top-0 h-2 w-2 bg-oceanDark border border-white/30 group-hover:border-acid rounded-full"></div>
+                                <p class="text-[9px] text-acid font-mono mb-1">HACE 2H • CMF</p>
+                                <p class="text-xs text-white font-medium leading-relaxed font-sans group-hover:text-acid transition-colors">Variación del Fondo E impacta proyecciones de retiro.</p>
+                            </div>
+                            <div class="relative pl-4 border-l border-white/10 hover:border-acid transition-colors cursor-pointer group">
+                                <div class="absolute -left-[5px] top-0 h-2 w-2 bg-oceanDark border border-white/30 group-hover:border-acid rounded-full"></div>
+                                <p class="text-[9px] text-acid font-mono mb-1">HOY • LEGISLACIÓN</p>
+                                <p class="text-xs text-white font-medium leading-relaxed font-sans group-hover:text-acid transition-colors">Indicación reforma pensiones: 6% adicional en debate.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-oceanDark p-6 rounded-sm border border-acid text-center relative overflow-hidden shadow-[0_0_20px_rgba(204,255,0,0.05)]">
+                        <div class="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(204,255,0,0.05)_50%,transparent_75%,transparent_100%)] bg-[length:20px_20px]"></div>
+                        <div class="h-10 w-10 bg-acid rounded-none mx-auto flex items-center justify-center mb-4 shadow-hard">
+                            <i data-lucide="bot" class="w-6 h-6 text-oceanDark"></i>
+                        </div>
+                        <h3 class="text-white font-serif italic text-xl mb-2">Asesor IA La Justa</h3>
+                        <p class="text-xs text-white/60 mb-6 font-mono px-2">¿Dudas sobre Ley Karin o casos de borde? Respuestas técnicas instantáneas.</p>
+                        <button class="btn-brand w-full bg-white text-oceanDark font-bold text-xs py-3 rounded-sm hover:bg-acid transition-colors uppercase tracking-widest font-mono">Iniciar Chat</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-12 text-center border-t border-white/5 pt-8 pb-4 opacity-50 hover:opacity-100 transition-opacity">
+                <p class="text-[10px] text-white/40 font-mono uppercase tracking-widest">
+                    La Justa Enterprise Solutions • Sistema Certificado SP/CMF • <a href="#" class="hover:text-acid">Privacidad</a>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js';
+        import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js';
+
+        const firebaseConfig = JSON.parse(__firebase_config);
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // UI Elements
+        const welcomeName = document.getElementById('welcomeName');
+        const sidebarName = document.getElementById('sidebarName');
+        const sidebarEmail = document.getElementById('sidebarEmail');
+        const avatarInitials = document.getElementById('avatarInitials');
+        const btnLogout = document.getElementById('btnLogout');
+
+        // Monitor Auth State
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // Get display name or fallback
+                const displayName = user.displayName || user.email.split('@')[0];
+                const email = user.email;
+                
+                // Update UI
+                welcomeName.innerText = displayName;
+                sidebarName.innerText = displayName;
+                sidebarEmail.innerText = email;
+                
+                // Initials
+                const initials = displayName.substring(0, 2).toUpperCase();
+                avatarInitials.innerText = initials;
+                
+            } else {
+                // Si no hay usuario, redirigir al index (login)
+                // Para efectos del preview en Canvas, mostramos datos demo si no hay auth real
+                console.log("No user signed in. Redirecting to login...");
+                // window.location.href = 'index.html'; // Descomentar en producción
+                
+                // Demo fallback para visualización
+                welcomeName.innerText = "Camila";
+                sidebarName.innerText = "Camila Muñoz";
+                sidebarEmail.innerText = "camila@empresa.cl";
+                avatarInitials.innerText = "HR";
+            }
+        });
+
+        // Logout
+        btnLogout.addEventListener('click', () => {
+            signOut(auth).then(() => {
+                window.location.href = 'index.html';
+            }).catch((error) => {
+                console.error("Error signing out", error);
+            });
+        });
+        
+        // Initializations
+        lucide.createIcons();
+        const ctx = document.getElementById('wellnessChart').getContext('2d');
+        const colorAcid = '#CCFF00';
+        const colorWhiteDim = 'rgba(255, 255, 255, 0.2)';
+        const colorWhiteDimmer = 'rgba(255, 255, 255, 0.08)';
+
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Sano', 'En Riesgo', 'Crítico'],
+                datasets: [{
+                    data: [55, 30, 15], 
+                    backgroundColor: [colorAcid, colorWhiteDim, colorWhiteDimmer], 
+                    borderWidth: 0,
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: '#F3F4F6', 
+                            font: { size: 10, family: 'Space Mono' },
+                            usePointStyle: true,
+                            pointStyle: 'rect' 
+                        }
+                    }
+                },
+                cutout: '75%' 
+            }
+        });
+    </script>
+</body>
+</html>
