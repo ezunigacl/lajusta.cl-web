@@ -174,7 +174,7 @@
                 <div id="express-result" class="hidden text-center py-4 relative z-10 animate-fade-in-up">
                     <span class="text-[9px] font-mono text-white/50 uppercase tracking-[0.2em]">Monto Mensual Estimado (CLP)</span>
                     <div id="ex-resultado-monto" class="text-4xl font-mono font-bold text-acid my-4 text-glow">$0</div>
-                    <a href="simulador.html" class="btn-3d block w-full bg-acid text-ocean font-extrabold py-3.5 rounded-lg uppercase tracking-widest text-[10px] hover:bg-white transition-all">Ver Informe Completo →</a>
+                    <a href="simulador.html" class="btn-3d block w-full bg-acid text-ocean font-extrabold py-3.5 rounded-lg uppercase tracking-widest text-[10px] hover:bg-white transition-all">Ver Informe Completo </a>
                     <button onclick="resetExpress()" class="text-[9px] font-mono text-white/40 uppercase hover:text-white transition-colors mt-4">Reiniciar Cálculo</button>
                 </div>
             </div>
@@ -205,7 +205,8 @@
                         <a href="#inicio" class="text-white hover:text-acid transition-colors duration-300">INICIO</a>
                         <a href="#que-hacemos" class="text-white hover:text-acid transition-colors duration-300">SERVICIOS</a>
                         <a href="#tools" class="text-acid hover:text-white transition-colors duration-300 glow-sm">[ HERRAMIENTAS ]</a>
-                        <a href="#login" class="border border-acid text-acid px-4 py-2 hover:bg-acid hover:text-ocean transition-all duration-300 btn-3d">ACCESO</a>
+                        <!-- ID AGREGADO PARA SCRIPT DE AUTH -->
+                        <a href="#login" id="nav-login-desktop" class="border border-acid text-acid px-4 py-2 hover:bg-acid hover:text-ocean transition-all duration-300 btn-3d">ACCESO</a>
                     </div>
                 </div>
                 <div class="md:hidden">
@@ -224,7 +225,8 @@
                 <a href="pgu.html" class="block px-3 py-4 text-white hover:text-acid border-b border-white/5">PGU / BONO HIJO</a>
                 <a href="salud.html" class="block px-3 py-4 text-white hover:text-acid border-b border-white/5">EXENCIÓN SALUD</a>
                 <a href="eld.html" class="block px-3 py-4 text-white hover:text-acid border-b border-white/5">EFICIENCIA ELD</a>
-                <a href="#login" class="block px-3 py-4 text-acid hover:text-white border-b border-white/5">ACCESO</a>
+                <!-- ID AGREGADO PARA SCRIPT DE AUTH -->
+                <a href="#login" id="nav-login-mobile" class="block px-3 py-4 text-acid hover:text-white border-b border-white/5">ACCESO</a>
             </div>
         </div>
     </nav>
@@ -419,7 +421,8 @@
                         <div class="w-16 h-16 rounded-full bg-ocean border border-acid text-acid flex items-center justify-center mb-6 mx-auto"><i data-lucide="user" class="w-8 h-8"></i></div>
                         <h3 class="font-serif text-3xl text-white mb-2">Soy Cliente</h3>
                         <p class="text-gray-400 text-sm mb-8">Accede a tu dashboard personal y evolución de fondos.</p>
-                        <button class="btn-3d w-48 bg-acid text-ocean py-3 font-mono text-sm font-bold uppercase hover:bg-white transition-all">Entrar</button>
+                        <!-- ID AGREGADO PARA SCRIPT DE AUTH -->
+                        <button id="btn-client-login" class="btn-3d w-48 bg-acid text-ocean py-3 font-mono text-sm font-bold uppercase hover:bg-white transition-all">Entrar</button>
                     </div>
                     <div class="p-10 hover:bg-white/5 transition-colors relative overflow-hidden">
                         <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjEiIGZpbGw9IiNDQ0ZGMDAiIGZpbGwtb3BhY2l0eT0iMC4xIi8+PC9zdmc+')] opacity-20"></div>
@@ -534,6 +537,163 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => { fetchFinancialIndicators(); lucide.createIcons(); });
+    </script>
+
+    <!-- FIREBASE AUTHENTICATION MODULE -->
+    <script type="module">
+        // 1. Importar funciones de Firebase desde CDN (No necesitas npm install)
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } 
+        from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        // ------------------------------------------------------------------
+        // CONFIGURACIÓN REAL DE LA JUSTA (Copiada de tu consola)
+        // ------------------------------------------------------------------
+        const firebaseConfig = {
+            apiKey: "AIzaSyAtSfJZLmX1au-rxsWYmkimI9YKcAN1IUw",
+            authDomain: "lajusta-web.firebaseapp.com",
+            projectId: "lajusta-web",
+            storageBucket: "lajusta-web.firebasestorage.app",
+            messagingSenderId: "231604835302",
+            appId: "1:231604835302:web:70cdaee46afb20f9123c27",
+            measurementId: "G-192LPZTRCR"
+        };
+        // ------------------------------------------------------------------
+
+        // 3. Inicializar Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+
+        // 4. Referencias al DOM (Botones del index.html)
+        // Asegúrate de agregar id="btn-client-login" al botón de "Soy Cliente" en tu HTML
+        
+        // Función de Login
+        window.loginWithGoogle = async () => {
+            // Verificar si se está ejecutando desde file://
+            if (window.location.protocol === 'file:') {
+                alert("Error Crítico: Firebase Auth NO funciona al abrir el archivo directamente (file://).\n\nPara probar el login, debes usar un servidor local.\n\nSi tienes VS Code, instala la extensión 'Live Server' y usa 'Open with Live Server'.");
+                return;
+            }
+
+            try {
+                const result = await signInWithPopup(auth, provider);
+                const user = result.user;
+                console.log("Usuario conectado:", user.displayName, user.email);
+                
+                // Aquí puedes redirigir al Dashboard del Cliente
+                // window.location.href = "dashboard-cliente.html"; 
+                alert(`¡Bienvenido ${user.displayName}! Acceso concedido.`);
+                updateUI(user);
+                
+            } catch (error) {
+                console.error("Error en login:", error);
+                // Manejo de errores comunes
+                if (error.code === 'auth/popup-closed-by-user') {
+                    console.warn("El usuario cerró la ventana emergente antes de terminar.");
+                } else if (error.code === 'auth/unauthorized-domain') {
+                    // DIAGNÓSTICO: Mostramos el dominio exacto que está fallando
+                    const currentDomain = window.location.hostname;
+                    const protocol = window.location.protocol;
+                    const port = window.location.port;
+                    const fullOrigin = `${protocol}//${currentDomain}${port ? ':' + port : ''}`;
+                    
+                    alert(`Error de Dominio No Autorizado (auth/unauthorized-domain).\n\nFirebase ha bloqueado la conexión desde:\n👉 ${currentDomain} 👈\n\nSOLUCIÓN:\n1. Ve a Firebase Console -> Authentication -> Settings -> Authorized domains.\n2. Agrega este dominio exacto: ${currentDomain}\n\nNota: Si usas localhost, asegúrate de que 'localhost' esté en la lista.`);
+                } else {
+                    alert("Hubo un error al iniciar sesión: " + error.message);
+                }
+            }
+        };
+
+        // Función de Logout
+        window.logout = () => {
+            signOut(auth).then(() => {
+                alert("Sesión cerrada correctamente");
+                updateUI(null);
+            });
+        };
+
+        // Observador de Estado (Detecta si ya está logueado al recargar)
+        onAuthStateChanged(auth, (user) => {
+            updateUI(user);
+        });
+
+        // Actualizar Interfaz Gráfica
+        function updateUI(user) {
+            // Busca el botón dentro de la sección Login con ID específico
+            const loginSectionBtn = document.getElementById('btn-client-login');
+            // Busca el botón del Navbar con ID específico
+            const navLoginBtnDesktop = document.getElementById('nav-login-desktop'); 
+            const navLoginBtnMobile = document.getElementById('nav-login-mobile'); 
+            
+            const sectionTitle = document.querySelector('#login h3'); // Título "Soy Cliente"
+            
+            if (user) {
+                // Estado: LOGUEADO
+                if(sectionTitle) sectionTitle.innerText = `Hola, ${user.displayName.split(' ')[0]}`;
+                
+                // Actualizar botón de la sección Login
+                if(loginSectionBtn) {
+                    loginSectionBtn.innerText = "CERRAR SESIÓN";
+                    // Clonamos el botón para eliminar listeners anteriores y evitar duplicados
+                    const newBtn = loginSectionBtn.cloneNode(true);
+                    loginSectionBtn.parentNode.replaceChild(newBtn, loginSectionBtn);
+                    
+                    newBtn.onclick = window.logout; // Asignar Logout
+                    newBtn.classList.replace('bg-acid', 'bg-red-500'); 
+                    newBtn.classList.replace('text-ocean', 'text-white');
+                }
+
+                // Actualizar Navbar Desktop
+                if(navLoginBtnDesktop) {
+                    navLoginBtnDesktop.innerText = "MI CUENTA";
+                    navLoginBtnDesktop.classList.add('text-acid');
+                }
+                
+                // Actualizar Navbar Mobile
+                if(navLoginBtnMobile) {
+                    navLoginBtnMobile.innerText = "MI CUENTA";
+                    navLoginBtnMobile.classList.add('text-acid');
+                }
+
+            } else {
+                // Estado: NO LOGUEADO
+                if(sectionTitle) sectionTitle.innerText = "Soy Cliente";
+                
+                if(loginSectionBtn) {
+                    loginSectionBtn.innerText = "ENTRAR CON GOOGLE";
+                    const newBtn = loginSectionBtn.cloneNode(true);
+                    loginSectionBtn.parentNode.replaceChild(newBtn, loginSectionBtn);
+
+                    newBtn.onclick = window.loginWithGoogle; // Asignar Login
+                    newBtn.classList.replace('bg-red-500', 'bg-acid');
+                    newBtn.classList.replace('text-white', 'text-ocean');
+                }
+
+                if(navLoginBtnDesktop) {
+                    navLoginBtnDesktop.innerText = "ACCESO";
+                    navLoginBtnDesktop.classList.remove('text-acid');
+                }
+                
+                if(navLoginBtnMobile) {
+                    navLoginBtnMobile.innerText = "ACCESO";
+                    navLoginBtnMobile.classList.remove('text-acid');
+                }
+            }
+        }
+        
+        // Inicialización automática del botón al cargar
+        // Intenta buscar el botón "Soy Cliente" por su ID
+        const autoInitBtn = document.getElementById('btn-client-login');
+        if(autoInitBtn) {
+            autoInitBtn.addEventListener('click', (e) => {
+                // Solo si aún dice "Entrar" o similar, prevenimos comportamiento por defecto
+                if(autoInitBtn.innerText.toUpperCase().includes('ENTRAR')) {
+                    e.preventDefault(); 
+                    window.loginWithGoogle();
+                }
+            });
+        }
     </script>
 </body>
 </html>
