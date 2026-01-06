@@ -446,7 +446,7 @@
                                     Hemos calculado 7 escenarios optimizados para tu caso. Para ver los montos exactos y entender qué modalidad te conviene más, agenda una breve sesión de entrega de informe.
                                 </p>
 
-                                <button onclick="openBooking()" class="btn-3d w-full bg-white text-ocean px-6 py-4 rounded-xl font-bold font-mono text-xs uppercase tracking-widest hover:bg-acid transition-colors flex items-center justify-center gap-3 mb-3">
+                                <button onclick="window.location.href='agenda-lajusta-web.html'" class="btn-3d w-full bg-white text-ocean px-6 py-4 rounded-xl font-bold font-mono text-xs uppercase tracking-widest hover:bg-acid transition-colors flex items-center justify-center gap-3 mb-3">
                                     <span>Agendar Asesoría Gratuita</span>
                                     <i data-lucide="calendar-check" class="w-4 h-4"></i>
                                 </button>
@@ -623,14 +623,7 @@
             });
         }
 
-        function openBooking() {
-            const btn = event.currentTarget;
-            btn.innerHTML = '<span>Redirigiendo...</span>';
-            setTimeout(() => {
-                alert("En un entorno real, esto abriría tu Calendly/AgendaPro para cerrar el lead.");
-                btn.innerHTML = `<span>Agendar Entrega de Informe</span><i data-lucide="calendar-check" class="w-5 h-5"></i>`;
-            }, 1000);
-        }
+        // Eliminada función openBooking() ya que se reemplazó por redirección directa en el botón
 
         document.getElementById('inputRut').addEventListener('input', (e) => {
             let val = e.target.value.replace(/[^0-9kK]/g, "");
