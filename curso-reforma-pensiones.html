@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Curso: Reforma de Pensiones 2025 | La Justa</title>
+    
+    <!-- Fuentes de Marca -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@1&family=Inter:wght@300;400;600;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind & Chart.js -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        ocean: '#022C43',
+                        oceanLight: '#053B58',
+                        oceanDark: '#011826',
+                        acid: '#CCFF00',
+                        acidHover: '#b3e600',
+                        lightText: '#E6F4F1'
+                    },
+                    fontFamily: {
+                        serif: ['Instrument Serif', 'serif'],
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Space Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { background-color: #022C43; color: #E6F4F1; overflow-x: hidden; }
+        .grid-bg { 
+            background-image: linear-gradient(rgba(204, 255, 0, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(204, 255, 0, 0.03) 1px, transparent 1px); 
+            background-size: 40px 40px;
+        }
+        .glass-panel { 
+            background: rgba(5, 59, 88, 0.3); 
+            backdrop-filter: blur(16px); 
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+        }
+        .text-glow { text-shadow: 0 0 20px rgba(204, 255, 0, 0.4); }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            height: 400px;
+        }
+
+        .btn-3d { transition: all 0.1s ease; box-shadow: 4px 4px 0px rgba(0,0,0,0.5); }
+        .btn-3d:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px rgba(0,0,0,0.5); }
+
+        .module-tab.active {
+            border-color: #CCFF00;
+            color: #CCFF00;
+            background: rgba(204, 255, 0, 0.05);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #CCFF00; border-radius: 10px; }
+
+        @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-in-up { animation: fadeInUp 0.8s ease-out forwards; opacity: 0; transform: translateY(20px); }
+    </style>
+</head>
+<body class="grid-bg min-h-screen antialiased selection:bg-acid selection:text-ocean">
+
+    <!-- Navegación -->
+    <nav class="fixed w-full z-50 glass-panel border-b border-white/5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex items-center gap-6">
+                    <a href="index.html" class="flex items-center gap-3 group">
+                        <div class="w-10 h-10 bg-acid rounded-lg flex items-center justify-center text-ocean font-bold font-serif text-xl italic border border-white/10 group-hover:border-acid transition-all">L</div>
+                        <span class="font-serif text-2xl md:text-3xl text-acid tracking-wide">La Justa<span class="text-white">.</span></span>
+                    </a>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8 font-mono text-sm tracking-widest">
+                        <a href="index.html" class="text-white hover:text-acid transition-colors uppercase">Inicio</a>
+                        <a href="simulador.html" class="text-white hover:text-acid transition-colors uppercase">Simulador</a>
+                        <a href="academia.html" class="text-acid glow-sm border-b border-acid pb-1 uppercase tracking-widest">[ Academia ]</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero del Curso -->
+    <header class="pt-48 pb-20 px-6 relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-96 h-96 bg-acid opacity-5 blur-[120px] rounded-full"></div>
+        <div class="max-w-5xl mx-auto text-center">
+            <div class="inline-flex items-center gap-2 px-3 py-1 border border-acid/30 rounded-full bg-oceanLight/30 mb-8 animate-fade-in-up">
+                <span class="w-2 h-2 rounded-full bg-acid animate-pulse"></span>
+                <span class="text-[10px] font-mono text-acid tracking-widest uppercase">Análisis Integral Ley 21.735 // Vigencia 2026</span>
+            </div>
+            <h1 class="font-serif text-5xl md:text-7xl italic text-white mb-8 leading-tight animate-fade-in-up" style="animation-delay: 0.2s;">
+                La Transformación del <br/> <span class="text-acid">Sistema Previsional</span>
+            </h1>
+            <p class="text-gray-400 font-sans text-xl max-w-3xl mx-auto leading-relaxed animate-fade-in-up" style="animation-delay: 0.3s;">
+                La Ley 21.735 redefine la arquitectura del bienestar en Chile. Prepárate para el hito de <span class="text-white">enero 2026</span> con una formación técnica profunda sobre el nuevo sistema mixto y el Seguro Social.
+            </p>
+            <div class="mt-12 flex flex-col sm:flex-row gap-6 justify-center items-center animate-fade-in-up" style="animation-delay: 0.4s;">
+                <a href="#malla" class="text-white font-mono text-xs uppercase border-b border-white/20 pb-1 hover:border-acid transition-all tracking-widest">Contenidos del Programa</a>
+                <a href="#contacto" class="bg-acid text-ocean font-bold px-8 py-4 rounded-xl btn-3d uppercase tracking-widest text-xs font-mono">Inscribirse al Curso</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 py-12 space-y-32">
+
+        <!-- Contexto Estratégico -->
+        <section id="contexto" class="space-y-16">
+            <div class="text-center max-w-3xl mx-auto">
+                <h2 class="font-serif text-4xl md:text-5xl text-white italic mb-6">El Horizonte de Enero 2026</h2>
+                <p class="text-stone-400 font-sans text-lg leading-relaxed">Tras 40 años de predominio absoluto de capitalización individual, Chile transita hacia un sistema de seguridad social. Analizamos el impacto en empresas, trabajadores y actuales pensionados.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <div class="glass-panel p-10 rounded-[2.5rem] border-white/5 relative group">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-acid to-transparent opacity-30"></div>
+                    <h3 class="font-mono text-xs text-acid uppercase tracking-widest mb-10 flex items-center gap-2">
+                        <i data-lucide="bar-chart-3" class="w-5 h-5"></i> Gradualidad de Cotización (Cargo Empleador)
+                    </h3>
+                    <div class="chart-container">
+                        <canvas id="cotizacionChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="space-y-8">
+                    <div class="p-8 bg-white/5 border-l-4 border-acid rounded-r-2xl">
+                        <h4 class="font-bold text-white mb-4 uppercase text-sm font-mono tracking-widest">Cambio de Paradigma</h4>
+                        <p class="text-stone-400 text-md leading-relaxed">El riesgo de longevidad deja de ser exclusivamente individual. La reforma introduce mecanismos de <span class="text-white font-bold italic">solidaridad intergeneracional</span> y un Seguro Social Previsional (SSP) que redefine la gestión corporativa de nóminas.</p>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div class="glass-panel p-6 rounded-2xl border border-white/5">
+                            <span class="block text-4xl font-black text-white font-mono mb-2">18.5%</span>
+                            <span class="text-[10px] text-stone-500 uppercase tracking-[0.2em] font-bold">Cotización en Régimen</span>
+                        </div>
+                        <div class="glass-panel p-6 rounded-2xl border border-white/5">
+                            <span class="block text-4xl font-black text-acid font-mono mb-2">+8.5%</span>
+                            <span class="text-[10px] text-stone-500 uppercase tracking-[0.2em] font-bold">Esfuerzo Patronal Neto</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Vitrina de Módulos (Interactivo) -->
+        <section id="malla" class="space-y-16 pt-20">
+            <div class="flex flex-col md:flex-row gap-6 border-b border-white/10 pb-10">
+                <div class="flex-1">
+                    <h2 class="font-serif text-5xl text-white italic">Malla Curricular</h2>
+                    <p class="text-stone-500 font-mono text-xs uppercase mt-3 tracking-widest">/ IMPLEMENTACIÓN_Y_CUMPLIMIENTO_TÉCNICO</p>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="switchModule(1)" id="tab-1" class="module-tab active px-5 py-3 font-mono text-[10px] border border-white/10 rounded-lg hover:border-acid transition-all uppercase tracking-widest">Cotizaciones</button>
+                    <button onclick="switchModule(2)" id="tab-2" class="module-tab px-5 py-3 font-mono text-[10px] border border-white/10 rounded-lg hover:border-acid transition-all uppercase tracking-widest">Seguro Social</button>
+                    <button onclick="switchModule(3)" id="tab-3" class="module-tab px-5 py-3 font-mono text-[10px] border border-white/10 rounded-lg hover:border-acid transition-all uppercase tracking-widest">IPP / APA</button>
+                    <button onclick="switchModule(4)" id="tab-4" class="module-tab px-5 py-3 font-mono text-[10px] border border-white/10 rounded-lg hover:border-acid transition-all uppercase tracking-widest">Transición</button>
+                </div>
+            </div>
+
+            <div id="module-content" class="grid grid-cols-1 lg:grid-cols-12 gap-16 min-h-[450px]">
+                <!-- Inyectado vía JS -->
+            </div>
+        </section>
+
+        <!-- Detalle de Prestaciones (BAC y CEV) -->
+        <section id="prestaciones" class="py-24 relative">
+            <div class="absolute inset-0 bg-acid/5 blur-[180px] rounded-full opacity-30 pointer-events-none"></div>
+            <div class="glass-panel p-12 md:p-20 rounded-[4rem] border border-acid/20 relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-1.5 bg-acid"></div>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+                    <div>
+                        <span class="font-mono text-acid text-xs font-bold tracking-[0.4em] uppercase block mb-6">Impacto Directo</span>
+                        <h2 class="font-serif text-6xl italic text-white mb-8 leading-tight">Justicia de Género <br/> <span class="text-acid">y Años Cotizados</span></h2>
+                        <p class="text-stone-400 text-lg mb-10 leading-relaxed">
+                            La reforma ataca la "penalización biológica" de las mujeres y reconoce la constancia laboral. Enero 2026 marca el inicio del pago automático de beneficios.
+                        </p>
+                        
+                        <div class="space-y-6 font-mono text-sm">
+                            <div class="flex items-center gap-4 text-white">
+                                <div class="w-12 h-12 rounded-full bg-acid/10 flex items-center justify-center text-acid border border-acid/30">01</div>
+                                <span>BAC: 0.1 UF por año cotizado (Tope 25 años).</span>
+                            </div>
+                            <div class="flex items-center gap-4 text-white">
+                                <div class="w-12 h-12 rounded-full bg-acid/10 flex items-center justify-center text-acid border border-acid/30">02</div>
+                                <span>CEV: Compensación por diferencia en expectativa de vida.</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-oceanDark border border-white/10 rounded-[3rem] p-12 space-y-8 shadow-2xl relative">
+                        <h4 class="text-[11px] font-mono text-stone-500 uppercase tracking-[0.3em] font-bold text-center">Calculadora de Impacto Estimado</h4>
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center border-b border-white/5 pb-4">
+                                <span class="text-sm text-gray-400">Beneficio BAC (25 años)</span>
+                                <span class="text-acid font-bold">2.5 UF / mes</span>
+                            </div>
+                            <div class="flex justify-between items-center border-b border-white/5 pb-4">
+                                <span class="text-sm text-gray-400">PGU Actualizada</span>
+                                <span class="text-white font-bold">$250.000</span>
+                            </div>
+                            <div class="flex justify-between items-center pb-4">
+                                <span class="text-sm text-gray-400">Ahorro Comisiones (Saldo)</span>
+                                <span class="text-green-400 font-bold">+1% Líquido</span>
+                            </div>
+                        </div>
+                        <div class="pt-6 border-t border-white/5 text-center">
+                            <p class="text-[10px] text-stone-500 uppercase leading-relaxed font-mono">
+                                Proyecciones basadas en Ley 21.735 y notas técnicas del Ministerio de Hacienda.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Final -->
+        <section id="contacto" class="py-20 text-center space-y-12">
+            <div class="max-w-3xl mx-auto space-y-6 text-glow">
+                <h2 class="font-serif text-5xl md:text-6xl text-white italic leading-tight">Lidera la Transición Previsional</h2>
+                <p class="text-gray-400 text-lg">Certifícate en el análisis de la Ley 21.735. Formación indispensable para gerentes de compensaciones, asesores y directivos.</p>
+            </div>
+            
+            <div class="flex flex-col md:flex-row gap-6 justify-center">
+                <button class="bg-white text-ocean font-bold px-10 py-5 rounded-2xl btn-3d uppercase tracking-widest text-xs font-mono flex items-center gap-3 mx-auto md:mx-0">
+                    <i data-lucide="calendar-plus" class="w-4 h-4"></i> Inscribirse Ahora
+                </button>
+                <button class="border border-white/20 text-white font-bold px-10 py-5 rounded-2xl hover:bg-white/5 transition-all uppercase tracking-widest text-xs font-mono flex items-center gap-3 mx-auto md:mx-0">
+                    <i data-lucide="file-down" class="w-4 h-4"></i> Descargar Brochure
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-oceanDark pt-20 pb-10 border-t border-white/10 text-sm mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center md:text-left">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-16 mb-16">
+                <div class="col-span-1 md:col-span-2">
+                    <div class="flex items-center gap-4 mb-6 justify-center md:justify-start">
+                        <div class="w-10 h-10 rounded-xl bg-acid flex items-center justify-center text-ocean font-bold font-serif italic text-xl border border-white/10">L</div>
+                        <span class="font-serif text-4xl text-white italic tracking-wide">La Justa.</span>
+                    </div>
+                    <p class="text-gray-500 max-w-sm font-sans text-md leading-relaxed tracking-tight">Especialistas en auditoría actuarial y educación previsional ante los cambios de la Ley 21.735.</p>
+                </div>
+                <div>
+                    <h4 class="font-mono text-acid text-xs uppercase mb-6 tracking-widest font-bold">Acceso Rápido</h4>
+                    <ul class="space-y-3 font-mono text-gray-400 text-xs tracking-widest uppercase">
+                        <li><a href="index.html" class="hover:text-white">Inicio</a></li>
+                        <li><a href="academia.html" class="hover:text-white">Cursos</a></li>
+                        <li><a href="simulador.html" class="hover:text-white">Simulador</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-mono text-acid text-xs uppercase mb-6 tracking-widest font-bold">Legal</h4>
+                    <ul class="space-y-3 font-mono text-gray-400 text-xs tracking-widest uppercase">
+                        <li><a href="#" class="hover:text-white">Transparencia</a></li>
+                        <li><a href="#" class="hover:text-white">Privacidad</a></li>
+                        <li><a href="#" class="hover:text-white">Ley 21.735</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-white/5 pt-10 flex flex-col md:flex-row justify-between items-center text-[11px] text-gray-600 font-mono tracking-[0.2em] uppercase">
+                <p>&copy; 2025 La Justa Fintech SpA. Todos los derechos reservados.</p>
+                <p class="mt-4 md:mt-0 text-gray-500 text-center md:text-right">DISCLAIMER: Información académica basada en la ley vigente al 2025.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        // --- Gráfico de Cotización (Calendario de Implementación) ---
+        function initCharts() {
+            const ctx = document.getElementById('cotizacionChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['2025', '2026', '2027', '2028', '2029', '2030', '2031', '2032', '2033'],
+                    datasets: [
+                        {
+                            label: 'Cotización Empleador (%)',
+                            data: [1.0, 1.0, 3.5, 4.25, 5.0, 5.7, 6.4, 7.1, 8.5],
+                            borderColor: '#CCFF00',
+                            backgroundColor: 'rgba(204, 255, 0, 0.1)',
+                            fill: true,
+                            tension: 0.2,
+                            borderWidth: 3,
+                            pointRadius: 4,
+                            pointBackgroundColor: '#CCFF00'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { 
+                            min: 0,
+                            max: 10,
+                            grid: { color: 'rgba(255,255,255,0.05)' },
+                            ticks: { color: '#888', font: { family: 'Space Mono', size: 10 }, stepSize: 2 }
+                        },
+                        x: { 
+                            grid: { display: false },
+                            ticks: { color: '#888', font: { family: 'Space Mono', size: 10 } }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#011826',
+                            titleColor: '#CCFF00',
+                            bodyFont: { family: 'Space Mono' },
+                            callbacks: {
+                                label: (context) => `Cotización: ${context.raw}%`
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // --- Vitrina de Módulos ---
+        const moduleData = {
+            1: {
+                title: "Estructura de Cotización y CRP",
+                duration: "4 Horas",
+                content: "Desglosamos el aumento del 8,5% de cargo del empleador. Análisis de la Cotización con Rentabilidad Protegida (CRP) como activo patrimonial y su evolución hacia la cuenta individual en 2045.",
+                points: ["Calendario 2025-2033", "CRP: Bono de Seguridad", "Heredabilidad y Merito Ejecutivo"],
+                metric: "Comprensión del 100% del costo laboral."
+            },
+            2: {
+                title: "Seguro Social: BAC y CEV",
+                duration: "4 Horas",
+                content: "Estudio del Seguro Social Previsional (SSP). Requisitos para el Beneficio por Años Cotizados y el algoritmo de Compensación por Expectativa de Vida para mujeres.",
+                points: ["Cálculo Actuarial BAC", "Nivelación Brecha de Género", "IPS vs APA: Nuevos Roles"],
+                metric: "Simulación de beneficios automáticos."
+            },
+            3: {
+                title: "Fin de las AFP y Creación de IPP",
+                duration: "4 Horas",
+                content: "La reorganización industrial más profunda en 40 años. Separación de funciones: El APA como rostro público y los Inversores Privados (IPP) enfocados exclusivamente en rentabilidad.",
+                points: ["El Administrador Autónomo (APA)", "Inversor Previsional Público", "Competencia de Cooperativas"],
+                metric: "Mapa del nuevo mercado previsional."
+            },
+            4: {
+                title: "Fondos Generacionales y Comisiones",
+                duration: "3 Horas",
+                content: "Transición del modelo de multifondos (A-E) a Fondos Generacionales. El cambio de comisión por flujo a comisión por saldo y su impacto en el salario líquido.",
+                points: ["Estrategias Ciclo de Vida", "Descuentos por Cohorte", "Libertad de Elección IPP"],
+                metric: "Incremento estimado de sueldo líquido."
+            }
+        };
+
+        function switchModule(id) {
+            const data = moduleData[id];
+            const container = document.getElementById('module-content');
+            
+            document.querySelectorAll('.module-tab').forEach(t => t.classList.remove('active'));
+            document.getElementById(`tab-${id}`).classList.add('active');
+
+            container.innerHTML = `
+                <div class="lg:col-span-7 space-y-10 animate-fade-in-up">
+                    <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+                        <span class="bg-acid/10 text-acid px-4 py-1.5 text-[10px] font-mono font-bold border border-acid/20 rounded-lg w-max tracking-widest uppercase">${data.duration}</span>
+                        <h3 class="font-serif text-4xl md:text-5xl text-white italic leading-tight">${data.title}</h3>
+                    </div>
+                    <p class="text-stone-400 text-xl leading-relaxed font-sans">${data.content}</p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        ${data.points.map(p => `
+                            <div class="p-5 border border-white/5 bg-white/5 rounded-2xl font-mono text-[10px] text-white/50 hover:text-acid transition-all">
+                                [ ${p} ]
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="p-6 bg-acid/5 border border-acid/10 rounded-2xl">
+                        <p class="text-[10px] font-mono text-acid uppercase tracking-widest font-bold mb-2">Hito Técnico:</p>
+                        <p class="text-white font-serif text-2xl italic">${data.metric}</p>
+                    </div>
+                </div>
+                <div class="lg:col-span-5 hidden lg:flex items-center justify-center">
+                    <div class="w-full h-96 bg-oceanDark border border-white/10 rounded-[3rem] flex items-center justify-center relative overflow-hidden group shadow-2xl">
+                        <div class="absolute inset-0 bg-gradient-to-br from-acid/5 to-transparent opacity-50"></div>
+                        <div class="text-center p-8 space-y-4">
+                             <i data-lucide="landmark" class="w-12 h-12 text-white/10 mx-auto animate-pulse"></i>
+                             <p class="text-stone-600 font-mono text-[10px] uppercase tracking-widest leading-relaxed">Formación Técnica <br/> Especializada</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            lucide.createIcons();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initCharts();
+            switchModule(1);
+        });
+    </script>
+</body>
+</html>
