@@ -540,37 +540,67 @@
         </div>
     </section>
 
-   <section id="login" class="py-24 bg-oceanDark relative">
-        <div class="max-w-md mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-            <div class="glass-panel p-1 border-acid/20">
-                <div class="p-8 md:p-10 transition-colors">
-                    <div class="w-16 h-16 rounded-full bg-ocean border border-acid text-acid flex items-center justify-center mb-6 mx-auto shadow-[0_0_15px_rgba(204,255,0,0.2)]">
-                        <i data-lucide="building-2" class="w-8 h-8"></i>
+ <section id="login" class="py-24 bg-oceanDark relative border-t border-white/5">
+        <div class="max-w-md mx-auto px-4 relative z-10">
+            <div class="glass-panel p-1 border-acid/20 rounded-2xl overflow-hidden shadow-2xl">
+                
+                <!-- Pestañas de Alternancia -->
+                <div class="flex border-b border-white/10 font-mono text-[10px] uppercase tracking-widest">
+                    <button onclick="switchLoginView('login')" id="tab-login" class="flex-1 py-4 bg-oceanLight/50 text-acid border-b-2 border-acid font-bold">Ingreso</button>
+                    <button onclick="switchLoginView('register')" id="tab-register" class="flex-1 py-4 text-gray-500 hover:text-white transition-colors">Registro Nuevo</button>
+                </div>
+
+                <div class="p-8 md:p-10 text-center">
+                    <div id="login-header">
+                        <div class="w-16 h-16 rounded-full bg-ocean border border-acid text-acid flex items-center justify-center mb-6 mx-auto shadow-[0_0_15px_rgba(204,255,0,0.2)]">
+                            <i data-lucide="building-2" class="w-8 h-8"></i>
+                        </div>
+                        <h3 id="form-title" class="font-serif text-3xl text-white mb-2 italic">Acceso Corporativo</h3>
+                        <p id="form-desc" class="text-gray-400 text-sm mb-8 font-sans">Ingresa las credenciales de tu empresa.</p>
                     </div>
-                    
-                    <h3 class="font-serif text-3xl text-white mb-2 italic">Acceso Corporativo</h3>
-                    <p class="text-gray-400 text-sm mb-8 font-sans">Dashboard de gestión para alianzas y convenios RRHH.</p>
-                    
-                    <form id="rrhh-login-form" class="space-y-4 text-left">
+
+                    <!-- FORMULARIO DE INGRESO -->
+                    <form id="rrhh-login-form" class="space-y-4 text-left animate-fade-in">
                         <div>
-                            <label class="block text-[10px] font-mono font-bold text-acid uppercase tracking-widest mb-1.5 ml-1">ID de Empresa / Usuario</label>
-                            <input type="text" id="rrhh-user" class="input-premium w-full rounded-lg px-4 py-3 text-sm" placeholder="usuario@empresa.cl">
+                            <label class="block text-[10px] font-mono font-bold text-acid uppercase mb-1.5 ml-1">Email Corporativo</label>
+                            <input type="email" id="login-email" class="input-premium w-full rounded-lg px-4 py-3 text-sm" placeholder="ejemplo@empresa.cl" required>
                         </div>
                         <div>
-                            <label class="block text-[10px] font-mono font-bold text-acid uppercase tracking-widest mb-1.5 ml-1">Contraseña</label>
-                            <input type="password" id="rrhh-password" class="input-premium w-full rounded-lg px-4 py-3 text-sm" placeholder="••••••••">
+                            <label class="block text-[10px] font-mono font-bold text-acid uppercase mb-1.5 ml-1">Contraseña</label>
+                            <input type="password" id="login-pass" class="input-premium w-full rounded-lg px-4 py-3 text-sm" placeholder="••••••••" required>
                         </div>
-                        
                         <div class="pt-4">
+                            <!-- Botón que redirige a dashboard.html tras validación -->
                             <button type="submit" class="btn-3d w-full bg-acid text-ocean py-4 font-mono text-sm font-bold uppercase hover:bg-white transition-all">
                                 ENTRAR AL SISTEMA
                             </button>
                         </div>
                     </form>
 
+                    <!-- FORMULARIO DE REGISTRO -->
+                    <form id="rrhh-register-form" class="hidden space-y-4 text-left animate-fade-in">
+                        <div>
+                            <label class="block text-[10px] font-mono font-bold text-acid uppercase mb-1.5 ml-1">ID de Convenio / Alianza</label>
+                            <input type="text" id="reg-convenio" class="input-premium w-full rounded-lg px-4 py-3 text-sm" placeholder="ID-2025-XXXX" required>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-mono font-bold text-acid uppercase mb-1.5 ml-1">Email Corporativo</label>
+                            <input type="email" id="reg-email" class="input-premium w-full rounded-lg px-4 py-3 text-sm" placeholder="nombre@empresa.cl" required>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-mono font-bold text-acid uppercase mb-1.5 ml-1">Nueva Contraseña</label>
+                            <input type="password" id="reg-pass" class="input-premium w-full rounded-lg px-4 py-3 text-sm" placeholder="Mínimo 6 caracteres" required>
+                        </div>
+                        <div class="pt-4">
+                            <button type="submit" class="btn-3d w-full bg-white text-ocean py-4 font-mono text-sm font-bold uppercase hover:bg-acid transition-all">
+                                CREAR CUENTA CORPORATIVA
+                            </button>
+                        </div>
+                    </form>
+
                     <p class="mt-8 text-[10px] text-gray-500 font-mono uppercase tracking-wider">
-                        ¿Tu empresa aún no tiene convenio? <br>
-                        <a href="mailto:alianzas@lajusta.cl" class="text-acid hover:underline">Solicitar información aquí</a>
+                        ¿Problemas con el ID? <br>
+                        <a href="mailto:soporte@lajusta.cl" class="text-acid hover:underline">Contactar a soporte</a>
                     </p>
                 </div>
             </div>
