@@ -477,23 +477,38 @@
         </div>
     </section>
 
-    <section id="login" class="py-24 bg-oceanDark relative">
-        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+   <section id="login" class="py-24 bg-oceanDark relative">
+        <div class="max-w-md mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
             <div class="glass-panel p-1 border-acid/20">
-                <div class="grid grid-cols-1 md:grid-cols-2">
-                    <div class="p-10 md:border-r border-white/10 hover:bg-white/5 transition-colors">
-                        <div class="w-16 h-16 rounded-full bg-ocean border border-acid text-acid flex items-center justify-center mb-6 mx-auto"><i data-lucide="user" class="w-8 h-8"></i></div>
-                        <h3 class="font-serif text-3xl text-white mb-2">Soy Cliente</h3>
-                        <p class="text-gray-400 text-sm mb-8">Accede a tu dashboard personal y evolución de fondos.</p>
-                        <button id="btn-client-login" class="btn-3d w-48 bg-acid text-ocean py-3 font-mono text-sm font-bold uppercase hover:bg-white transition-all">Entrar</button>
+                <div class="p-8 md:p-10 transition-colors">
+                    <div class="w-16 h-16 rounded-full bg-ocean border border-acid text-acid flex items-center justify-center mb-6 mx-auto shadow-[0_0_15px_rgba(204,255,0,0.2)]">
+                        <i data-lucide="building-2" class="w-8 h-8"></i>
                     </div>
-                    <div class="p-10 hover:bg-white/5 transition-colors relative overflow-hidden">
-                        <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjEiIGZpbGw9IiNDQ0ZGMDAiIGZpbGwtb3BhY2l0eT0iMC4xIi8+PC9zdmc+')] opacity-20"></div>
-                        <div class="w-16 h-16 rounded-full bg-ocean border border-gray-600 text-gray-400 flex items-center justify-center mb-6 mx-auto"><i data-lucide="briefcase" class="w-8 h-8"></i></div>
-                        <h3 class="font-serif text-3xl text-white mb-2">Soy Asesor</h3>
-                        <p class="text-gray-400 text-sm mb-8">Gestión profesional de clientes y herramientas avanzadas.</p>
-                        <button class="btn-3d w-48 bg-transparent border border-gray-500 text-white py-3 font-mono text-sm font-bold uppercase hover:border-acid hover:text-acid transition-all">Acceso Pro</button>
-                    </div>
+                    
+                    <h3 class="font-serif text-3xl text-white mb-2 italic">Acceso Corporativo</h3>
+                    <p class="text-gray-400 text-sm mb-8 font-sans">Dashboard de gestión para alianzas y convenios RRHH.</p>
+                    
+                    <form id="rrhh-login-form" class="space-y-4 text-left">
+                        <div>
+                            <label class="block text-[10px] font-mono font-bold text-acid uppercase tracking-widest mb-1.5 ml-1">ID de Empresa / Usuario</label>
+                            <input type="text" id="rrhh-user" class="input-premium w-full rounded-lg px-4 py-3 text-sm" placeholder="usuario@empresa.cl">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-mono font-bold text-acid uppercase tracking-widest mb-1.5 ml-1">Contraseña</label>
+                            <input type="password" id="rrhh-password" class="input-premium w-full rounded-lg px-4 py-3 text-sm" placeholder="••••••••">
+                        </div>
+                        
+                        <div class="pt-4">
+                            <button type="submit" class="btn-3d w-full bg-acid text-ocean py-4 font-mono text-sm font-bold uppercase hover:bg-white transition-all">
+                                ENTRAR AL SISTEMA
+                            </button>
+                        </div>
+                    </form>
+
+                    <p class="mt-8 text-[10px] text-gray-500 font-mono uppercase tracking-wider">
+                        ¿Tu empresa aún no tiene convenio? <br>
+                        <a href="mailto:alianzas@lajusta.cl" class="text-acid hover:underline">Solicitar información aquí</a>
+                    </p>
                 </div>
             </div>
         </div>
