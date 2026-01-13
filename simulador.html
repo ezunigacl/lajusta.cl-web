@@ -168,63 +168,7 @@
     </div>
 
     <!-- Navegación Estándar -->
-    <nav class="fixed w-full z-50 glass-panel border-b-0 border-white/5 top-0">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-20">
-                <div class="flex items-center gap-6">
-                    <a href="index.html" class="flex items-center gap-3 group flex-shrink-0">
-                        <img src="Logo.jpg" alt="Logo" class="h-10 w-10 rounded-lg border border-white/10 group-hover:border-acid transition-colors object-cover">
-                        <span class="font-serif text-2xl md:text-3xl text-acid tracking-wide">La Justa<span class="text-white">.</span></span>
-                    </a>
-                    <!-- INDICADORES ECONÓMICOS -->
-                    <div class="hidden md:flex items-center gap-4 bg-oceanLight/30 border border-white/10 px-4 py-1.5 rounded-lg backdrop-blur-md">
-                        <div class="flex flex-col items-start leading-none border-r border-white/10 pr-4">
-                            <span class="text-[9px] font-bold text-acid uppercase tracking-widest mb-0.5">UF HOY</span>
-                            <span id="navUF" class="font-mono text-white text-xs font-bold animate-pulse">...</span>
-                        </div>
-                        <div class="flex flex-col items-start leading-none">
-                            <span class="text-[9px] font-bold text-acid uppercase tracking-widest mb-0.5">UTM MES</span>
-                            <span id="navUTM" class="font-mono text-white text-xs font-bold animate-pulse">...</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="hidden lg:block">
-                    <div class="ml-10 flex items-baseline space-x-8 font-mono text-sm">
-                        <a href="index.html#inicio" class="text-white hover:text-acid transition-colors duration-300">INICIO</a>
-                        <a href="index.html#que-hacemos" class="text-white hover:text-acid transition-colors duration-300">SERVICIOS</a>
-                        <a href="index.html#tools" class="text-acid hover:text-white transition-colors duration-300 glow-sm">[ HERRAMIENTAS ]</a>
-                        <a href="index.html#login" id="nav-login-desktop" class="border border-acid text-acid px-4 py-2 hover:bg-acid hover:text-ocean transition-all duration-300 btn-3d">ACCESO</a>
-                    </div>
-                </div>
-                <div class="lg:hidden">
-                    <button onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" class="text-white hover:text-acid p-2 focus:outline-none">
-                        <i data-lucide="menu" class="w-8 h-8"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-        
-        <!-- MENU MÓVIL -->
-        <div id="mobile-menu" class="hidden lg:hidden bg-oceanDark/95 backdrop-blur-xl border-t border-white/10 absolute w-full left-0">
-             <div class="px-4 py-4 border-b border-white/5 md:hidden">
-                <div class="flex justify-between gap-4 bg-oceanLight/20 p-3 rounded-lg border border-white/5">
-                    <div class="flex flex-col items-center flex-1 border-r border-white/10">
-                        <span class="text-[9px] font-bold text-acid uppercase tracking-widest mb-0.5">UF HOY</span>
-                        <span id="navUF-mobile" class="font-mono text-white text-xs font-bold">...</span>
-                    </div>
-                    <div class="flex flex-col items-center flex-1">
-                        <span class="text-[9px] font-bold text-acid uppercase tracking-widest mb-0.5">UTM MES</span>
-                        <span id="navUTM-mobile" class="font-mono text-white text-xs font-bold">...</span>
-                    </div>
-                </div>
-            </div>
-            <div class="px-4 pt-2 pb-6 space-y-2 font-mono text-sm">
-                <a href="index.html#inicio" class="block px-3 py-4 text-white hover:text-acid border-b border-white/5">INICIO</a>
-                <a href="simulador.html" class="block px-3 py-4 text-acid font-bold border-b border-white/5">SIMULADOR</a>
-                <a href="index.html#login" id="nav-login-mobile" class="block px-3 py-4 text-acid hover:text-white border-b border-white/5">ACCESO</a>
-            </div>
-        </div>
-    </nav>
+    <<div id="header-container"></div>
 
     <div class="pt-28"></div>
 
@@ -511,23 +455,8 @@
         </div>
     </main>
 
-    <footer class="bg-oceanDark pt-16 pb-8 border-t border-white/10 text-sm mt-auto">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center md:text-left">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
-                <div class="col-span-1 md:col-span-2">
-                    <div class="flex items-center gap-3 mb-4 justify-center md:justify-start">
-                        <img src="Logo.jpg" alt="Logo" class="h-8 w-8 rounded-md border border-white/10 opacity-80 grayscale hover:grayscale-0 transition-all">
-                        <span class="font-serif text-3xl text-white italic tracking-wide">La Justa.</span>
-                    </div>
-                    <p class="text-gray-500 max-w-sm font-sans">Reingeniería financiera para una nueva generación.</p>
-                </div>
-                <div><h4 class="font-mono text-acid text-xs uppercase mb-4 tracking-widest">Navegación</h4><ul class="space-y-2 font-mono text-gray-400"><li><a href="simulador.html" class="hover:text-white transition-colors">Simuladores</a></li><li><a href="#" class="hover:text-white transition-colors">Metodología</a></li></ul></div>
-                <div><h4 class="font-mono text-acid text-xs uppercase mb-4 tracking-widest">Legal</h4><ul class="space-y-2 font-mono text-gray-400"><li><a href="#" class="hover:text-white transition-colors">Términos</a></li><li><a href="#" class="hover:text-white transition-colors">Privacidad</a></li></ul></div>
-            </div>
-            <div class="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-gray-600 font-mono"><p>&copy; 2025 La Justa Fintech SpA. Todos los derechos reservados.</p><p class="mt-2 md:mt-0 max-w-lg">DISCLAIMER: Las proyecciones son referenciales.</p></div>
-        </div>
-    </footer>
-
+<div id="footer-container"></div>.
+        
     <!-- Lógica del Simulador -->
     <script>
         const PGU_MAX_AMOUNT = 214296; 
@@ -827,5 +756,27 @@
             }
         }
     </script>
+        async function loadComponents() {
+    const components = [
+        { id: 'header-container', url: 'header.html' },
+        { id: 'footer-container', url: 'footer.html' }
+    ];
+
+    for (const comp of components) {
+        try {
+            const response = await fetch(comp.url);
+            const html = await response.text();
+            document.getElementById(comp.id).innerHTML = html;
+        } catch (err) {
+            console.error(`Error cargando ${comp.url}:`, err);
+        }
+    }
+
+    // RE-INICIALIZAR FUNCIONES DEL HEADER TRAS LA CARGA
+    if (window.lucide) lucide.createIcons();
+    if (typeof fetchIndicators === "function") fetchIndicators(); 
+}
+
+window.addEventListener('DOMContentLoaded', loadComponents);
 </body>
 </html>
