@@ -1,0 +1,55 @@
+<nav class="fixed w-full z-50 glass-panel border-b-0 border-white/5 rounded-none top-0">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-20">
+            <div class="flex items-center gap-6">
+                <a href="index.html" class="flex items-center gap-3 group flex-shrink-0">
+                    <img src="Logo.jpg" alt="Logo" class="h-10 w-10 rounded-lg border border-white/10 group-hover:border-acid transition-colors object-cover">
+                    <span class="font-serif text-2xl md:text-3xl text-acid tracking-wide">La Justa<span class="text-white">.</span></span>
+                </a>
+
+                <div class="hidden lg:flex items-center gap-4 bg-oceanLight/30 border border-white/10 px-4 py-1.5 rounded-lg backdrop-blur-md" id="ufWidgetContainer">
+                    <div class="flex flex-col items-start leading-none border-r border-white/10 pr-4">
+                        <span class="text-[9px] font-bold text-acid uppercase tracking-widest mb-0.5 flex gap-2">
+                            UF HOY <i onclick="fetchIndicators()" class="ph ph-arrows-clockwise cursor-pointer hover:text-white"></i>
+                        </span>
+                        <div class="flex items-center">
+                            <span class="text-white/60 font-mono mr-1 text-xs">$</span>
+                            <input type="text" id="inputUFValue" placeholder="..." class="w-20 text-white text-xs font-bold font-mono focus:outline-none text-left">
+                        </div>
+                    </div>
+                    <div class="flex flex-col items-start leading-none">
+                        <span class="text-[9px] font-bold text-acid uppercase tracking-widest mb-0.5">UTM MES</span>
+                        <div class="flex items-center">
+                            <span class="text-white/60 font-mono mr-1 text-xs">$</span>
+                            <input type="text" id="inputUTMNavbar" disabled placeholder="..." class="w-20 text-white text-xs font-bold font-mono focus:outline-none text-left">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="hidden md:block">
+                <div class="ml-10 flex items-baseline space-x-8 font-mono text-sm">
+                    <a href="index.html" class="text-white hover:text-acid transition-colors">INICIO</a>
+                    <a href="simulador.html" class="text-white hover:text-acid transition-colors">SIMULADOR</a>
+                    <a href="auditorscomp.html" class="text-white hover:text-acid transition-colors">AUDITOR</a>
+                    <a href="index.html#login" class="border border-acid text-acid px-4 py-2 hover:bg-acid hover:text-ocean transition-all btn-3d rounded">ACCESO</a>
+                </div>
+            </div>
+
+            <div class="md:hidden">
+                <button onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" class="text-white hover:text-acid p-2 focus:outline-none">
+                    <i data-lucide="menu" class="w-8 h-8"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="mobile-menu" class="hidden md:hidden bg-oceanDark/95 backdrop-blur-xl border-t border-white/10 absolute w-full left-0">
+        <div class="px-4 pt-2 pb-6 space-y-2 font-mono text-sm">
+            <a href="index.html" class="block px-3 py-4 text-white border-b border-white/5">INICIO</a>
+            <a href="simulador.html" class="block px-3 py-4 text-white border-b border-white/5">SIMULADOR</a>
+            <a href="auditorscomp.html" class="block px-3 py-4 text-white border-b border-white/5">AUDITOR SCOMP</a>
+            <a href="index.html#login" class="block px-3 py-4 text-acid font-bold">ACCESO</a>
+        </div>
+    </div>
+</nav>
