@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador APV | La Justa</title>
+    
+    <!-- Fuentes y Estilos -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@1&family=Inter:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        ocean: '#022C43',
+                        oceanLight: '#053B58',
+                        oceanDark: '#011826',
+                        acid: '#CCFF00',
+                        acidHover: '#b3e600',
+                        lightText: '#E6F4F1'
+                    },
+                    fontFamily: {
+                        serif: ['Instrument Serif', 'serif'],
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Space Mono', 'monospace'],
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { background-color: #022C43; color: #E6F4F1; overflow-x: hidden; }
+        .font-serif { font-family: 'Instrument Serif', serif; font-style: italic; }
+        .font-mono { font-family: 'Space Mono', monospace; }
+        
+        .glass-panel { 
+            background: rgba(5, 59, 88, 0.4); 
+            backdrop-filter: blur(12px); 
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+        
+        .grid-bg { 
+            background-image: linear-gradient(rgba(204, 255, 0, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(204, 255, 0, 0.03) 1px, transparent 1px); 
+            background-size: 40px 40px; 
+            background-position: center top;
+        }
+
+        .input-premium {
+            background: rgba(1, 24, 38, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            transition: all 0.3s ease;
+            font-family: 'Space Mono', monospace;
+        }
+        .input-premium:focus { 
+            border-color: #CCFF00; outline: none; 
+            box-shadow: 0 0 15px rgba(204, 255, 0, 0.15); 
+        }
+        
+        .btn-3d { transition: all 0.1s ease; box-shadow: 4px 4px 0px rgba(0,0,0,0.5); transform: translate(0,0); }
+        .btn-3d:hover { transform: translate(-1px, -1px); box-shadow: 6px 6px 0px rgba(0,0,0,0.4); }
+        .btn-3d:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px rgba(0,0,0,0.5); }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #022C43; }
+        ::-webkit-scrollbar-thumb { background: #053B58; border-radius: 3px; }
+    </style>
+</head>
+<body class="grid-bg relative antialiased selection:bg-acid selection:text-ocean flex flex-col min-h-screen">
+
+    <!-- Navegación -->
+    <nav class="fixed w-full z-50 glass-panel border-b-0 border-white/5 top-0 h-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-3 group">
+                <img src="Logo.jpg" alt="Logo" class="h-10 w-10 rounded-lg border border-white/10 group-hover:border-acid transition-colors object-cover">
+                <span class="font-serif text-2xl md:text-3xl text-acid tracking-wide">La Justa<span class="text-white">.</span></span>
+            </a>
+            
+            <div class="hidden md:flex items-center gap-4 bg-oceanLight/30 border border-white/10 px-4 py-1.5 rounded-lg backdrop-blur-md">
+                <div class="flex flex-col items-start leading-none border-r border-white/10 pr-4">
+                    <span class="text-[9px] font-bold text-acid uppercase tracking-widest mb-0.5">UF HOY</span>
+                    <span id="navUF" class="font-mono text-white text-xs font-bold">...</span>
+                </div>
+                <div class="flex flex-col items-start leading-none">
+                    <span class="text-[9px] font-bold text-acid uppercase tracking-widest mb-0.5">UTM MES</span>
+                    <span id="navUTM" class="font-mono text-white text-xs font-bold">...</span>
+                </div>
+            </div>
+
+            <div class="hidden md:block">
+                <a href="index.html" class="text-white hover:text-acid text-sm font-mono transition-colors mr-6">VOLVER</a>
+                <a href="agenda-lajusta-web.html" class="border border-acid text-acid px-4 py-2 hover:bg-acid hover:text-ocean transition-all duration-300 btn-3d text-sm font-mono font-bold">ASESORÍA</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="pt-28"></div>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 mb-20 flex-grow w-full">
+        
+        <div class="text-center mb-12">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-acid/10 border border-acid/20 mb-4">
+                <span class="text-[10px] font-mono text-acid font-bold uppercase tracking-widest">Herramienta de Optimización</span>
+            </div>
+            <h1 class="font-serif text-5xl md:text-6xl text-white mb-4">Calculadora de Beneficio APV</h1>
+            <p class="text-gray-400 max-w-xl mx-auto text-sm font-sans leading-relaxed">
+                Descubre si te conviene el Régimen A (Bonificación) o el Régimen B (Rebaja de Impuestos) y cuánto crecerá tu pensión.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+            
+            <!-- FORMULARIO -->
+            <div class="lg:col-span-5 space-y-6">
+                <div class="glass-panel rounded-2xl p-6 lg:p-8 relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 pointer-events-none">
+                        <i data-lucide="piggy-bank" class="w-24 h-24 text-white"></i>
+                    </div>
+
+                    <h2 class="text-xl font-serif italic text-white mb-6 flex items-center gap-2">
+                        <span class="w-6 h-6 rounded-full bg-acid text-ocean text-xs font-bold flex items-center justify-center font-mono not-italic">1</span>
+                        Tus Datos Financieros
+                    </h2>
+
+                    <div class="space-y-5">
+                        <div>
+                            <label class="text-[10px] font-mono font-bold text-acid uppercase tracking-widest mb-1.5 ml-1 block">Sueldo Bruto Mensual</label>
+                            <div class="relative">
+                                <span class="absolute left-3 top-3 text-white/30 font-mono">$</span>
+                                <input type="text" id="inputSalary" class="input-premium w-full rounded-lg pl-8 py-3 font-mono font-bold text-lg text-white currency-input" placeholder="0">
+                            </div>
+                            <p class="text-[9px] text-white/30 mt-1 ml-1">Utilizamos el valor bruto para calcular tu tramo de impuesto.</p>
+                        </div>
+
+                        <div>
+                            <label class="text-[10px] font-mono font-bold text-acid uppercase tracking-widest mb-1.5 ml-1 block">Ahorro APV Mensual</label>
+                            <div class="relative">
+                                <span class="absolute left-3 top-3 text-white/30 font-mono">$</span>
+                                <input type="text" id="inputApv" class="input-premium w-full rounded-lg pl-8 py-3 font-mono font-bold text-lg text-acid currency-input" placeholder="0">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-[10px] font-mono font-bold text-white/50 uppercase tracking-widest mb-1.5 block">Edad Actual</label>
+                                <input type="number" id="inputAge" class="input-premium w-full rounded-lg px-3 py-3 text-sm text-center" placeholder="Ej: 35">
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-mono font-bold text-white/50 uppercase tracking-widest mb-1.5 block">Perfil Riesgo</label>
+                                <select id="inputProfile" class="input-premium w-full rounded-lg px-2 py-3 text-xs appearance-none cursor-pointer text-center">
+                                    <option value="A">Arriesgado (A)</option>
+                                    <option value="C" selected>Moderado (C)</option>
+                                    <option value="E">Conservador (E)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button onclick="calculateAPV()" class="btn-3d w-full bg-acid text-ocean font-extrabold py-4 rounded-xl uppercase tracking-[0.2em] text-sm flex justify-center items-center gap-3 hover:bg-white hover:text-ocean transition-colors mt-4">
+                            <span>Calcular Beneficio</span>
+                            <i data-lucide="zap" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RESULTADOS -->
+            <div class="lg:col-span-7 space-y-6 hidden" id="resultsPanel">
+                
+                <!-- Tarjeta Principal: GANADOR -->
+                <div class="glass-panel p-1 rounded-2xl border-acid/50 relative overflow-hidden shadow-[0_0_40px_rgba(204,255,0,0.1)]">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-acid via-white to-acid opacity-80"></div>
+                    <div class="bg-oceanDark/90 p-8 rounded-xl text-center">
+                        <p class="text-[10px] font-mono text-white/50 uppercase tracking-widest mb-2">Tu Mejor Opción Estratégica</p>
+                        <h2 class="text-3xl md:text-4xl font-serif italic text-acid mb-4" id="resBestRegime">RÉGIMEN B</h2>
+                        
+                        <div class="flex flex-col md:flex-row justify-center items-center gap-6 mt-6">
+                            <div class="text-center">
+                                <span class="block text-2xl font-bold text-white font-mono" id="resImmediateBenefit">$0</span>
+                                <span class="text-[10px] text-white/40 uppercase tracking-wide">Beneficio Mensual (Hoy)</span>
+                            </div>
+                            <div class="w-px h-10 bg-white/10 hidden md:block"></div>
+                            <div class="text-center">
+                                <span class="block text-2xl font-bold text-white font-mono" id="resYearlyBenefit">$0</span>
+                                <span class="text-[10px] text-white/40 uppercase tracking-wide">Beneficio Anual</span>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-400 mt-6 max-w-md mx-auto" id="resExplanation">
+                            Debido a tu renta, te conviene rebajar impuestos. El Estado financiará parte de tu ahorro devolviéndote impuestos.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Comparativa -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="glass-panel p-5 rounded-xl border-white/5 opacity-50 hover:opacity-100 transition-opacity" id="cardRegimeA">
+                        <h4 class="font-serif italic text-xl text-white mb-2">Régimen A</h4>
+                        <p class="text-[10px] text-white/40 uppercase tracking-widest mb-4">Bonificación Estatal (15%)</p>
+                        <div class="text-lg font-mono text-acid font-bold" id="valRegimeA">$0 / mes</div>
+                        <p class="text-[9px] text-gray-500 mt-1">Tope legal: 6 UTM anuales</p>
+                    </div>
+                    
+                    <div class="glass-panel p-5 rounded-xl border-white/5 opacity-50 hover:opacity-100 transition-opacity" id="cardRegimeB">
+                        <h4 class="font-serif italic text-xl text-white mb-2">Régimen B</h4>
+                        <p class="text-[10px] text-white/40 uppercase tracking-widest mb-4">Ahorro de Impuestos</p>
+                        <div class="text-lg font-mono text-acid font-bold" id="valRegimeB">$0 / mes</div>
+                        <p class="text-[9px] text-gray-500 mt-1">Rebaja de base tributable</p>
+                    </div>
+                </div>
+
+                <!-- Proyección Futura -->
+                <div class="glass-panel p-6 rounded-2xl border-white/10">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="font-serif italic text-xl text-white">Proyección a los 65 años</h3>
+                        <span class="text-[10px] font-mono text-acid border border-acid/30 px-2 py-1 rounded">Interés Compuesto</span>
+                    </div>
+                    <div class="h-48 w-full">
+                        <canvas id="apvChart"></canvas>
+                    </div>
+                    <div class="mt-4 flex justify-between items-end border-t border-white/10 pt-4">
+                        <div>
+                            <p class="text-[10px] text-white/40 uppercase">Capital Acumulado Estimado</p>
+                            <p class="text-2xl font-mono text-white font-bold" id="resTotalAccumulated">$0</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-[10px] text-white/40 uppercase">Aumento Pensión (Estimado)</p>
+                            <p class="text-xl font-mono text-acid font-bold" id="resPensionIncrease">+$0 / mes</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CTA -->
+                <div class="bg-oceanLight/20 border border-white/10 p-6 rounded-xl flex flex-col md:flex-row items-center justify-between gap-4">
+                    <div class="text-center md:text-left">
+                        <h4 class="text-white font-bold text-sm mb-1">¿No sabes cómo contratarlo?</h4>
+                        <p class="text-xs text-gray-400">Te ayudamos a elegir la institución con menores comisiones.</p>
+                    </div>
+                    <button onclick="window.location.href='agenda-lajusta-web.html'" class="btn-3d bg-white text-ocean px-6 py-3 rounded-lg font-bold font-mono text-xs uppercase tracking-widest hover:bg-acid transition-colors flex items-center gap-2">
+                        <span>Asesoría APV</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-oceanDark pt-10 pb-8 border-t border-white/10 text-sm mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="text-xs text-gray-600 font-mono">
+                &copy; 2025 La Justa Fintech SpA. Cálculos basados en normativa SII y topes UF/UTM vigentes. Rentabilidades son proyecciones y no garantizan resultados futuros.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        // --- CONSTANTES TRIBUTARIAS 2025 ---
+        // Factores y Deducciones en UTM (Mensual)
+        const TAX_TABLE = [
+            { limit: 13.5, factor: 0, deduction: 0 },
+            { limit: 30, factor: 0.04, deduction: 0.54 },
+            { limit: 50, factor: 0.08, deduction: 1.74 },
+            { limit: 70, factor: 0.135, deduction: 4.49 },
+            { limit: 90, factor: 0.23, deduction: 11.14 },
+            { limit: 120, factor: 0.304, deduction: 17.8 },
+            { limit: 310, factor: 0.35, deduction: 23.32 },
+            { limit: 999999, factor: 0.40, deduction: 38.82 }
+        ];
+
+        // Rentabilidades Reales Estimadas (Anual)
+        const FUND_RETURNS = {
+            'A': 0.06, // 6% Real
+            'C': 0.04, // 4% Real (Promedio)
+            'E': 0.02  // 2% Real
+        };
+
+        let currentUF = 38000; 
+        let currentUTM = 66000;
+        let chartInstance = null;
+
+        // --- UTILIDADES ---
+        const formatMoney = (n) => new Intl.NumberFormat('es-CL', {style:'currency', currency:'CLP', maximumFractionDigits:0}).format(n);
+        const parseMoney = (id) => parseFloat(document.getElementById(id).value.replace(/\./g, '').replace(/\D/g, '')) || 0;
+
+        // --- FETCH DATA ---
+        async function fetchIndicators() {
+            try {
+                const res = await fetch('https://mindicador.cl/api');
+                const data = await res.json();
+                currentUF = data.uf.valor;
+                currentUTM = data.utm.valor;
+                document.getElementById('navUF').innerText = formatMoney(currentUF);
+                document.getElementById('navUTM').innerText = formatMoney(currentUTM);
+            } catch (e) { console.log('Usando valores default'); }
+        }
+
+        // --- MOTOR DE CÁLCULO ---
+        function calculateTax(salaryCLP) {
+            const salaryUTM = salaryCLP / currentUTM;
+            const bracket = TAX_TABLE.find(b => salaryUTM <= b.limit);
+            if (!bracket) return 0;
+            
+            const taxUTM = (salaryUTM * bracket.factor) - bracket.deduction;
+            return Math.max(0, taxUTM * currentUTM);
+        }
+
+        function calculateAPV() {
+            const grossSalary = parseMoney('inputSalary');
+            const apvAmount = parseMoney('inputApv');
+            const age = parseInt(document.getElementById('inputAge').value) || 30;
+            const profile = document.getElementById('inputProfile').value;
+
+            if(grossSalary === 0 || apvAmount === 0) {
+                alert("Por favor ingresa tu sueldo y el monto que deseas ahorrar.");
+                return;
+            }
+
+            // 1. Estimación Base Tributable (Descontando 20% aprox leyes sociales)
+            // Esto es una aproximación para Lead Magnet. En asesoría real se usa liquidación exacta.
+            const taxableBase = grossSalary * 0.82; 
+
+            // 2. Cálculo Régimen B (Rebaja Impuesto)
+            const taxWithoutAPV = calculateTax(taxableBase);
+            const taxWithAPV = calculateTax(taxableBase - apvAmount);
+            const benefitB = taxWithoutAPV - taxWithAPV; // Ahorro mensual
+
+            // 3. Cálculo Régimen A (Bonificación)
+            // Tope anual 6 UTM -> Mensual 0.5 UTM
+            const maxBonusA = 0.5 * currentUTM;
+            let benefitA = apvAmount * 0.15;
+            if (benefitA > maxBonusA) benefitA = maxBonusA;
+
+            // 4. Determinación de Ganador
+            let bestRegime = "";
+            let winningAmount = 0;
+
+            if (benefitB > benefitA) {
+                bestRegime = "RÉGIMEN B";
+                winningAmount = benefitB;
+                document.getElementById('resExplanation').innerText = `Tu renta te sitúa en un tramo de impuestos donde te conviene rebajar la base tributable. El Estado te "devuelve" más vía impuestos que con la bonificación directa.`;
+                document.getElementById('cardRegimeB').style.opacity = "1";
+                document.getElementById('cardRegimeB').classList.add('border-acid');
+                document.getElementById('cardRegimeA').style.opacity = "0.4";
+                document.getElementById('cardRegimeA').classList.remove('border-acid');
+            } else {
+                bestRegime = "RÉGIMEN A";
+                winningAmount = benefitA;
+                document.getElementById('resExplanation').innerText = `Tu renta está en un tramo exento o bajo de impuestos. Te conviene recibir la Bonificación Fiscal directa del 15% en tu cuenta de AFP.`;
+                document.getElementById('cardRegimeA').style.opacity = "1";
+                document.getElementById('cardRegimeA').classList.add('border-acid');
+                document.getElementById('cardRegimeB').style.opacity = "0.4";
+                document.getElementById('cardRegimeB').classList.remove('border-acid');
+            }
+
+            // UI Update
+            document.getElementById('resBestRegime').innerText = bestRegime;
+            document.getElementById('resImmediateBenefit').innerText = formatMoney(winningAmount);
+            document.getElementById('resYearlyBenefit').innerText = formatMoney(winningAmount * 12);
+            
+            document.getElementById('valRegimeA').innerText = formatMoney(benefitA);
+            document.getElementById('valRegimeB').innerText = formatMoney(benefitB);
+
+            document.getElementById('resultsPanel').classList.remove('hidden');
+            
+            // 5. Proyección
+            projectFund(apvAmount, age, profile, winningAmount); // winningAmount se suma a la rentabilidad si se reinvierte
+        }
+
+        function projectFund(monthlyContribution, currentAge, profile, taxBenefit) {
+            const retirementAge = 65;
+            const yearsToGrow = Math.max(1, retirementAge - currentAge);
+            const months = yearsToGrow * 12;
+            const annualRate = FUND_RETURNS[profile];
+            const monthlyRate = Math.pow(1 + annualRate, 1/12) - 1;
+
+            // Asumimos que el usuario reinvierte el beneficio tributario o bono (Escenario Optimista La Justa)
+            const totalMonthlyInput = monthlyContribution + taxBenefit; 
+
+            // Valor Futuro Anualidad Anticipada
+            const fv = totalMonthlyInput * ((Math.pow(1 + monthlyRate, months) - 1) / monthlyRate) * (1 + monthlyRate);
+            
+            // Estimación Pensión Extra (CNU simplificado ~200)
+            const cnu = 200; // Divisor referencial vejez hombre
+            const pensionIncrease = fv / cnu;
+
+            document.getElementById('resTotalAccumulated').innerText = formatMoney(fv);
+            document.getElementById('resPensionIncrease').innerText = "+" + formatMoney(pensionIncrease);
+
+            updateChart(months, totalMonthlyInput, monthlyRate, currentAge);
+        }
+
+        function updateChart(months, monthlyInput, monthlyRate, startAge) {
+            const ctx = document.getElementById('apvChart').getContext('2d');
+            if(chartInstance) chartInstance.destroy();
+
+            const labels = [];
+            const dataProj = [];
+            const dataCap = [];
+            
+            // Puntos anuales para el gráfico
+            const steps = Math.ceil(months / 12);
+            
+            for(let i=0; i<=steps; i++) {
+                labels.push(startAge + i);
+                const m = i * 12;
+                const val = monthlyInput * ((Math.pow(1 + monthlyRate, m) - 1) / monthlyRate) * (1 + monthlyRate);
+                dataProj.push(val);
+                dataCap.push(monthlyInput * m);
+            }
+
+            Chart.defaults.color = '#94a3b8';
+            Chart.defaults.font.family = "'Space Mono', monospace";
+
+            chartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Capital + Rentabilidad + Beneficio',
+                            data: dataProj,
+                            borderColor: '#CCFF00',
+                            backgroundColor: 'rgba(204, 255, 0, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Solo tu Aporte',
+                            data: dataCap,
+                            borderColor: '#ffffff',
+                            borderDash: [5, 5],
+                            pointRadius: 0
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { labels: { color: '#E6F4F1' } } },
+                    scales: {
+                        y: { 
+                            grid: { color: 'rgba(255,255,255,0.05)' },
+                            ticks: { callback: (v) => '$' + (v/1000000).toFixed(1) + 'M' }
+                        },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+        }
+
+        // Inputs Formatting
+        document.querySelectorAll('.currency-input').forEach(i => i.addEventListener('input', e => { 
+            let v = e.target.value.replace(/\D/g, ""); 
+            e.target.value = v ? parseInt(v).toLocaleString('es-CL') : ""; 
+        }));
+
+        fetchIndicators();
+    </script>
+</body>
+</html>
