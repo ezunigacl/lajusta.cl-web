@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academia | La Justa</title>
+    <!-- Fuentes y Estilos idénticos -->
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@1&family=Inter:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        oceanDark: '#022C43',
+                        acid: '#CCFF00',
+                        paper: '#F3F4F6',
+                        oceanLight: '#053B58',
+                    },
+                    fontFamily: {
+                        serif: ['Instrument Serif', 'serif'],
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Space Mono', 'monospace'],
+                    },
+                    boxShadow: { 'hard': '4px 4px 0px 0px rgba(0,0,0,0.4)' }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { 
+            background-color: #022C43; color: #F3F4F6;
+            background-image: linear-gradient(rgba(204, 255, 0, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(204, 255, 0, 0.03) 1px, transparent 1px); 
+            background-size: 40px 40px; 
+        }
+        .glass-panel { 
+            background: rgba(5, 59, 88, 0.3); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+        }
+        .btn-brand { transition: all 0.1s ease; box-shadow: 4px 4px 0px 0px rgba(0,0,0,0.4); }
+        .btn-brand:hover { transform: translate(-1px, -1px); box-shadow: 6px 6px 0px 0px rgba(0,0,0,0.3); }
+        .nav-item.active { background: rgba(204, 255, 0, 0.1); border-left: 3px solid #CCFF00; color: #CCFF00; }
+        .course-card:hover .play-icon { transform: scale(1.1); }
+    </style>
+</head>
+<body class="antialiased flex h-screen overflow-hidden">
+
+    <!-- SIDEBAR -->
+    <aside class="w-64 bg-oceanDark/90 border-r border-white/10 flex flex-col hidden md:flex backdrop-blur-sm">
+        <div class="h-20 flex items-center px-6 border-b border-white/10">
+            <div class="flex items-center gap-2">
+                <div class="h-8 w-8 bg-acid rounded-none border border-white/20 flex items-center justify-center text-oceanDark font-serif italic font-bold shadow-hard">LJ</div>
+                <span class="font-serif text-xl text-paper">La Justa <span class="text-[10px] font-mono font-normal text-acid tracking-widest ml-1 border border-acid px-1 rounded-sm">B2B</span></span>
+            </div>
+        </div>
+        <div class="flex-1 overflow-y-auto py-6 space-y-1">
+            <p class="px-6 text-[10px] font-mono text-white/40 uppercase tracking-widest mb-2">Principal</p>
+            <a href="dashboard.html" class="nav-item flex items-center gap-3 px-6 py-3 text-sm font-medium transition-all text-white/60 hover:text-acid hover:bg-white/5 font-sans">
+                <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard
+            </a>
+            <a href="simuladores.html" class="nav-item flex items-center gap-3 px-6 py-3 text-sm font-medium transition-all text-white/60 hover:text-acid hover:bg-white/5 font-sans">
+                <i data-lucide="calculator" class="w-4 h-4"></i> Simuladores
+                <span class="bg-white/10 text-white text-[9px] font-bold font-mono px-1 rounded-sm ml-auto">HUB</span>
+            </a>
+            <p class="px-6 text-[10px] font-mono text-white/40 uppercase tracking-widest mb-2 mt-6">Recursos</p>
+            <a href="academia.html" class="nav-item active flex items-center gap-3 px-6 py-3 text-sm font-medium transition-all text-paper hover:text-acid hover:bg-white/5 font-sans">
+                <i data-lucide="graduation-cap" class="w-4 h-4"></i> Academia
+            </a>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-1 flex flex-col h-screen overflow-hidden">
+        <header class="md:hidden h-16 bg-oceanDark border-b border-white/10 flex items-center justify-between px-4">
+            <span class="font-serif text-lg text-paper italic">Academia</span>
+            <button class="text-white"><i data-lucide="menu" class="w-6 h-6"></i></button>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-4 md:p-8">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+                <div>
+                    <h1 class="text-3xl font-serif italic text-paper">Academia Corporativa</h1>
+                    <p class="text-sm text-white/60 font-sans mt-1">Capacitación continua en bienestar financiero y normativo.</p>
+                </div>
+                <!-- Barra de Progreso Global -->
+                <div class="glass-panel px-4 py-2 rounded-sm flex items-center gap-4">
+                    <div>
+                        <p class="text-[9px] text-white/40 font-mono uppercase">Tu Progreso</p>
+                        <p class="text-lg font-bold text-acid font-mono">35%</p>
+                    </div>
+                    <div class="w-24 h-1 bg-white/10 rounded-full overflow-hidden">
+                        <div class="h-full bg-acid w-[35%]"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                
+                <!-- Curso 1 -->
+                <div class="glass-panel p-0 rounded-sm overflow-hidden group course-card border border-white/10 hover:border-acid/30 transition-all">
+                    <div class="h-40 bg-oceanLight relative overflow-hidden">
+                        <div class="absolute inset-0 bg-oceanDark/60 z-10"></div>
+                        <!-- Placeholder visual -->
+                        <div class="absolute inset-0 flex items-center justify-center z-20">
+                            <div class="h-12 w-12 rounded-full bg-acid/20 flex items-center justify-center backdrop-blur-sm border border-acid/50 play-icon transition-transform duration-300">
+                                <i data-lucide="play" class="w-5 h-5 text-acid fill-current"></i>
+                            </div>
+                        </div>
+                        <div class="absolute bottom-3 left-3 z-20 bg-oceanDark px-2 py-1 text-[9px] font-mono text-white font-bold rounded-sm border border-white/10">3 MÓDULOS</div>
+                    </div>
+                    <div class="p-5">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-[10px] text-acid font-mono uppercase tracking-widest">Finanzas Personales</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2 leading-tight">Educación Financiera Básica</h3>
+                        <p class="text-xs text-white/50 mb-4 line-clamp-2">Aprende a gestionar tu presupuesto, reducir deudas y comenzar a ahorrar con inteligencia.</p>
+                        
+                        <div class="w-full bg-white/5 rounded-full h-1.5 mb-2">
+                            <div class="bg-acid h-1.5 rounded-full w-[80%]"></div>
+                        </div>
+                        <p class="text-[9px] text-white/40 text-right font-mono">80% COMPLETADO</p>
+                        
+                        <button class="mt-4 w-full btn-brand bg-white/5 hover:bg-acid hover:text-oceanDark text-white border border-white/10 py-2 rounded-sm text-xs font-mono font-bold uppercase transition-colors">
+                            Continuar
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Curso 2 -->
+                <div class="glass-panel p-0 rounded-sm overflow-hidden group course-card border border-white/10 hover:border-acid/30 transition-all">
+                    <div class="h-40 bg-oceanLight relative overflow-hidden">
+                        <div class="absolute inset-0 bg-oceanDark/60 z-10"></div>
+                         <div class="absolute inset-0 flex items-center justify-center z-20">
+                            <div class="h-12 w-12 rounded-full bg-white/10 flex items-center justify-center backdrop-blur-sm border border-white/30 play-icon transition-transform duration-300">
+                                <i data-lucide="lock" class="w-5 h-5 text-white/50"></i>
+                            </div>
+                        </div>
+                        <div class="absolute bottom-3 left-3 z-20 bg-oceanDark px-2 py-1 text-[9px] font-mono text-white font-bold rounded-sm border border-white/10">2 MÓDULOS</div>
+                    </div>
+                    <div class="p-5">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-[10px] text-acid font-mono uppercase tracking-widest">Sistema Previsional</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2 leading-tight">Entendiendo tu AFP</h3>
+                        <p class="text-xs text-white/50 mb-4 line-clamp-2">Comisiones, fondos, rentabilidad y cómo elegir la mejor opción para tu perfil.</p>
+                        
+                        <div class="w-full bg-white/5 rounded-full h-1.5 mb-2">
+                            <div class="bg-acid h-1.5 rounded-full w-0"></div>
+                        </div>
+                        <p class="text-[9px] text-white/40 text-right font-mono">NO INICIADO</p>
+                        
+                        <button class="mt-4 w-full btn-brand bg-white/5 hover:bg-white text-white hover:text-oceanDark border border-white/10 py-2 rounded-sm text-xs font-mono font-bold uppercase transition-colors">
+                            Iniciar Curso
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Curso 3 -->
+                <div class="glass-panel p-0 rounded-sm overflow-hidden group course-card border border-white/10 hover:border-acid/30 transition-all">
+                    <div class="h-40 bg-oceanLight relative overflow-hidden">
+                        <div class="absolute inset-0 bg-oceanDark/60 z-10"></div>
+                         <div class="absolute inset-0 flex items-center justify-center z-20">
+                            <div class="h-12 w-12 rounded-full bg-white/10 flex items-center justify-center backdrop-blur-sm border border-white/30 play-icon transition-transform duration-300">
+                                <i data-lucide="lock" class="w-5 h-5 text-white/50"></i>
+                            </div>
+                        </div>
+                        <div class="absolute bottom-3 left-3 z-20 bg-oceanDark px-2 py-1 text-[9px] font-mono text-white font-bold rounded-sm border border-white/10">4 MÓDULOS</div>
+                    </div>
+                    <div class="p-5">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-[10px] text-acid font-mono uppercase tracking-widest">Legal</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2 leading-tight">Planificación Tributaria</h3>
+                        <p class="text-xs text-white/50 mb-4 line-clamp-2">Beneficios tributarios del APV (Régimen A y B) y cómo optimizar tu carga impositiva.</p>
+                        
+                        <div class="w-full bg-white/5 rounded-full h-1.5 mb-2">
+                            <div class="bg-acid h-1.5 rounded-full w-0"></div>
+                        </div>
+                        <p class="text-[9px] text-white/40 text-right font-mono">BLOQUEADO</p>
+                        
+                        <button class="mt-4 w-full cursor-not-allowed opacity-50 bg-white/5 text-white/30 border border-white/10 py-2 rounded-sm text-xs font-mono font-bold uppercase">
+                            Requiere Nivel 2
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+    <script>lucide.createIcons();</script>
+</body>
+</html>
