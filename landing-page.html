@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Justa. | Tu Jubilación Clara</title>
+    <meta name="description" content="Asesoría previsional transparente. Tu jubilación sin letra chica.">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Alpine.js (Con defer para corregir orden de ejecución) -->
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Configuración Tailwind -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        ocean: '#022C43',
+                        oceanLight: '#053B58',
+                        oceanDark: '#011826',
+                        acid: '#CCFF00',
+                    },
+                    fontFamily: {
+                        serif: ['"Instrument Serif"', 'serif'],
+                        sans: ['"Inter"', 'sans-serif'],
+                        mono: ['"Space Mono"', 'monospace'],
+                    },
+                    backgroundImage: {
+                        'grid-pattern': "linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px)",
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- LÓGICA DE LA APLICACIÓN (Movida al head para evitar ReferenceErrors) -->
+    <script>
+        function appData() {
+            return {
+                indicators: {
+                    uf: 0,
+                    utm: 0
+                },
+                calc: {
+                    saldo: 0,
+                    saldoStr: '',
+                    edad: 60,
+                    genero: 'M' // M o F
+                },
+
+                init() {
+                    this.fetchIndicators();
+                    // Inicializar iconos Lucide si se recarga el componente (para SPAs)
+                    // Usamos setTimeout para asegurar que el DOM esté listo
+                    setTimeout(() => {
+                        if (window.lucide) lucide.createIcons();
+                    }, 100);
+                },
+
+                async fetchIndicators() {
+                    try {
+                        const response = await fetch('https://mindicador.cl/api');
+                        if (!response.ok) throw new Error('API Error');
+                        const data = await response.json();
+                        this.indicators.uf = data.uf.valor;
+                        this.indicators.utm = data.utm.valor;
+                    } catch (error) {
+                        console.log('Usando valores fallback debido a error de API o CORS');
+                        // Valores fallback aproximados 2025
+                        this.indicators.uf = 38500; 
+                        this.indicators.utm = 66000;
+                    }
+                },
+
+                formatCurrency(value) {
+                    if (value === undefined || value === null) return '$0';
+                    return new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP' }).format(value);
+                },
+
+                formatSaldoInput() {
+                    // Eliminar todo lo que no sea números
+                    if (!this.calc.saldoStr) {
+                         this.calc.saldo = 0;
+                         return;
+                    }
+                    
+                    let rawValue = this.calc.saldoStr.replace(/\D/g, '');
+                    
+                    if (rawValue === '') {
+                        this.calc.saldo = 0;
+                        this.calc.saldoStr = '';
+                        return;
+                    }
+
+                    // Convertir a número para el cálculo
+                    this.calc.saldo = parseInt(rawValue, 10);
+
+                    // Formatear visualmente con puntos
+                    this.calc.saldoStr = new Intl.NumberFormat('es-CL').format(this.calc.saldo);
+                },
+
+                calculatePension() {
+                    if (this.calc.saldo === 0) return '$0';
+
+                    // Lógica solicitada: (Saldo / Factor) + PGU
+                    // Interpretación: Factor es anual, así que dividimos el resultado por 12 para mensualidad.
+                    
+                    const factor = this.calc.genero === 'M' ? 19 : 24; // Años de expectativa/división capital
+                    
+                    // Cálculo base mensual (Saldo / Factor Anual) / 12 meses
+                    let basePensionMensual = (this.calc.saldo / factor) / 12;
+
+                    // Lógica PGU: Sumar 214.296 si edad >= 65
+                    const pguValue = 214296;
+                    if (this.calc.edad >= 65) {
+                        basePensionMensual += pguValue;
+                    }
+
+                    return this.formatCurrency(basePensionMensual);
+                },
+                
+                scrollToTools() {
+                    const el = document.getElementById('herramientas');
+                    if(el) el.scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Estilos Globales y Efectos */
+        body {
+            background-color: #022C43;
+            color: white;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .bg-grid {
+            background-size: 40px 40px;
+            background-image: linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        }
+
+        .text-glow {
+            text-shadow: 0 0 20px rgba(204, 255, 0, 0.3);
+        }
+
+        .glass {
+            background: rgba(5, 59, 88, 0.3);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .glass-strong {
+            background: rgba(1, 24, 38, 0.7);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Input Range Customization */
+        input[type=range] {
+            -webkit-appearance: none; 
+            background: transparent; 
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+            background: #CCFF00;
+            cursor: pointer;
+            margin-top: -6px; 
+            box-shadow: 0 0 10px #CCFF00;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: rgba(255,255,255,0.2);
+            border-radius: 2px;
+        }
+        
+        [x-cloak] { display: none !important; }
+    </style>
+</head>
+<body class="bg-ocean bg-grid overflow-x-hidden relative" x-data="appData()">
+
+    <!-- Lucide Icons Init -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if(window.lucide) lucide.createIcons();
+        });
+    </script>
+
+    <!-- A. HEADER FLOTANTE -->
+    <header class="fixed top-0 w-full z-50 glass-strong transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Logo -->
+            <a href="#" class="font-serif text-3xl text-white tracking-wide italic">
+                La Justa<span class="text-acid not-italic">.</span>
+            </a>
+
+            <!-- Widget Data (Desktop) -->
+            <div class="hidden md:flex items-center gap-6 font-mono text-xs text-gray-400">
+                <div class="flex items-center gap-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-acid animate-pulse"></span>
+                    <span>UF: <span x-text="formatCurrency(indicators.uf)" class="text-white">...</span></span>
+                </div>
+                <div>
+                    <span>UTM: <span x-text="formatCurrency(indicators.utm)" class="text-white">...</span></span>
+                </div>
+            </div>
+
+            <!-- Navegación & CTA -->
+            <div class="flex items-center gap-6">
+                <nav class="hidden md:flex gap-6 text-sm font-medium text-gray-300">
+                    <a href="#herramientas" class="hover:text-acid transition-colors">Herramientas</a>
+                    <a href="#manifiesto" class="hover:text-acid transition-colors">Manifiesto</a>
+                    <a href="#empresas" class="hover:text-acid transition-colors">Empresas</a>
+                </nav>
+                <a href="#" class="bg-acid text-oceanDark font-bold px-5 py-2.5 rounded hover:bg-white transition-colors duration-300 text-sm">
+                    Acceso Clientes
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- B. HERO SECTION (CON CALCULADORA INTEGRADA) -->
+    <section class="relative min-h-screen pt-28 pb-12 flex items-center justify-center px-4 overflow-hidden">
+        <!-- Decoración de fondo (Glows) -->
+        <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-acid/10 rounded-full blur-[120px] pointer-events-none"></div>
+        <div class="absolute bottom-0 right-0 w-[500px] h-[500px] bg-oceanLight/50 rounded-full blur-[100px] pointer-events-none"></div>
+
+        <div class="max-w-7xl w-full grid lg:grid-cols-12 gap-12 items-center relative z-10">
+            
+            <!-- Copy Persuasivo (Left Column) -->
+            <div class="lg:col-span-7 space-y-8 text-center lg:text-left">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-acid/30 bg-acid/5 text-acid text-xs font-mono tracking-wider">
+                    <i data-lucide="shield-check" class="w-3 h-3"></i>
+                    REGULADO POR LA SUPERTINTENDENCIA
+                </div>
+                
+                <h1 class="font-serif text-5xl md:text-7xl leading-[1.1]">
+                    Tu Jubilación clara, <br>
+                    <span class="italic text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400">sin letra chica.</span>
+                </h1>
+                
+                <p class="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto lg:mx-0 font-light leading-relaxed">
+                    Combinamos tecnología financiera y expertise legal para recuperar el control de tu futuro. Sin promesas vacías, solo matemática pura y estrategia.
+                </p>
+
+                <div class="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start pt-4">
+                    <div class="flex -space-x-3">
+                        <img class="w-10 h-10 rounded-full border-2 border-ocean" src="https://ui-avatars.com/api/?name=Carlos+Z&background=random" alt="Cliente">
+                        <img class="w-10 h-10 rounded-full border-2 border-ocean" src="https://ui-avatars.com/api/?name=Ana+M&background=random" alt="Cliente">
+                        <img class="w-10 h-10 rounded-full border-2 border-ocean" src="https://ui-avatars.com/api/?name=Luis+R&background=random" alt="Cliente">
+                        <div class="w-10 h-10 rounded-full border-2 border-ocean bg-oceanLight flex items-center justify-center text-xs font-bold">+2k</div>
+                    </div>
+                    <span class="text-sm text-gray-400">Clientes asesorados este año</span>
+                </div>
+            </div>
+
+            <!-- Calculadora Express (Right Column - The Interactive Hook) -->
+            <div class="lg:col-span-5 w-full">
+                <div class="glass p-6 md:p-8 rounded-2xl relative group hover:border-acid/30 transition-all duration-500 shadow-2xl shadow-black/50">
+                    <!-- Brillo borde -->
+                    <div class="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent rounded-2xl pointer-events-none"></div>
+
+                    <div class="relative z-10">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="font-serif text-2xl italic">Simulador Express</h3>
+                            <i data-lucide="calculator" class="text-acid w-5 h-5"></i>
+                        </div>
+
+                        <!-- Inputs -->
+                        <div class="space-y-5">
+                            <div>
+                                <label class="block text-xs font-mono text-gray-400 mb-2 uppercase tracking-wider">Saldo Actual ($)</label>
+                                <div class="relative">
+                                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+                                    <input type="text" x-model="calc.saldoStr" @input="formatSaldoInput()" 
+                                        class="w-full bg-oceanDark/50 border border-white/10 rounded px-8 py-3 focus:outline-none focus:border-acid text-white font-mono placeholder-gray-600 transition-colors"
+                                        placeholder="Ej: 50.000.000">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-mono text-gray-400 mb-2 uppercase tracking-wider">Edad</label>
+                                    <input type="number" x-model.number="calc.edad" 
+                                        class="w-full bg-oceanDark/50 border border-white/10 rounded px-4 py-3 focus:outline-none focus:border-acid text-white font-mono transition-colors">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-mono text-gray-400 mb-2 uppercase tracking-wider">Género</label>
+                                    <div class="flex rounded bg-oceanDark/50 border border-white/10 overflow-hidden">
+                                        <button @click="calc.genero = 'M'" :class="{'bg-acid text-oceanDark font-bold': calc.genero === 'M', 'text-gray-400 hover:text-white': calc.genero !== 'M'}" class="flex-1 py-3 text-sm transition-all">H</button>
+                                        <button @click="calc.genero = 'F'" :class="{'bg-acid text-oceanDark font-bold': calc.genero === 'F', 'text-gray-400 hover:text-white': calc.genero !== 'F'}" class="flex-1 py-3 text-sm transition-all">M</button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Resultado Instantáneo -->
+                            <div class="mt-8 pt-6 border-t border-white/10 text-center animate-fade-in" x-show="calc.saldo > 0">
+                                <span class="block text-xs text-gray-400 font-mono mb-1">JUBILACIÓN ESTIMADA (MENSUAL)</span>
+                                <div class="text-4xl md:text-5xl font-mono text-acid font-bold text-glow" x-text="calculatePension()">
+                                    $0
+                                </div>
+                                <p class="text-[10px] text-gray-500 mt-2 font-light">
+                                    *Cálculo referencial basado en saldo actual + PGU (si aplica). No constituye oferta vinculante.
+                                </p>
+                            </div>
+
+                            <button @click="scrollToTools()" x-show="calc.saldo === 0" 
+                                class="w-full bg-oceanLight hover:bg-oceanLight/80 text-white font-medium py-4 rounded border border-white/10 transition-all mt-4">
+                                Simular Ahora
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- C. MANIFIESTO (EL PROBLEMA) -->
+    <section id="manifiesto" class="bg-oceanDark py-24 relative overflow-hidden border-y border-white/5">
+        <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5"></div>
+        
+        <div class="max-w-4xl mx-auto px-4 text-center relative z-10">
+            <span class="text-acid font-mono text-sm tracking-[0.2em] mb-6 block">LA VERDAD INCÓMODA</span>
+            <h2 class="font-serif text-4xl md:text-6xl leading-tight mb-8">
+                "La asimetría de información es el <span class="italic text-gray-400">impuesto más caro</span> que pagas en tu vida."
+            </h2>
+            <p class="text-gray-300 text-lg font-light leading-relaxed max-w-2xl mx-auto">
+                El sistema está diseñado para ser complejo. Nosotros estamos diseñados para decodificarlo. No somos vendedores de seguros; somos arquitectos de patrimonio que nivelan la cancha a tu favor.
+            </p>
+        </div>
+    </section>
+
+    <!-- D. HUB DE HERRAMIENTAS -->
+    <section id="herramientas" class="py-24 px-4 relative">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+                <div>
+                    <h2 class="font-serif text-4xl md:text-5xl mb-2">Ecosistema Financiero</h2>
+                    <p class="text-gray-400">Herramientas diseñadas para maximizar tu retorno.</p>
+                </div>
+                <button class="text-acid border-b border-acid pb-1 hover:text-white hover:border-white transition-colors text-sm uppercase tracking-wide">
+                    Ver todos los servicios
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Card Destacada: Simulador Pensión -->
+                <div class="glass p-8 rounded-xl border border-acid/30 hover:shadow-[0_0_30px_rgba(204,255,0,0.1)] transition-all duration-300 group cursor-pointer relative overflow-hidden lg:col-span-1 lg:row-span-2 flex flex-col justify-between min-h-[320px]">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <i data-lucide="trending-up" class="w-32 h-32"></i>
+                    </div>
+                    <div>
+                        <div class="w-12 h-12 rounded-full bg-acid text-oceanDark flex items-center justify-center mb-6">
+                            <i data-lucide="calculator" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="font-serif text-2xl italic mb-3">Simulación Profunda</h3>
+                        <p class="text-sm text-gray-300 leading-relaxed">
+                            No solo calculamos tu pensión actual. Proyectamos escenarios de retiro programado vs. renta vitalicia, impacto tributario y excedentes de libre disposición.
+                        </p>
+                    </div>
+                    <div class="mt-8">
+                        <span class="inline-flex items-center text-acid text-sm font-bold group-hover:gap-2 transition-all">
+                            Comenzar Análisis <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Card: APV -->
+                <div class="glass p-6 rounded-xl hover:bg-white/5 transition-colors cursor-pointer group">
+                    <div class="flex justify-between items-start mb-4">
+                        <i data-lucide="piggy-bank" class="text-gray-400 group-hover:text-acid transition-colors w-8 h-8"></i>
+                        <span class="text-xs font-mono text-gray-500">AHORRO</span>
+                    </div>
+                    <h3 class="font-serif text-xl mb-2">Estrategia APV</h3>
+                    <p class="text-sm text-gray-400">Optimización tributaria (Régimen A vs B) para aumentar tu capital líquido.</p>
+                </div>
+
+                <!-- Card: Renta Privada -->
+                <div class="glass p-6 rounded-xl hover:bg-white/5 transition-colors cursor-pointer group">
+                    <div class="flex justify-between items-start mb-4">
+                        <i data-lucide="briefcase" class="text-gray-400 group-hover:text-acid transition-colors w-8 h-8"></i>
+                        <span class="text-xs font-mono text-gray-500">INVERSIÓN</span>
+                    </div>
+                    <h3 class="font-serif text-xl mb-2">Renta Privada</h3>
+                    <p class="text-sm text-gray-400">Alternativas de inversión estructurada fuera del sistema AFP tradicional.</p>
+                </div>
+
+                <!-- Card: PGU -->
+                <div class="glass p-6 rounded-xl hover:bg-white/5 transition-colors cursor-pointer group">
+                    <div class="flex justify-between items-start mb-4">
+                        <i data-lucide="landmark" class="text-gray-400 group-hover:text-acid transition-colors w-8 h-8"></i>
+                        <span class="text-xs font-mono text-gray-500">ESTATAL</span>
+                    </div>
+                    <h3 class="font-serif text-xl mb-2">Gestión PGU</h3>
+                    <p class="text-sm text-gray-400">Verificación de requisitos y tramitación de la Pensión Garantizada Universal.</p>
+                </div>
+
+                <!-- Card: Salud -->
+                <div class="glass p-6 rounded-xl hover:bg-white/5 transition-colors cursor-pointer group">
+                    <div class="flex justify-between items-start mb-4">
+                        <i data-lucide="heart-pulse" class="text-gray-400 group-hover:text-acid transition-colors w-8 h-8"></i>
+                        <span class="text-xs font-mono text-gray-500">PROTECCIÓN</span>
+                    </div>
+                    <h3 class="font-serif text-xl mb-2">Excedentes Salud</h3>
+                    <p class="text-sm text-gray-400">Cómo impacta tu jubilación en tu plan de Isapre o Fonasa. No pierdas cobertura.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- D.2 NUEVA SECCIÓN: ALIANZAS CORPORATIVAS (RRHH) -->
+    <section id="empresas" class="py-24 relative overflow-hidden border-t border-white/5">
+        <!-- Fondo Decorativo -->
+        <div class="absolute right-0 top-1/4 w-[600px] h-[600px] bg-oceanLight/20 rounded-full blur-[120px] pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-4 grid lg:grid-cols-2 gap-16 items-center relative z-10">
+            <!-- Columna Visual (Izquierda) -->
+            <div class="relative order-2 lg:order-1">
+                <div class="glass p-8 rounded-2xl border border-white/10 relative z-10">
+                    <div class="flex items-center justify-between mb-8 border-b border-white/5 pb-4">
+                        <span class="text-xs font-mono text-gray-400 uppercase">Impacto Organizacional</span>
+                        <div class="flex gap-2">
+                            <span class="w-3 h-3 rounded-full bg-red-500/20 border border-red-500"></span>
+                            <span class="w-3 h-3 rounded-full bg-yellow-500/20 border border-yellow-500"></span>
+                            <span class="w-3 h-3 rounded-full bg-green-500/20 border border-green-500"></span>
+                        </div>
+                    </div>
+                    
+                    <!-- Stats Simuladas -->
+                    <div class="space-y-6">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded bg-oceanDark flex items-center justify-center text-acid">
+                                <i data-lucide="bar-chart-2" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-white">+40%</h4>
+                                <p class="text-xs text-gray-400">Mejora en Clima Laboral</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded bg-oceanDark flex items-center justify-center text-acid">
+                                <i data-lucide="users" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-white">Retención</h4>
+                                <p class="text-xs text-gray-400">Valorización de Beneficios</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Floating Card Effect -->
+                    <div class="absolute -bottom-6 -right-6 glass-strong p-4 rounded-lg border border-acid/20 shadow-xl max-w-[200px]">
+                        <p class="text-xs text-gray-300 italic">"La charla de APV cambió la perspectiva de nuestro equipo senior."</p>
+                        <span class="text-[10px] text-acid block mt-2 font-mono">-- Gte. Personas, Retail</span>
+                    </div>
+                </div>
+                
+                <!-- Graphic Elements behind -->
+                <div class="absolute -top-10 -left-10 w-full h-full border border-white/5 rounded-2xl -z-10 rotate-3"></div>
+            </div>
+
+            <!-- Columna Contenido (Derecha) -->
+            <div class="order-1 lg:order-2">
+                <span class="text-acid font-mono text-xs tracking-[0.2em] uppercase mb-4 block">RRHH & Bienestar</span>
+                <h2 class="font-serif text-4xl md:text-5xl mb-6 leading-tight">
+                    El beneficio que tus colaboradores <br> <span class="italic text-gray-400">realmente valoran.</span>
+                </h2>
+                <p class="text-gray-300 text-lg font-light leading-relaxed mb-8">
+                    El estrés financiero es la causa silenciosa de la baja productividad. Asociamos con departamentos de RRHH para entregar <strong>Certeza Previsional</strong> mediante operativos in-company y planes de educación financiera.
+                </p>
+
+                <ul class="space-y-4 mb-10">
+                    <li class="flex items-start gap-3">
+                        <div class="mt-1 w-5 h-5 rounded-full bg-acid/10 flex items-center justify-center shrink-0">
+                            <i data-lucide="check" class="w-3 h-3 text-acid"></i>
+                        </div>
+                        <span class="text-gray-400 text-sm"><strong class="text-white">Operativos Presenciales:</strong> Llevamos la asesoría a tu oficina.</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <div class="mt-1 w-5 h-5 rounded-full bg-acid/10 flex items-center justify-center shrink-0">
+                            <i data-lucide="check" class="w-3 h-3 text-acid"></i>
+                        </div>
+                        <span class="text-gray-400 text-sm"><strong class="text-white">Charlas Magistrales:</strong> Tributación, APV y Ley 21.000.</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <div class="mt-1 w-5 h-5 rounded-full bg-acid/10 flex items-center justify-center shrink-0">
+                            <i data-lucide="check" class="w-3 h-3 text-acid"></i>
+                        </div>
+                        <span class="text-gray-400 text-sm"><strong class="text-white">Diagnóstico Previsional:</strong> Reporte de salud financiera de la nómina.</span>
+                    </li>
+                </ul>
+
+                <a href="#contacto-empresas" class="inline-flex items-center gap-2 border border-acid text-acid hover:bg-acid hover:text-oceanDark px-6 py-3 rounded transition-all duration-300 text-sm uppercase font-bold tracking-wide">
+                    Agendar Reunión Corporativa <i data-lucide="briefcase" class="w-4 h-4"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- E. AUTORIDAD (TRUST SIGNALS) -->
+    <section id="autoridad" class="py-20 relative">
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent to-oceanDark opacity-80"></div>
+        
+        <div class="max-w-5xl mx-auto px-4 relative z-10">
+            <div class="glass border border-white/10 rounded-2xl p-8 md:p-12 flex flex-col md:flex-row items-center gap-10">
+                
+                <!-- Badge Regulatorio -->
+                <div class="flex-shrink-0 relative group">
+                    <div class="absolute inset-0 bg-acid blur-2xl opacity-20 group-hover:opacity-40 transition-opacity"></div>
+                    <div class="w-40 h-40 border-2 border-acid/50 rounded-full flex flex-col items-center justify-center relative bg-oceanDark/80">
+                        <span class="text-xs font-mono text-gray-400 uppercase tracking-widest mb-1">Registro</span>
+                        <span class="text-4xl font-mono font-bold text-acid text-glow">1207</span>
+                        <span class="text-[10px] text-gray-400 mt-1">Superintendencia</span>
+                    </div>
+                </div>
+
+                <!-- Contenido -->
+                <div class="text-center md:text-left flex-1">
+                    <h2 class="font-serif text-3xl mb-4">Respaldados por la experiencia.</h2>
+                    <p class="text-gray-300 mb-6 leading-relaxed">
+                        En una industria llena de vendedores, nosotros somos asesores. <span class="text-white font-semibold">Carlos Zúñiga</span> y <span class="text-white font-semibold">Eduardo Zúñiga</span> lideran un equipo enfocado en la letra chica y la optimización matemática de tu patrimonio.
+                    </p>
+                    <div class="flex flex-wrap gap-4 justify-center md:justify-start">
+                        <div class="flex items-center gap-2 text-sm text-gray-400">
+                            <i data-lucide="check-circle" class="text-acid w-4 h-4"></i> Asesores Acreditados
+                        </div>
+                        <div class="flex items-center gap-2 text-sm text-gray-400">
+                            <i data-lucide="check-circle" class="text-acid w-4 h-4"></i> Independencia Total
+                        </div>
+                        <div class="flex items-center gap-2 text-sm text-gray-400">
+                            <i data-lucide="check-circle" class="text-acid w-4 h-4"></i> +25 Años Experiencia
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- F. FOOTER MINIMALISTA -->
+    <footer class="bg-oceanDark border-t border-white/5 py-12 text-sm">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="flex flex-col items-center md:items-start">
+                <span class="font-serif text-xl text-white italic mb-2">La Justa.</span>
+                <p class="text-gray-500">© 2025 Todos los derechos reservados.</p>
+            </div>
+
+            <div class="flex gap-6 text-gray-400">
+                <a href="#" class="hover:text-acid transition-colors">Términos Legales</a>
+                <a href="#" class="hover:text-acid transition-colors">Privacidad</a>
+                <a href="#" class="hover:text-acid transition-colors">Contacto</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
